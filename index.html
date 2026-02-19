@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home Page</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        img[alt="Logo"] {
+            border-radius: 10px;
+        }
+
+        img[alt="Logo"]:hover {
+            transform: scale(1.1);
+            transition: 0.5s ease-in-out;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: green;
+            transition: 0.5s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        #imgwrapper {
+            background-color: rgba(226, 217, 217, 0.778);
+            border-radius: 10px;
+            height: 45px;
+            width: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        #imgwrapper:hover {
+            background-color: rgba(189, 182, 182, 0.778);
+            transition: 0.5s ease-in-out;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src='js/Home.js'></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <div id="imgwrapper">
+                <img src="assets/logo.png" alt="Logo" width="32" height="32" class="d-inline-block align-text-top mx-2">
+            </div>
+            <a class="navbar-brand" href="#">
+                <h4 class="">Amazino</h4>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item px-3">
+                        <a class="nav-link active" aria-current="page" href="#"><b>Home</b></a>
+                    </li>
+                    <li class="nav-item px-3">
+                        <a class="nav-link" href="#"><b>Shop</b></a>
+                    </li>
+                    <li class="nav-item px-3">
+                        <a class="nav-link" href="#"><b>Categories</b></a>
+                    </li>
+                    <li class="nav-item px-3">
+                        <a class="nav-link" href="#"><b>About Us</b></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><b>Contact Us</b></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <a href="#" class="text-black fs-5">
+                    <i class="bi bi-heart"></i>
+                </a>
+                <a href="#" class="text-black fs-5 position-relative">
+                    <i class="bi bi-cart"></i>
+                </a>
+                <button type="button" class="btn btn-outline-dark">Sign In</button>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="row align-items-center">
+
+                <div class="col-md-6">
+                    <h1 class="fw-bold">Big Sale Today 🔥</h1>
+                    <p class="lead">Get the best products with amazing discounts</p>
+                    <a href="#" class="btn btn-dark btn-lg">Shop Now</a>
+                </div>
+
+                <div class="col-md-6">
+                    <img src="assets/Frame.png" class="img-fluid">
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </pre>
+    <!-- Featured Products -->
+    <!-- Promotions -->
+    <!-- Footer -->
+</body>
+
+</html>
