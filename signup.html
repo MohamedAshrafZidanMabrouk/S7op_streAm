@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>signup</title>
+    <link rel="stylesheet" href="./index.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- email js -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+    ></script>
+    <script type="text/javascript">
+      (function () {
+        emailjs.init("38fW8AWlUoUtFifrX"); // حطي الـ Key بتاعك هنا
+      })();
+    </script>
+  </head>
+  <body>
+    <div
+      class="container-fluid d-flex align-items-center justify-content-center h-100"
+    >
+      <div
+        class="row h-100 w-100 p-4 d-flex align-items-stretch justify-content-center g-4"
+      >
+        <div class="col left p-5 w-25">
+          <div class="title-wrapper">
+            <h1 class="bg-color fw-bold fs-1">Amazino</h1>
+            <hr />
+          </div>
+
+          <br />
+          <br />
+
+          <div class="d-flex flex-column g-0">
+            <p class="fs-3 fw-bold text-black m-0 p-0">Create Account</p>
+            <p class="m-0 p-0 text-black fw-light">
+              Sign up and get 20% off your first order.
+            </p>
+          </div>
+
+          <br />
+
+          <!-- alert -->
+          <div
+            id="alreadyRegisteredAlert"
+            class="alert alert-danger d-none align-items-center"
+            role="alert"
+          >
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div>This email is already registered!</div>
+          </div>
+
+          <div class="identity w-100 d-flex flex-column justify-content-center">
+            <p class="mb-2 fw-semibold">I want to join as a:</p>
+
+            <div
+              class="options text-center bg-body-secondary p-1 rounded d-flex justify-content-center align-items-center gap-1"
+            >
+              <p
+                id="buyer"
+                class="active w-50 d-flex justify-content-center align-items-center p-2 mb-0"
+              >
+                Buyer
+              </p>
+
+              <p
+                id="seller"
+                class="w-50 d-flex justify-content-center align-items-center p-2 mb-0 text-secondary"
+              >
+                Seller
+              </p>
+            </div>
+          </div>
+
+          <br />
+
+          <form class="row g-3 needs-validation" novalidate>
+            <!--user or buyer -->
+            <input
+              type="hidden"
+              name="userRole"
+              id="userRoleInput"
+              value="buyer"
+            />
+
+            <div class="col-4 w-50">
+              <label for="validationCustom01" class="form-label"
+                >First name</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="firstName"
+                required
+                placeholder="Enter first name"
+              />
+              <div class="invalid-feedback">First name is required.</div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+
+            <div class="col-4 w-50">
+              <label for="validationCustom02" class="form-label"
+                >Last name</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="lastName"
+                required
+                placeholder="Enter last name"
+              />
+              <div class="invalid-feedback">Last name is required.</div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+
+            <div class="col-12">
+              <label for="validationCustomUsername" class="form-label"
+                >Email</label
+              >
+              <div class="input-group has-validation">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  aria-describedby="inputGroupPrepend"
+                  required
+                  placeholder="Enter email address"
+                />
+                <div class="invalid-feedback">Please choose a username.</div>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="validationCustomPassword" class="form-label"
+                >Password</label
+              >
+
+              <div class="position-relative">
+                <input
+                  type="password"
+                  class="form-control pe-5"
+                  id="password"
+                  placeholder="Enter password"
+                  required
+                />
+
+                <i
+                  class="bi bi-eye position-absolute end-0"
+                  id="togglePassword"
+                  style="cursor: pointer"
+                ></i>
+                <div class="invalid-feedback">
+                  Please provide a valid password.
+                </div>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="invalidCheck"
+                  required
+                />
+                <label class="form-check-label" for="invalidCheck">
+                  Agree to
+                  <a class="mylink bg-color fw-semibold" href=""
+                    >Terms & Conditions</a
+                  >
+                  and
+                  <a class="mylink bg-color fw-semibold" href=""
+                    >Privacy Policy</a
+                  >
+                </label>
+                <div class="invalid-feedback">
+                  You must agree before submitting.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <button
+                class="mybutton text-white fw-bold w-100 btn bg-main-color"
+                type="submit"
+                id="submitBtn"
+              >
+                <span id="btnText">Sign Up</span>
+                <span
+                  id="btnSpinner"
+                  class="spinner-border spinner-border-sm d-none"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
+            </div>
+          </form>
+
+          <div class="mt-5 text-center w-100">
+            <div class="position-relative mb-4">
+              <hr class="text-secondary" />
+              <span
+                class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-secondary"
+              >
+                Continue With
+              </span>
+            </div>
+
+            <div class="d-flex justify-content-between gap-3 mb-4">
+              <div class="link btn border rounded-3 py-2 flex-grow-1 shadow-sm">
+                <i class="fab fa-google text-danger fs-4"></i>
+              </div>
+              <div class="link btn border rounded-3 py-2 flex-grow-1 shadow-sm">
+                <i class="fab fa-facebook text-primary fs-4"></i>
+              </div>
+              <div class="link btn border rounded-3 py-2 flex-grow-1 shadow-sm">
+                <i class="fab fa-apple text-dark fs-4"></i>
+              </div>
+            </div>
+
+            <p class="text-secondary">
+              Already have an account?
+              <a
+                href="http://127.0.0.1:5501/index.html"
+                class="text-decoration-none fw-bold bg-color signin"
+                >Sign In</a
+              >
+            </p>
+          </div>
+        </div>
+
+        <div class="col right d-none d-lg-flex">
+          <img
+            class="w-100 h-100 object-fit-cover rounded-5"
+            src="./img1.png"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- modal -->
+    <div class="modal fade" id="otpModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered text-center">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center">Welcome to Amazino</h5>
+          </div>
+          <div class="modal-body">
+            <p>We've sent a confirmation link to your email.</p>
+            <input
+              type="text"
+              id="otpInput"
+              class="form-control"
+              placeholder="Enter 4 numbers here"
+              maxlength="4"
+            />
+            <div id="otpError" class="text-danger mt-2 d-none">
+              sorry! this code is wrong please try again
+            </div>
+            <div id="otpSuccess" class="text-success mt-2 d-none">Success!</div>
+          </div>
+          <div class="modal-content p-3">
+            <button
+              type="button"
+              id="verifyBtn"
+              class="btn bg-main-color w-100 text-white"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- bootstrap js -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- form validation -->
+    <script src="./formValidation.js"></script>
+
+    <!-- password eye -->
+    <script src="./passwordEyeToggle.js"></script>
+  </body>
+</html>
