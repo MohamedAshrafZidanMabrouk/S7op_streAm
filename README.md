@@ -8,11 +8,11 @@ E-commerce platform with role-based access for Customers, Sellers, and Admins.
 
 | Member | Role | Responsibilities |
 |--------|------|-----------------|
-|   | Full-Stack | Authentication + Admin Panel |
-|   | Frontend Lead | Home Page + Design System |
+|   | Frontend | Authentication + Admin Panel |
+|   | Frontend | Home Page + Design System |
 |   | Frontend | Products Catalog |
 |   | Frontend | Shopping Cart + Checkout |
-|   | Full-Stack | Customer & Seller Dashboards |
+|   | Frontend | Customer & Seller Dashboards |
 
 ## 🚀 Features
 
