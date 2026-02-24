@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>About Us - Amazino</title>
+    <link rel="stylesheet" type="text/css" href="css/pages.css">
+    <link rel="stylesheet" type="text/css" href="css/components.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="js/navbar.js" defer></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="sp-navbar sp-navbar--solid" id="mainNavbar">
+        <div class="sp-navbar__container">
+            <a class="sp-navbar__brand" href="index.html">
+                <div class="sp-navbar__logo-wrap">
+                    <img src="assets/logo1.png" alt="Logo" width="32" height="32">
+                </div>
+                <span class="sp-navbar__brand-name">Amazino</span>
+            </a>
+
+            <button class="sp-navbar__toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="sp-navbar__toggle-bar"></span>
+                <span class="sp-navbar__toggle-bar"></span>
+                <span class="sp-navbar__toggle-bar"></span>
+            </button>
+
+            <div class="sp-navbar__menu" id="navMenu">
+                <ul class="sp-navbar__links">
+                    <li><a class="sp-navbar__link" href="index.html">Home</a></li>
+                    <li><a class="sp-navbar__link" href="products.html">Shop</a></li>
+                    <li><a class="sp-navbar__link sp-navbar__link--active" href="about.html">About Us</a></li>
+                    <li><a class="sp-navbar__link" href="contact.html">Contact Us</a></li>
+                    <li><a class="sp-navbar__link" href="blog.html">Blog</a></li>
+                </ul>
+
+                <div class="sp-navbar__actions">
+                    <a href="#" class="sp-navbar__icon-link" aria-label="Wishlist">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                    <a href="cart.html" class="sp-navbar__icon-link" aria-label="Cart">
+                        <i class="bi bi-cart"></i>
+                    </a>
+                    <a href="login.html" class="sp-navbar__btn-signin">
+                        <i class="bi bi-person"></i> SIGNIN
+                    </a>
+                </div>
+            </div>
+
+            <div class="sp-navbar__overlay" id="navOverlay"></div>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>About Us</h1>
+            <p>Discover our story, values, and the passionate team behind Amazino.</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">About Us</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="page-section">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <h2 class="section-title">Our Story</h2>
+                    <p class="text-muted" style="line-height:1.8;">
+                        Founded in 2020, Amazino started with a simple vision — to make modern, high-quality furniture
+                        accessible to everyone. What began as a small online shop has grown into a trusted destination
+                        for homeowners, interior designers, and design enthusiasts alike.
+                    </p>
+                    <p class="text-muted" style="line-height:1.8;">
+                        We believe that your home should reflect your personality. That's why we carefully curate every
+                        piece in our collection, ensuring it meets our standards of craftsmanship, sustainability, and
+                        timeless design.
+                    </p>
+                    <p class="text-muted" style="line-height:1.8;">
+                        From Scandinavian minimalism to bold contemporary statements, we offer a diverse range of
+                        furniture and decor that helps you create spaces you love coming home to.
+                    </p>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=400&fit=crop"
+                        alt="Our Story" class="img-fluid rounded-4 shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="page-section bg-light">
+        <div class="container">
+            <div class="row g-4 text-center">
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <h3>50K+</h3>
+                        <p>Happy Customers</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <h3>2K+</h3>
+                        <p>Products Available</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <h3>15+</h3>
+                        <p>Countries Served</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <h3>99%</h3>
+                        <p>Satisfaction Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Values -->
+    <section class="page-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Our Values</h2>
+                <p class="section-subtitle">The principles that guide everything we do</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="about-value-card">
+                        <div class="icon-wrap">
+                            <i class="bi bi-gem"></i>
+                        </div>
+                        <h5>Quality First</h5>
+                        <p>Every product is hand-picked for its craftsmanship and durability, ensuring lasting value for your home.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="about-value-card">
+                        <div class="icon-wrap">
+                            <i class="bi bi-leaf"></i>
+                        </div>
+                        <h5>Sustainability</h5>
+                        <p>We partner with eco-conscious brands and use sustainable materials to protect our planet for future generations.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="about-value-card">
+                        <div class="icon-wrap">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h5>Customer Focus</h5>
+                        <p>Your satisfaction is our top priority. We offer personalized support from browsing to delivery and beyond.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="about-value-card">
+                        <div class="icon-wrap">
+                            <i class="bi bi-lightbulb"></i>
+                        </div>
+                        <h5>Innovation</h5>
+                        <p>We constantly explore new trends and technologies to bring you the most innovative home solutions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Team -->
+    <section class="page-section bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Meet Our Team</h2>
+                <p class="section-subtitle">The creative minds behind Amazino</p>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="team-card">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Team Member">
+                        <h6>Ahmed Hassan</h6>
+                        <small>Founder & CEO</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="team-card">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Team Member">
+                        <h6>Sara Ibrahim</h6>
+                        <small>Head of Design</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="team-card">
+                        <img src="https://randomuser.me/api/portraits/men/65.jpg" alt="Team Member">
+                        <h6>Omar Khaled</h6>
+                        <small>Product Manager</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="team-card">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Team Member">
+                        <h6>Nour Ali</h6>
+                        <small>Marketing Lead</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section">
+        <div class="container">
+            <h3>Join Our Community</h3>
+            <p>Subscribe to get exclusive offers, design tips, and new arrivals straight to your inbox.</p>
+            <div class="input-group">
+                <input type="email" class="form-control" placeholder="Enter your email address">
+                <button class="btn" type="button">Subscribe</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <section class="section-bg text-white text-center py-5">
+        <div class="container-fluid">
+            <div class="row text-start justify-content-center p-5 gx-4">
+                <div class="col-12 col-md-12 col-lg-4 mb-2 mb-lg-0">
+                    <div class="d-flex align-items-center mb-3 wrapper">
+                        <img src="assets/logo1.png" alt="Amazino" width="39" height="39"
+                            class="d-inline-block align-text-top mx-2">
+                        <h2 class="fw-bold">Amazino</h2>
+                    </div>
+                    <p>Amazino helps you turn your home into a dream oasis through expert selection, design, and
+                        implementation of furniture, decor, and smart solutions.</p>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-facebook text-white fs-4 mx-2"></i></a>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-twitter text-white fs-4 mx-2"></i></a>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-pinterest text-white fs-4 mx-2"></i></a>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-instagram text-white fs-4 mx-2"></i></a>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-youtube text-white fs-4 mx-2"></i></a>
+                </div>
+                <div class="col-6 col-lg-2 mb-2 mb-lg-0">
+                    <h4 class="fw-bold">Company</h4>
+                    <ul class="list-unstyled">
+                        <li class="mt-2"><a href="about.html" class="text-white text-decoration-none">About Us</a></li>
+                        <li class="mt-2"><a href="blog.html" class="text-white text-decoration-none">Blog</a></li>
+                        <li class="mt-2"><a href="contact.html" class="text-white text-decoration-none">Contact Us</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2 mb-2 mb-lg-0">
+                    <h4 class="fw-bold">Customer Service</h4>
+                    <ul class="list-unstyled">
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">My Account</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Track Order</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Returns</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2 mb-2 mb-lg-0">
+                    <h4 class="fw-bold">Information</h4>
+                    <ul class="list-unstyled">
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Privacy Policy</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Terms & Conditions</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Refund Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2 mb-2 mb-lg-0">
+                    <h4 class="fw-bold">Contact Us</h4>
+                    <p><i class="bi bi-telephone mx-2"></i> +1 234 567 890</p>
+                    <p><i class="bi bi-envelope mx-2"></i>Help@Amazino.com</p>
+                    <p><i class="bi bi-geo-alt mx-2"></i>123 Main Street, Anytown, USA</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer-bg text-white text-center py-4">
+        <p>© 2026 Amazino. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

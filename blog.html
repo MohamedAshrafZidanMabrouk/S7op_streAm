@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Blog - Amazino</title>
+    <link rel="stylesheet" type="text/css" href="css/pages.css">
+    <link rel="stylesheet" type="text/css" href="css/components.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="js/navbar.js" defer></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="sp-navbar sp-navbar--solid" id="mainNavbar">
+        <div class="sp-navbar__container">
+            <a class="sp-navbar__brand" href="index.html">
+                <div class="sp-navbar__logo-wrap">
+                    <img src="assets/logo1.png" alt="Logo" width="32" height="32">
+                </div>
+                <span class="sp-navbar__brand-name">Amazino</span>
+            </a>
+
+            <button class="sp-navbar__toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="sp-navbar__toggle-bar"></span>
+                <span class="sp-navbar__toggle-bar"></span>
+                <span class="sp-navbar__toggle-bar"></span>
+            </button>
+
+            <div class="sp-navbar__menu" id="navMenu">
+                <ul class="sp-navbar__links">
+                    <li><a class="sp-navbar__link" href="index.html">Home</a></li>
+                    <li><a class="sp-navbar__link" href="products.html">Shop</a></li>
+                    <li><a class="sp-navbar__link" href="about.html">About Us</a></li>
+                    <li><a class="sp-navbar__link" href="contact.html">Contact Us</a></li>
+                    <li><a class="sp-navbar__link sp-navbar__link--active" href="blog.html">Blog</a></li>
+                </ul>
+
+                <div class="sp-navbar__actions">
+                    <a href="#" class="sp-navbar__icon-link" aria-label="Wishlist">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                    <a href="cart.html" class="sp-navbar__icon-link" aria-label="Cart">
+                        <i class="bi bi-cart"></i>
+                    </a>
+                    <a href="login.html" class="sp-navbar__btn-signin">
+                        <i class="bi bi-person"></i> SIGNIN
+                    </a>
+                </div>
+            </div>
+
+            <div class="sp-navbar__overlay" id="navOverlay"></div>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Our Blog</h1>
+            <p>Design inspiration, home tips, and the latest trends in modern living.</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Blog</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Blog Content -->
+    <section class="page-section">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Blog Posts -->
+                <div class="col-lg-8">
+                    <!-- Featured Post -->
+                    <div class="blog-featured mb-5">
+                        <span class="badge bg-white text-dark mb-3 rounded-pill px-3 py-2" style="font-size:0.8rem;">Featured</span>
+                        <h5 class="fs-3">The Art of Minimalist Living: Less is More</h5>
+                        <p>Discover how embracing minimalism in your home can lead to a more intentional, peaceful, and
+                            fulfilling lifestyle. We explore practical tips for decluttering and designing spaces that breathe.</p>
+                        <div class="d-flex align-items-center gap-3 mt-3">
+                            <small><i class="bi bi-calendar3 me-1"></i> Feb 15, 2026</small>
+                            <small><i class="bi bi-clock me-1"></i> 8 min read</small>
+                        </div>
+                    </div>
+
+                    <!-- Post Grid -->
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="blog-card">
+                                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop"
+                                    class="card-img-top" alt="Blog Post">
+                                <div class="card-body">
+                                    <span class="badge-category">Interior Design</span>
+                                    <h5 class="card-title"><a href="#">10 Ways to Transform Your Living Room on a Budget</a></h5>
+                                    <p class="card-text">Simple and affordable ideas to give your living space a fresh new look without breaking the bank.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small><i class="bi bi-calendar3 me-1"></i> Feb 10, 2026</small>
+                                    <a href="#" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="blog-card">
+                                <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=400&fit=crop"
+                                    class="card-img-top" alt="Blog Post">
+                                <div class="card-body">
+                                    <span class="badge-category">Furniture Guide</span>
+                                    <h5 class="card-title"><a href="#">How to Choose the Perfect Sofa for Your Home</a></h5>
+                                    <p class="card-text">A comprehensive guide to selecting a sofa that fits your style, space, and comfort needs perfectly.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small><i class="bi bi-calendar3 me-1"></i> Feb 5, 2026</small>
+                                    <a href="#" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="blog-card">
+                                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&h=400&fit=crop"
+                                    class="card-img-top" alt="Blog Post">
+                                <div class="card-body">
+                                    <span class="badge-category">Trends</span>
+                                    <h5 class="card-title"><a href="#">2026 Home Decor Trends You Need to Know</a></h5>
+                                    <p class="card-text">From earthy tones to smart furniture, explore the biggest home decor trends shaping interiors this year.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small><i class="bi bi-calendar3 me-1"></i> Jan 28, 2026</small>
+                                    <a href="#" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="blog-card">
+                                <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&h=400&fit=crop"
+                                    class="card-img-top" alt="Blog Post">
+                                <div class="card-body">
+                                    <span class="badge-category">Sustainability</span>
+                                    <h5 class="card-title"><a href="#">Eco-Friendly Furniture: A Buyer's Guide</a></h5>
+                                    <p class="card-text">Learn how to make sustainable choices when furnishing your home without compromising on style or quality.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small><i class="bi bi-calendar3 me-1"></i> Jan 20, 2026</small>
+                                    <a href="#" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="blog-card">
+                                <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&h=400&fit=crop"
+                                    class="card-img-top" alt="Blog Post">
+                                <div class="card-body">
+                                    <span class="badge-category">Bedroom</span>
+                                    <h5 class="card-title"><a href="#">Creating the Perfect Bedroom Sanctuary</a></h5>
+                                    <p class="card-text">Tips and ideas for designing a bedroom that promotes relaxation, better sleep, and personal well-being.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small><i class="bi bi-calendar3 me-1"></i> Jan 15, 2026</small>
+                                    <a href="#" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="blog-card">
+                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop"
+                                    class="card-img-top" alt="Blog Post">
+                                <div class="card-body">
+                                    <span class="badge-category">Kitchen</span>
+                                    <h5 class="card-title"><a href="#">Small Kitchen, Big Ideas: Maximizing Your Space</a></h5>
+                                    <p class="card-text">Clever storage solutions and design hacks to make the most out of a compact kitchen space.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small><i class="bi bi-calendar3 me-1"></i> Jan 8, 2026</small>
+                                    <a href="#" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Search -->
+                    <div class="blog-sidebar-card">
+                        <h6>Search</h6>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search articles..."
+                                style="border-radius:10px 0 0 10px; border:1.5px solid #e0e0e0; padding:10px 16px;">
+                            <button class="btn" type="button"
+                                style="background:var(--main-color); color:#fff; border-radius:0 10px 10px 0; padding:10px 16px;">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="blog-sidebar-card">
+                        <h6>Categories</h6>
+                        <ul class="list-unstyled mb-0">
+                            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                <a href="#" class="text-decoration-none text-dark">Interior Design</a>
+                                <span class="badge rounded-pill" style="background:rgba(124,29,124,0.1); color:var(--main-color);">12</span>
+                            </li>
+                            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                <a href="#" class="text-decoration-none text-dark">Furniture Guide</a>
+                                <span class="badge rounded-pill" style="background:rgba(124,29,124,0.1); color:var(--main-color);">8</span>
+                            </li>
+                            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                <a href="#" class="text-decoration-none text-dark">Trends</a>
+                                <span class="badge rounded-pill" style="background:rgba(124,29,124,0.1); color:var(--main-color);">15</span>
+                            </li>
+                            <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                <a href="#" class="text-decoration-none text-dark">Sustainability</a>
+                                <span class="badge rounded-pill" style="background:rgba(124,29,124,0.1); color:var(--main-color);">6</span>
+                            </li>
+                            <li class="d-flex justify-content-between align-items-center py-2">
+                                <a href="#" class="text-decoration-none text-dark">DIY & Tips</a>
+                                <span class="badge rounded-pill" style="background:rgba(124,29,124,0.1); color:var(--main-color);">10</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Recent Posts -->
+                    <div class="blog-sidebar-card">
+                        <h6>Recent Posts</h6>
+                        <div class="recent-post-item">
+                            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=100&h=100&fit=crop" alt="Post">
+                            <div class="post-info">
+                                <h6><a href="#" class="text-decoration-none text-dark">10 Ways to Transform Your Living Room</a></h6>
+                                <small>Feb 10, 2026</small>
+                            </div>
+                        </div>
+                        <div class="recent-post-item">
+                            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop" alt="Post">
+                            <div class="post-info">
+                                <h6><a href="#" class="text-decoration-none text-dark">Choosing the Perfect Sofa</a></h6>
+                                <small>Feb 5, 2026</small>
+                            </div>
+                        </div>
+                        <div class="recent-post-item">
+                            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=100&h=100&fit=crop" alt="Post">
+                            <div class="post-info">
+                                <h6><a href="#" class="text-decoration-none text-dark">2026 Home Decor Trends</a></h6>
+                                <small>Jan 28, 2026</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="blog-sidebar-card">
+                        <h6>Popular Tags</h6>
+                        <div>
+                            <a href="#" class="tag">Minimalist</a>
+                            <a href="#" class="tag">Modern</a>
+                            <a href="#" class="tag">Scandinavian</a>
+                            <a href="#" class="tag">Eco-Friendly</a>
+                            <a href="#" class="tag">Small Spaces</a>
+                            <a href="#" class="tag">Living Room</a>
+                            <a href="#" class="tag">Bedroom</a>
+                            <a href="#" class="tag">Kitchen</a>
+                            <a href="#" class="tag">Budget</a>
+                            <a href="#" class="tag">Luxury</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section">
+        <div class="container">
+            <h3>Stay Inspired</h3>
+            <p>Subscribe to our newsletter for the latest articles, design tips, and exclusive content.</p>
+            <div class="input-group">
+                <input type="email" class="form-control" placeholder="Enter your email address">
+                <button class="btn" type="button">Subscribe</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <section class="section-bg text-white text-center py-5">
+        <div class="container-fluid">
+            <div class="row text-start justify-content-center p-5 gx-4">
+                <div class="col-12 col-md-12 col-lg-4 mb-2 mb-lg-0">
+                    <div class="d-flex align-items-center mb-3 wrapper">
+                        <img src="assets/logo1.png" alt="Amazino" width="39" height="39"
+                            class="d-inline-block align-text-top mx-2">
+                        <h2 class="fw-bold">Amazino</h2>
+                    </div>
+                    <p>Amazino helps you turn your home into a dream oasis through expert selection, design, and
+                        implementation of furniture, decor, and smart solutions.</p>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-facebook text-white fs-4 mx-2"></i></a>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-twitter text-white fs-4 mx-2"></i></a>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-pinterest text-white fs-4 mx-2"></i></a>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-instagram text-white fs-4 mx-2"></i></a>
+                    <a href="#" class="text-decoration-none icons"><i class="bi bi-youtube text-white fs-4 mx-2"></i></a>
+                </div>
+                <div class="col-6 col-lg-2 mb-2 mb-lg-0">
+                    <h4 class="fw-bold">Company</h4>
+                    <ul class="list-unstyled">
+                        <li class="mt-2"><a href="about.html" class="text-white text-decoration-none">About Us</a></li>
+                        <li class="mt-2"><a href="blog.html" class="text-white text-decoration-none">Blog</a></li>
+                        <li class="mt-2"><a href="contact.html" class="text-white text-decoration-none">Contact Us</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2 mb-2 mb-lg-0">
+                    <h4 class="fw-bold">Customer Service</h4>
+                    <ul class="list-unstyled">
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">My Account</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Track Order</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Returns</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2 mb-2 mb-lg-0">
+                    <h4 class="fw-bold">Information</h4>
+                    <ul class="list-unstyled">
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Privacy Policy</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Terms & Conditions</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Refund Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2 mb-2 mb-lg-0">
+                    <h4 class="fw-bold">Contact Us</h4>
+                    <p><i class="bi bi-telephone mx-2"></i> +1 234 567 890</p>
+                    <p><i class="bi bi-envelope mx-2"></i>Help@Amazino.com</p>
+                    <p><i class="bi bi-geo-alt mx-2"></i>123 Main Street, Anytown, USA</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer-bg text-white text-center py-4">
+        <p>© 2026 Amazino. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

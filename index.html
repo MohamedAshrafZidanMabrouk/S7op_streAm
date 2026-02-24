@@ -3,238 +3,365 @@
 
 <head>
     <title>Home Page</title>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='css/home.css'>
+    <link rel='stylesheet' type='text/css' href='css/components.css'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        img[alt="Logo"] {
-            border-radius: 10px;
-        }
-        img[alt="Logo"]:hover {
-            transform: scale(1.1);
-            transition: 0.5s ease-in-out;
-        }
-
-        .nav-link {
-            position: relative;
-        }
-
-        .nav-link::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: -2px;
-            width: 0;
-            height: 2px;
-            background-color: green;
-            transition: 0.5s;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .nav-link.active::after {
-            width: 100%;
-        }
-
-        #imgwrapper {
-            background-color: rgba(226, 217, 217, 0.778);
-            border-radius: 10px;
-            height: 45px;
-            width: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-        img[alt="Amazino"] {
-            border-radius: 10px;
-             transition: 0.5s ease-in-out;
-        }
-        #imgwrapper:hover {
-            background-color: rgba(189, 182, 182, 0.778);
-            transition: 0.5s ease-in-out;
-        }
-        .section-bg {
-            background-color: #205457;
-        }
-        .footer-bg {
-            background-color: #b19470;
-        }
-        .wrapper:hover img[alt="Amazino"] {
-            transform: scale(1.1);
-           
-        }
-        .wrapper h2 {
-            transition: 0.5s ease-in-out;
-        }
-        .wrapper:hover h2 {
-            opacity: 0.7;
-        }
-        .wrapper
-        {
-            width: fit-content;
-        }
-        .wrapper:hover
-        {
-            cursor: pointer;
-        }
-        
-    </style>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-    <script src='js/Home.js'></script>
+    <script src="js/data.js" defer></script>
+    <script src="js/Home.js" defer></script>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-        <div class="container-fluid">
-            <div id="imgwrapper">
-                <img src="assets/logo.png" alt="Logo" width="32" height="32" class="d-inline-block align-text-top mx-2">
-            </div>
-            <a class="navbar-brand" href="#">
-                <h4 class="">Amazino</h4>
+    <!-- Navbar -->
+    <nav class="sp-navbar" id="mainNavbar">
+        <div class="sp-navbar__container">
+            <!-- Brand / Logo -->
+            <a class="sp-navbar__brand" href="#">
+                <div class="sp-navbar__logo-wrap">
+                    <img src="assets/logo1.png" alt="Logo" width="32" height="32">
+                </div>
+                <span class="sp-navbar__brand-name">Amazino</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+
+            <!-- Hamburger Toggle (mobile) -->
+            <button class="sp-navbar__toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="sp-navbar__toggle-bar"></span>
+                <span class="sp-navbar__toggle-bar"></span>
+                <span class="sp-navbar__toggle-bar"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item px-3">
-                        <a class="nav-link active" aria-current="page" href="#"><b>Home</b></a>
-                    </li>
-                    <li class="nav-item px-3">
-                        <a class="nav-link" href="#"><b>Shop</b></a>
-                    </li>
-                    <li class="nav-item px-3">
-                        <a class="nav-link" href="#"><b>Categories</b></a>
-                    </li>
-                    <li class="nav-item px-3">
-                        <a class="nav-link" href="#"><b>About Us</b></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><b>Contact Us</b></a>
-                    </li>
+
+            <!-- Nav Menu -->
+            <div class="sp-navbar__menu" id="navMenu">
+                <ul class="sp-navbar__links">
+                    <li><a class="sp-navbar__link sp-navbar__link--active" href="#">Home</a></li>
+                    <li><a class="sp-navbar__link" href="products.html">Shop</a></li>
+                    <li><a class="sp-navbar__link" href="about.html">About Us</a></li>
+                    <li><a class="sp-navbar__link" href="contact.html">Contact Us</a></li>
+                    <li><a class="sp-navbar__link" href="blog.html">Blog</a></li>
                 </ul>
+
+                <!-- Actions (wishlist, cart, sign in) -->
+                <div class="sp-navbar__actions">
+                    <a href="#" class="sp-navbar__icon-link" aria-label="Wishlist">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                    <a href="cart.html" class="sp-navbar__icon-link" aria-label="Cart">
+                        <i class="bi bi-cart"></i>
+                    </a>
+                    <a href="login.html" class="sp-navbar__btn-signin">
+                        <i class="bi bi-person"></i> SIGNIN
+                    </a>
+                </div>
             </div>
-            <div class="d-flex align-items-center gap-3">
-                <a href="#" class="text-black fs-5">
-                    <i class="bi bi-heart"></i>
-                </a>
-                <a href="#" class="text-black fs-5 position-relative">
-                    <i class="bi bi-cart"></i>
-                </a>
-                <button type="button" class="btn btn-outline-dark">Sign In</button>
-            </div>
+
+            <!-- Overlay (mobile) -->
+            <div class="sp-navbar__overlay" id="navOverlay"></div>
         </div>
     </nav>
+
     <!-- Hero Section -->
-    <section class="bg-light py-5">
-        <div class="container">
-            <div class="row align-items-center">
+    <section class="hero d-flex align-items-end text-white" id="heroSection">
+        <div class="container-fluid px-4 px-lg-5 pb-5 mb-3">
+            <div class="hero-content">
+                <h1 class="hero-title">Modern Furniture,<br>
+                    For Minimalist Lifestyle</h1>
+                <p class="hero-subtitle">
+                    Experience elegance and functionality with our new collection,<br>
+                    designed to elevate your living comfort.
+                </p>
+                <div class="hero-buttons d-flex align-items-center gap-3">
+                    <a href="products.html" class="btn btn-shopnow">Shop Now <i class="bi bi-arrow-right"></i></a>
+                    <a href="products.html" class="btn-viewall">View All</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <div class="col-md-6">
-                    <h1 class="fw-bold">Big Sale Today 🔥</h1>
-                    <p class="lead">Get the best products with amazing discounts</p>
-                    <a href="#" class="btn btn-dark btn-lg">Shop Now</a>
+    <!-- Shipping Info -->
+    <div class="container-fluid my-5">
+        <div class="row text-center justify-content-center ">
+            <div class="col-12 col-lg-4">
+                <div class="shipping-box d-flex align-items-center ">
+                    <img src="assets/boxicon.png" alt="shipping">
+                    <div class="text-start">
+                        <h5 class="mb-1 fw-bold">Free Shipping</h5>
+                        <p class="mb-0 text-muted">Free shipping for order above $180</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="shipping-box d-flex align-items-center">
+                    <img src="assets/cardicon.png" alt="card">
+                    <div class="text-start">
+                        <h5 class="mb-1 fw-bold">Flexible Payment</h5>
+                        <p class="mb-0 text-muted">Multiple secure payment options</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="shipping-box d-flex align-items-center">
+                    <img src="assets/headseticon.png" alt="support">
+                    <div class="text-start">
+                        <h5 class="mb-1 fw-bold">support</h5>
+                        <p class="mb-0 text-muted">We support online all days.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    <section class="featured-section">
+        <div class="container-fluid px-4 px-lg-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="section-header">
+                    <h2 class="section-title">Our Products</h2>
+                    <a href="products.html" class="section-viewall">View All</a>
+                </div>
+                <div class="slider-nav d-none d-md-flex gap-2">
+                    <button class="slider-arrow" id="slideLeft" aria-label="Scroll left">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button class="slider-arrow" id="slideRight" aria-label="Scroll right">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="product-slider" id="productSlider">
+                <!-- Cards rendered by Home.js -->
+            </div>
+            <div class="slider-progress">
+                <div class="slider-progress-bar" id="sliderProgressBar"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promotions -->
+    <section class="promo-section text-center">
+        <div class="container-fluid px-4 px-lg-5">
+            <div class="promo-card">
+                <div class="row align-items-center g-0">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="promo-content text-center">
+                            <h2 class="promo-title">Flash sale!</h2>
+                            <p class="promo-subtitle">Get 25% off - Limited Time Offer!</p>
+                            <div class="countdown d-flex justify-content-center gap-3 gap-md-4" id="countdown">
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countDays">00</span>
+                                    <span class="countdown-label">Days</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countHours">00</span>
+                                    <span class="countdown-label">Hours</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countMinutes">00</span>
+                                    <span class="countdown-label">Minutes</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countSeconds">00</span>
+                                    <span class="countdown-label">Seconds</span>
+                                </div>
+                            </div>
+                            <a href="products.html" class="btn btn-promo mt-4">Shop Now -></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="promo-img-wrapper">
+                            <img src="assets/promo.png" alt="Flash Sale" class="promo-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deals of the Day -->
+    <section class="deals-section py-5">
+        <div class="container-fluid px-4 px-lg-5">
+            <div class="mb-4">
+                <h2 class="section-title mb-1">Deals Of The Day</h2>
+                <p class="text-muted" style="letter-spacing: -0.5px;">Discover Quality</p>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <!-- Deal Card 1 -->
+                <div class="col-12 col-lg-6">
+                    <div class="deal-card p-4 h-100 d-flex flex-column flex-sm-row align-items-center gap-4">
+                        <div class="deal-img-wrapper position-relative text-center">
+                            <span class="badge position-absolute top-0 start-0 m-0 py-2 px-3 rounded-pill">15% Off</span>
+                            <img src="assets/dining_chair.png" alt="Chair" class="img-fluid"
+                                style="max-height: 250px; object-fit: contain;">
+                        </div>
+                        <div class="deal-content w-100">
+                            <small class="text-muted text-uppercase d-block mb-1">chairs</small>
+                            <h4 class="fw-bold mb-2">Cloud-View Ergonomic Leather Recliner</h4>
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <span class="fw-bold fs-5">$700.00</span>
+                                <span class="text-decoration-line-through text-muted">$850.00</span>
+                            </div>
+                            <div class="mb-3">
+                                <i class="bi bi-star-fill text-warning fs-6"></i>
+                                <span class="fw-bold ms-1" style="font-size: 0.9rem;">4.9</span>
+                            </div>
+                            <p class="text-muted small mb-4">Experience the perfect blend of style and support with our
+                                premium ergonomic design, perfect for modern living spaces.</p>
+                            <a href="product-details.html?id=1" class="btn btn-deal rounded-pill text-white px-4 py-2 ">View Details
+                                <i class="bi bi-arrow-right ms-1"></i></a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="col-md-6">
-                    <img src="assets/Frame.png" class="img-fluid">
+                <!-- Deal Card 2 -->
+                <div class="col-12 col-lg-6">
+                    <div class="deal-card p-4 h-100 d-flex flex-column flex-sm-row align-items-center gap-4">
+                        <div class="deal-img-wrapper position-relative text-center">
+                            <span class="badge position-absolute top-0 start-0 m-0 py-2 px-3 rounded-pill">20% Off</span>
+                            <img src="assets/papasan_chair.png" alt="Sofa" class="img-fluid"
+                                style="max-height: 250px; object-fit: contain;">
+                        </div>
+                        <div class="deal-content w-100">
+                            <small class="text-muted text-uppercase d-block mb-1">sofa</small>
+                            <h4 class="fw-bold mb-2">Monochrome Fluidity 3D Textured Canvas</h4>
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <span class="fw-bold fs-5">$310.00</span>
+                                <span class="text-decoration-line-through text-muted">$400.00</span>
+                            </div>
+                            <div class="mb-3">
+                                <i class="bi bi-star-fill text-warning fs-6"></i>
+                                <span class="fw-bold ms-1" style="font-size: 0.9rem;">4.7</span>
+                            </div>
+                            <p class="text-muted small mb-4">Luxurious comfort meets modern durability in our signature
+                                plush sofa, designed to be the centerpiece of your living room.</p>
+                            <a href="product-details.html?id=2" class="btn btn-deal rounded-pill text-white px-4 py-2 ">View Details
+                                <i class="bi bi-arrow-right ms-1"></i></a>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Collection Banners -->
+            <div class="row g-4 mt-2">
+                <!-- Wood Chair Collection -->
+                <div class="col-12 col-md-6">
+                    <div class="collection-card wood-collection p-4 h-100 position-relative overflow-hidden rounded-4">
+                        <div class="row align-items-center h-100 position-relative z-index-1">
+                            <div class="col-7">
+                                <span class="d-block text-secondary mb-2 fw-medium">Flat 20% Discount</span>
+                                <h3 class="fw-bold mb-2 text-dark">Wood Chair Collection</h3>
+                                <p class="text-muted small mb-4">Handcrafted Masterpieces</p>
+                                <a href="products.html" class="btn btn-collection text-white px-4 py-2 rounded-pill">Shop Now <i
+                                        class="bi bi-arrow-right ms-1"></i></a>
+                            </div>
+                            <div class="col-5 text-center">
+                                <img src="assets/dining_chair.png" alt="Wood Chair" class="img-fluid collection-img"
+                                    style="max-height: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modern Sofa Collection -->
+                <div class="col-12 col-md-6">
+                    <div class="collection-card sofa-collection p-4 h-100 position-relative overflow-hidden rounded-4">
+                        <div class="row align-items-center h-100 position-relative z-index-1">
+                            <div class="col-7 text-white">
+                                <span class="d-block mb-2 text-white-50 fw-medium">Flat 20% Discount</span>
+                                <h3 class="fw-bold mb-2">Modern Sofa Collection</h3>
+                                <p class="text-white-50 small mb-4">Exclusive Range</p>
+                                <a href="products.html" class="btn btn-collection text-white px-4 py-2 rounded-pill">Shop Now <i
+                                        class="bi bi-arrow-right ms-1"></i></a>
+                            </div>
+                            <div class="col-5 text-center">
+                                <img src="assets/papasan_chair.png" alt="Sofa Collection"
+                                    class="img-fluid collection-img" style="max-height: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-------subscribe newsletter------->
+    <section class="py-5">
+        <div class="container text-center">
+
+            <div class="mx-auto" style="max-width:650px">
+
+                <h2 class="newsletter-title fw-medium">
+                    Subscribe to Our Newsletter to Get
+                    <span class="highlight">Updates to Our Latest Collection</span>
+                </h2>
+
+                <p class="text-muted fs-5">
+                    Get 20% off on your first order just by subscribing to our newsletter
+                </p>
+
+                <form class="row g-3 justify-content-center mt-3">
+
+                    <div class="col-12 col-md-8">
+                        <div class="d-flex align-items-center border newsletter-input px-3 bg-white">
+
+                            <div class="icon-circle">
+                                ✉
+                            </div>
+
+                            <input type="email" class="form-control border-0 shadow-none"
+                                placeholder="Enter Email Address">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-auto">
+                        <button class="newsletter-btn w-100">
+                            Subscribe
+                        </button>
+                    </div>
+
+                </form>
 
             </div>
         </div>
     </section>
-    <pre>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </pre>
-    <!-- Featured Products -->
-    <!-- Promotions -->
     <!-- Footer -->
     <section class="section-bg text-white text-center py-5">
         <div class="container-fluid">
-            <div class="row text-start justify-content-center p-5 gx-5">
+            <div class="row text-start justify-content-center p-5 gx-4">
                 <div class="col-12 col-md-12 col-lg-4 mb-2 mb-lg-0">
                     <div class="d-flex align-items-center mb-3 wrapper">
-                        <img src="assets/logo.png" alt="Amazino" width="38" height="38"
+                        <img src="assets/logo1.png" alt="Amazino" width="39" height="39"
                             class="d-inline-block align-text-top mx-2">
                         <h2 class="fw-bold">Amazino</h2>
                     </div>
                     <p>Amazino helps you turn your home into a dream oasis through expert selection, design, and
                         implementation of furniture, decor, and smart solutions. </p>
-                    <a href="#" class="text-decoration-none">
+                    <a href="#" class="text-decoration-none icons">
                         <i class="bi bi-facebook text-white fs-4 mx-2"></i></a>
-                    <a href="#" class="text-decoration-none">
+                    <a href="#" class="text-decoration-none icons">
                         <i class="bi bi-twitter text-white fs-4 mx-2"></i></a>
-                    <a href="#" class="text-decoration-none">
+                    <a href="#" class="text-decoration-none icons">
                         <i class="bi bi-pinterest text-white fs-4 mx-2"></i></a>
-                    <a href="#" class="text-decoration-none">
+                    <a href="#" class="text-decoration-none icons">
                         <i class="bi bi-instagram text-white fs-4 mx-2"></i></a>
-                    <a href="#" class="text-decoration-none">
+                    <a href="#" class="text-decoration-none icons">
                         <i class="bi bi-youtube text-white fs-4 mx-2"></i></a>
 
                 </div>
                 <div class="col-6 col-lg-2 mb-2 mb-lg-0">
                     <h4 class="fw-bold">Company</h4>
                     <ul class="list-unstyled">
-                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">About Us</a></li>
-                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Blog</a></li>
-                        <li class="mt-2"><a href="#" class="text-white text-decoration-none">Contact Us</a></li>
+                        <li class="mt-2"><a href="about.html" class="text-white text-decoration-none">About Us</a></li>
+                        <li class="mt-2"><a href="blog.html" class="text-white text-decoration-none">Blog</a></li>
+                        <li class="mt-2"><a href="contact.html" class="text-white text-decoration-none">Contact Us</a>
+                        </li>
                         <li class="mt-2"><a href="#" class="text-white text-decoration-none">Careers</a></li>
                     </ul>
                 </div>
@@ -250,7 +377,8 @@
                 <div class="col-6 col-lg-2 mb-2 mb-lg-0">
                     <h4 class="fw-bold">Information</h4>
                     <ul class="list-unstyled">
-                        <li class="mt-2"><a href="#" class="text-white text-decoration-none ">Privacy Policy</a></li>
+                        <li class="mt-2"><a href="#" class="text-white text-decoration-none ">Privacy Policy</a>
+                        </li>
                         <li class="mt-2"><a href="#" class="text-white text-decoration-none ">Terms & Conditions</a>
                         </li>
                         <li class="mt-2"><a href="#" class="text-white text-decoration-none ">Refund Policy</a></li>
