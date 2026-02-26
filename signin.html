@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>signup</title>
-    <link rel="stylesheet" href="./css/signup.css" />
+    <title>signIN</title>
+    <link rel="stylesheet" href="./css/signin.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -22,17 +22,20 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
       rel="stylesheet"
     />
+
     <!-- email js -->
     <script
       type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
     ></script>
+
     <script type="text/javascript">
       (function () {
-        emailjs.init("38fW8AWlUoUtFifrX"); // حطي الـ Key بتاعك هنا
+        emailjs.init("38fW8AWlUoUtFifrX");
       })();
     </script>
   </head>
+
   <body>
     <div
       class="container-fluid d-flex align-items-center justify-content-center h-100"
@@ -50,99 +53,16 @@
           <br />
 
           <div class="d-flex flex-column g-0">
-            <p class="fs-3 fw-bold text-black m-0 p-0">Create Account</p>
-            <p class="m-0 p-0 text-black fw-light">
-              Sign up and get 20% off your first order.
-            </p>
+            <p class="fs-3 fw-bold text-black m-0 p-0">Sign In</p>
+            <p class="m-0 p-0 text-black fw-light">Sign in to stay connected</p>
           </div>
 
           <br />
-
-          <!-- alert -->
-          <!-- <div
-            id="alreadyRegisteredAlert"
-            class="alert alert-danger d-none align-items-center"
-            role="alert"
-          >
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            <div>
-              This email is already registered!
-              <a href="./signin.html"> sign in</a>
-            </div>
-          </div> -->
-          <div
-            id="alreadyRegisteredAlert"
-            class="alert alert-danger d-none align-items-center"
-            role="alert"
-          >
-            This email is already registered!
-            <a href="./signin.html" class="alert-link"> sign in</a>
+          <div id="alertmsg" class="alert alert-danger d-none" role="alert">
+            Invalid email or password. Please try again!
           </div>
-          <div class="identity w-100 d-flex flex-column justify-content-center">
-            <p class="mb-2 fw-semibold">I want to join as a:</p>
-
-            <div
-              class="options text-center bg-body-secondary p-1 rounded d-flex justify-content-center align-items-center gap-1"
-            >
-              <p
-                id="buyer"
-                class="active w-50 d-flex justify-content-center align-items-center p-2 mb-0"
-              >
-                Buyer
-              </p>
-
-              <p
-                id="seller"
-                class="w-50 d-flex justify-content-center align-items-center p-2 mb-0 text-secondary"
-              >
-                Seller
-              </p>
-            </div>
-          </div>
-
-          <br />
 
           <form class="row g-3 needs-validation" novalidate>
-            <!--user or buyer -->
-            <input
-              type="hidden"
-              name="userRole"
-              id="userRoleInput"
-              value="buyer"
-            />
-
-            <!-- first name -->
-            <div class="col-4 w-50">
-              <label for="validationCustom01" class="form-label"
-                >First name</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="firstName"
-                required
-                placeholder="Enter first name"
-              />
-              <div class="invalid-feedback">First name is required.</div>
-              <div class="valid-feedback">Looks good!</div>
-            </div>
-
-            <!-- last name -->
-            <div class="col-4 w-50">
-              <label for="validationCustom02" class="form-label"
-                >Last name</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="lastName"
-                required
-                placeholder="Enter last name"
-              />
-              <div class="invalid-feedback">Last name is required.</div>
-              <div class="valid-feedback">Looks good!</div>
-            </div>
-
             <!-- email -->
             <div class="col-12">
               <label for="validationCustomUsername" class="form-label"
@@ -152,23 +72,21 @@
                 <input
                   type="email"
                   class="form-control"
-                  id="email"
+                  id="validationCustomUsername"
                   aria-describedby="inputGroupPrepend"
                   required
                   placeholder="Enter email address"
                 />
-                <div class="invalid-feedback">Please choose a username.</div>
-                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please enter a valid email</div>
+                <!-- <div class="valid-feedback">Looks good!</div> -->
               </div>
             </div>
 
             <!-- password -->
-            <div class="col-12">
-              <label for="validationCustomPassword" class="form-label"
-                >Password</label
-              >
+            <div class="col-12 pb-2">
+              <label for="password" class="form-label">Password</label>
 
-              <div class="position-relative">
+              <div class="position-relative password-wrapper">
                 <input
                   type="password"
                   class="form-control pe-5"
@@ -178,15 +96,12 @@
                 />
 
                 <i
-                  class="bi bi-eye position-absolute end-0"
+                  class="pe-3 bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3"
                   id="togglePassword"
                   style="cursor: pointer"
                 ></i>
-                <div class="invalid-feedback">
-                  Please provide a valid password.
-                </div>
-                <div class="valid-feedback">Looks good!</div>
               </div>
+              <div class="invalid-feedback">Please enter a valid password</div>
             </div>
 
             <div class="col-12">
@@ -196,37 +111,23 @@
                   type="checkbox"
                   value=""
                   id="invalidCheck"
-                  required
                 />
-                <label class="form-check-label" for="invalidCheck">
-                  Agree to
-                  <a class="mylink bg-color fw-semibold" href=""
-                    >Terms & Conditions</a
-                  >
-                  and
-                  <a class="mylink bg-color fw-semibold" href=""
-                    >Privacy Policy</a
-                  >
-                </label>
-                <div class="invalid-feedback">
-                  You must agree before submitting.
+                <div
+                  class="d-flex justify-content-between align-items-center pb-2"
+                >
+                  <label class="form-check-label" for="invalidCheck">
+                    Remember me
+                  </label>
+                  <a href="" class="forgetlink">Forget Password?</a>
                 </div>
               </div>
             </div>
-
             <div class="col-12">
               <button
                 class="mybutton text-white fw-bold w-100 btn bg-main-color"
                 type="submit"
-                id="submitBtn"
               >
-                <span id="btnText">Sign Up</span>
-                <span
-                  id="btnSpinner"
-                  class="spinner-border spinner-border-sm d-none"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
+                Sign In
               </button>
             </div>
           </form>
@@ -254,11 +155,11 @@
             </div>
 
             <p class="text-secondary">
-              Already have an account?
+              Don't have an account?
               <a
-                href="./signin.html"
+                href="./signup.html"
                 class="text-decoration-none fw-bold bg-color signin"
-                >Sign In</a
+                >Sign Up</a
               >
             </p>
           </div>
@@ -267,7 +168,7 @@
         <div class="col right d-none d-lg-flex">
           <img
             class="w-100 h-100 object-fit-cover rounded-5"
-            src="./assets/img1.png"
+            src="./assets/img2.png"
             alt=""
           />
         </div>
@@ -282,18 +183,34 @@
             <h5 class="modal-title text-center">Welcome to Amazino</h5>
           </div>
           <div class="modal-body">
-            <p>We've sent a confirmation code to your email.</p>
-            <input
-              type="text"
+            <p>Enter your email</p>
+            <!-- <input
+              type="email"
               id="otpInput"
               class="form-control"
-              placeholder="Enter 4 numbers here"
-              maxlength="4"
-            />
-            <div id="otpError" class="text-danger mt-2 d-none">
-              sorry! this code is wrong please try again
+              placeholder="Enter your email"
+            /> -->
+            <div class="input-group has-validation">
+              <input
+                type="email"
+                class="form-control"
+                id="otpInput"
+                aria-describedby="inputGroupPrepend"
+                required
+                placeholder="Enter email address"
+              />
+              <div class="invalid-feedback">Please enter a valid email</div>
+              <!-- <div class="valid-feedback">Looks good!</div> -->
             </div>
-            <div id="otpSuccess" class="text-success mt-2 d-none">Success!</div>
+            <div id="otpError" class="text-danger mt-2 d-none">
+              Failed to send email. Please try again later.
+            </div>
+            <div id="otpSuccess" class="text-success mt-2 d-none">
+              Password has been sent to your email successfully!
+            </div>
+            <div id="emailNotExist" class="text-success mt-2 d-none">
+              This email is not registered with us.
+            </div>
           </div>
           <div class="modal-content p-3">
             <button
@@ -308,17 +225,17 @@
       </div>
     </div>
 
-    <!-- bootstrap js -->
+    <!-- bootstrap -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
 
-    <!-- form validation -->
-    <script src="./js/SignupFormValidation.js"></script>
+    <!-- sign in form validation -->
+    <script src="./js/signinFormValidation.js"></script>
 
-    <!-- password eye -->
+    <!-- eye toggle -->
     <script src="./js/passwordEyeToggle.js"></script>
   </body>
 </html>

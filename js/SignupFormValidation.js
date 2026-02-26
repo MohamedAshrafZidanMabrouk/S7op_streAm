@@ -6,10 +6,18 @@ const verifyBtn = document.getElementById("verifyBtn");
 const otpInput = document.getElementById("otpInput");
 const otpError = document.getElementById("otpError");
 const otpSuccess = document.getElementById("otpSuccess");
+
 const submitBtn = document.getElementById("submitBtn"); // تأكدي إن الزرار واخد ID ده في الـ HTML
 const btnText = document.getElementById("btnText");
 const btnSpinner = document.getElementById("btnSpinner");
+
+// api link
+// api link
+const API_URL =
+  "https://699c4912110b5b738cc24139.mockapi.io/api/ecomerce/users/users_table"; // فصلنا السطر ده لوحده
+
 (() => {
+  // رجعنا دي زي ما كانت
   "use strict";
 
   document
@@ -27,7 +35,7 @@ const btnSpinner = document.getElementById("btnSpinner");
   forms.forEach((form) => {
     form.addEventListener(
       "submit",
-      (event) => {
+      async (event) => {
         // 1. فحص صحة الحقول (Bootstrap Validation)
         if (!form.checkValidity()) {
           event.preventDefault();
@@ -41,91 +49,128 @@ const btnSpinner = document.getElementById("btnSpinner");
           btnText.textContent = "Sending...";
           btnSpinner.classList.remove("d-none");
 
-          // 2. فحص هل الإيميل موجود مسبقاً قبل أي خطوة ثانية
-          let allUsers = JSON.parse(localStorage.getItem("usersData")) || [];
-          const isEmailTaken = allUsers.some(
-            (user) => user.email === email.value,
-          );
-          const alertBox = document.getElementById("alreadyRegisteredAlert");
+          try {
+            const response = await fetch(API_URL);
+            const allUsers = await response.json(); // صلحنا حرف الـ s هنا
 
-          if (isEmailTaken) {
-            alertBox.classList.remove("d-none");
-            alertBox.classList.add("d-flex");
-            return; // بنوقف هنا ومش بنبعت OTP
-          } else {
-            alertBox.classList.add("d-none"); // إخفاء التنبيه لو كان ظاهر
-          }
+            const isEmailTaken = allUsers.some(
+              (user) => user.email === email.value,
+            );
+            const isroleTheSame = allUsers.some(
+              (user) => user.role === roleInput.value,
+            );
+            const alertBox = document.getElementById("alreadyRegisteredAlert");
 
-          // 3. لو الإيميل جديد، نبدأ عملية الـ OTP
-          const otp = Math.floor(1000 + Math.random() * 9000).toString(); // توليد الكود
+            if (isEmailTaken && isroleTheSame) {
+              alertBox.classList.remove("d-none");
+              alertBox.classList.add("d-flex");
 
-          const templateParams = {
-            user_name: firstName.value,
-            user_email: email.value,
-            otp_code: otp,
-          };
-
-          console.log("Sending OTP...");
-
-          emailjs
-            .send("service_elxefnw", "template_5siit9k", templateParams)
-            .then(function (response) {
-              console.log("SUCCESS!", response.status);
+              // remove spinner
               submitBtn.disabled = false;
               btnText.textContent = "Sign Up";
               btnSpinner.classList.add("d-none");
 
-              // إظهار الـ Modal بدل الـ prompt
-              otpModal.show();
+              return; // بنوقف هنا ومش بنبعت OTP
+            } else {
+              alertBox.classList.add("d-none"); // إخفاء التنبيه لو كان ظاهر
+            }
 
-              // برمجة زرار التأكيد داخل المودال
-              verifyBtn.onclick = function () {
-                if (otpInput.value === otp) {
-                  // لو الكود صح:
-                  verifyBtn.innerHTML =
-                    '<span class="spinner-grow spinner-grow-sm"></span>';
-                  // verifyBtn.classList.replace("btn-primary", "btn-success");
-                  otpError.classList.add("d-none");
-                  otpSuccess.classList.remove("d-none");
-                  verifyBtn.disabled = true;
+            // 3. لو الإيميل جديد، نبدأ عملية الـ OTP
+            const otp = Math.floor(1000 + Math.random() * 9000).toString(); // توليد الكود
 
-                  const newUser = {
-                    id: Date.now(),
-                    firstName: firstName.value,
-                    lastName: lastName.value,
-                    email: email.value,
-                    password: password.value,
-                    role: roleInput.value,
-                    token: "TK-" + Math.random().toString(36).substr(2, 16),
-                  };
+            const templateParams = {
+              user_name: firstName.value.trim(),
+              user_email: email.value,
+              otp_code: otp,
+            };
 
-                  allUsers.push(newUser);
-                  localStorage.setItem("usersData", JSON.stringify(allUsers));
-                  localStorage.setItem("isLoggedIn", "true");
-                  localStorage.setItem("currentUser", JSON.stringify(newUser));
+            console.log("Sending OTP...");
 
-                  setTimeout(() => {
-                    otpModal.hide();
-                    window.location.href = "home.html";
-                  }, 1500);
-                } else {
-                  // لو الكود غلط:
-                  otpError.classList.remove("d-none");
-                  otpInput.classList.add("is-invalid");
-                }
-              };
-              otpInput.addEventListener("keypress", function (e) {
-                if (e.key === "Enter") {
-                  verifyBtn.click();
-                }
+            emailjs
+              .send("service_elxefnw", "template_5siit9k", templateParams)
+              .then(function (response) {
+                console.log("SUCCESS!", response.status);
+                submitBtn.disabled = false;
+                btnText.textContent = "Sign Up";
+                btnSpinner.classList.add("d-none");
+
+                // إظهار الـ Modal بدل الـ prompt
+                otpModal.show();
+
+                // برمجة زرار التأكيد داخل المودال
+                verifyBtn.onclick = async function () {
+                  // ضفنا كلمة async هنا
+                  if (otpInput.value === otp) {
+                    // لو الكود صح:
+                    verifyBtn.innerHTML =
+                      '<span class="spinner-grow spinner-grow-sm"></span>';
+                    otpError.classList.add("d-none");
+                    otpSuccess.classList.remove("d-none");
+                    verifyBtn.disabled = true;
+
+                    const newUser = {
+                      firstName: firstName.value.trim(),
+                      lastName: lastName.value.trim(),
+                      email: email.value,
+                      password: password.value,
+                      role: roleInput.value,
+                      token: "TK-" + Math.random().toString(36).substr(2, 16),
+                    };
+
+                    try {
+                      const postResponse = await fetch(API_URL, {
+                        method: "post",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(newUser),
+                      });
+
+                      const savedUser = await postResponse.json(); // صلحنا الـ syntax هنا
+
+                      localStorage.setItem("isLoggedIn", "true");
+                      localStorage.setItem(
+                        "currentUser",
+                        JSON.stringify(savedUser), // حفظنا الداتا اللي رجعت من الـ API
+                      );
+
+                      setTimeout(() => {
+                        otpModal.hide();
+                        window.location.href = "index.html";
+                      }, 1500);
+                    } catch (apiError) {
+                      console.error("Error saving to MockAPI:", apiError);
+                      alert(
+                        "حدث خطأ أثناء حفظ البيانات، يرجى المحاولة مرة أخرى.",
+                      );
+                      verifyBtn.innerHTML = "Apply";
+                      verifyBtn.disabled = false;
+                    }
+                  } else {
+                    // لو الكود غلط:
+                    otpError.classList.remove("d-none");
+                    otpInput.classList.add("is-invalid");
+                  }
+                };
+                otpInput.addEventListener("keypress", function (e) {
+                  if (e.key === "Enter") {
+                    verifyBtn.click();
+                  }
+                });
+              })
+              .catch(function (error) {
+                submitBtn.disabled = false;
+                btnText.textContent = "Sign Up";
+                btnSpinner.classList.add("d-none");
+                alert("Failed to send code. Please try again.");
               });
-            })
-            .catch(function (error) {
-              submitBtn.disabled = false;
-              btnText.textContent = "Sign Up";
-              btnSpinner.classList.add("d-none");
-              alert("Failed to send code. Please try again.");
-            });
+          } catch (fetchError) {
+            console.error("Error fetching data:", fetchError);
+            submitBtn.disabled = false;
+            btnText.textContent = "Sign Up";
+            btnSpinner.classList.add("d-none");
+            alert("حدث خطأ في الاتصال بالسيرفر، يرجى التأكد من الإنترنت.");
+          }
         }
 
         form.classList.add("was-validated");
@@ -145,20 +190,22 @@ const roleInput = document.getElementById("userRoleInput");
 
 // first name
 function isFirstNameValid() {
-  const nameRegex = /^[A-Za-z\u0600-\u06FF]{3,}$/;
-  return nameRegex.test(firstName.value);
+  const nameRegex =
+    /^(?=(?:.*[A-Za-z\u0600-\u06FF]){3,})[A-Za-z\u0600-\u06FF]+(?:\s[A-Za-z\u0600-\u06FF]+)*$/;
+  return nameRegex.test(firstName.value.trim());
 }
 
 // last name
 function isLastNameValid() {
-  const nameRegex = /^[A-Za-z\u0600-\u06FF]{3,}$/;
-  return nameRegex.test(lastName.value);
+  const nameRegex =
+    /^(?=(?:.*[A-Za-z\u0600-\u06FF]){3,})[A-Za-z\u0600-\u06FF]+(?:\s[A-Za-z\u0600-\u06FF]+)*$/;
+  return nameRegex.test(lastName.value.trim());
 }
 
 // email
 function isEmailValid() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email.value);
+  return emailRegex.test(email.value.trim());
 }
 
 // password
