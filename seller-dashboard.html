@@ -7,8 +7,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-        <link rel="stylesheet" href="css/seller_dashboard.css">
-
+    <link rel="stylesheet" href="css/seller_dashboard.css">
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+      (function(){ emailjs.init("38fW8AWlUoUtFifrX"); })();
+    </script>
+    <style>
+        /* ── Back to Store btn in topbar ── */
+        .tb-back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: var(--pri-lt);
+            color: var(--pri);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1.5px solid var(--pri);
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+        .tb-back-home:hover {
+            background: var(--pri);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124,29,124,0.2);
+        }
+        .tb-back-home i { font-size: 0.82rem; }
+        @media (max-width: 480px) {
+            .tb-back-home span { display: none; }
+        }
+        /* sidebar anchor nav-item */
+        a.ni {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: var(--r-sm, 10px);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+        }
+        a.ni:hover {
+            background: var(--pri-lt);
+            color: var(--pri);
+        }
+        a.ni i {
+            width: 18px;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--mu);
+        }
+        a.ni:hover i { color: var(--pri); }
+    </style>
 </head>
 <body>
 
@@ -16,7 +73,8 @@
 
 <!-- SIDEBAR -->
 <nav class="sb" id="sb">
-    <a class="sb-brand" href="#">
+    <!-- Logo → goes to home -->
+    <a class="sb-brand" href="index.html" title="Back to Store">
         <div class="sb-brand-icon"><i class="fas fa-store"></i></div>
         <span class="sb-brand-name">Amazino</span>
     </a>
@@ -36,6 +94,11 @@
         <div class="ni" onclick="go('orders')"><i class="fas fa-receipt"></i><span>Orders</span></div>
         <div class="ni" onclick="go('profile')"><i class="fas fa-user-circle"></i><span>Profile</span></div>
         <div class="sb-sep"></div>
+        <!-- Back to Store -->
+        <a class="ni" href="index.html">
+            <i class="fas fa-home"></i><span>Back to Store</span>
+        </a>
+        <div class="sb-sep"></div>
         <div class="ni logout-item" onclick="openLogoutModal()"><i class="fas fa-sign-out-alt"></i><span>Log Out</span></div>
     </div>
     <div class="sb-footer">
@@ -48,6 +111,11 @@
     <header class="topbar" id="topbar">
         <div class="tb-left">
             <button class="menu-btn" onclick="toggleSB()"><i class="fas fa-bars"></i></button>
+            <!-- Back to Store button -->
+            <a href="index.html" class="tb-back-home" title="Back to Store">
+                <i class="fas fa-home"></i>
+                <span>Store</span>
+            </a>
             <span class="page-title-bar" id="pageTitleBar">Dashboard</span>
         </div>
         <div class="tb-right">
@@ -56,11 +124,11 @@
                 <div class="dot"></div>
             </div>
             <div class="tb-divider"></div>
-            <div class="tb-user-pill">
+            <div class="tb-user-pill" onclick="openLogoutModal()">
                 <div class="tb-avatar" id="tbAvatar">SA</div>
-                <div>
+                <div class="tb-user-info">
                     <div class="tb-name" id="tbName">Seller</div>
-                    <div class="tb-role">Seller Account</div>
+                    <div class="tb-role" id="tbRole">Seller</div>
                 </div>
             </div>
         </div>
@@ -258,13 +326,8 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Image</th>
-                            <th>Product</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th>Image</th><th>Product</th><th>Category</th>
+                            <th>Price</th><th>Stock</th><th>Status</th><th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="productsTableBody">
@@ -446,7 +509,7 @@
                         <input type="password" class="form-input" id="pwCurrent" placeholder="Enter current password" style="padding-right:44px;">
                         <button type="button" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--mu2);cursor:pointer;font-size:.9rem;" onclick="togglePw('pwCurrent',this)"><i class="fas fa-eye-slash"></i></button>
                     </div>
-                    <a href="#" style="font-size:.75rem;color:var(--pri);font-weight:600;float:right;margin-top:5px;text-decoration:none;">Forgot Password?</a>
+                  <a href="#" class="forgetlink" onclick="openSellerForgotFlow(event)">Forget Password?</a>
                     <div class="err-msg" id="pwCurrentErr" style="clear:both;"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Required</div>
                 </div>
                 <div class="form-group" style="clear:both;">
@@ -471,7 +534,8 @@
         </div>
     </div>
 
-    
+    </div><!-- end .page -->
+</div><!-- end .main -->
 
 <!-- ======== PRODUCT MODAL ======== -->
 <div class="modal-bg" id="productModalBg" onclick="if(event.target===this)closeProductModal()">
@@ -552,6 +616,33 @@
     </div>
 </div>
 
+<!-- ======== PASSWORD OTP MODAL ======== -->
+<div class="modal-bg" id="sellerPwOtpModal" onclick="if(event.target===this)closePwOtpModal()">
+    <div class="modal-box" style="max-width:380px;border-radius:20px;padding:0;overflow:hidden;">
+        <div class="modal-head" style="background:var(--wh);border-radius:20px 20px 0 0;">
+            <div class="modal-title"><i class="fas fa-shield-alt" style="color:var(--pri);margin-right:8px;"></i>Verify Your Identity</div>
+            <button class="modal-close" onclick="closePwOtpModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div style="text-align:center;padding:32px 28px;">
+            <div style="width:64px;height:64px;background:var(--pri-lt);border:2px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+                <i class="fas fa-envelope" style="font-size:1.6rem;color:var(--pri);"></i>
+            </div>
+            <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Check your email</p>
+            <p style="margin:0 0 28px;font-size:0.85rem;color:var(--mu);line-height:1.5;">We sent a 4-digit code to confirm your new password.</p>
+            <div style="display:flex;gap:12px;justify-content:center;margin-bottom:24px;">
+                <input type="text" id="sCode1" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="sCode2" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="sCode3" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="sCode4" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+            </div>
+            <button class="btn-pri" style="width:100%;justify-content:center;" onclick="doSellerPwVerify()">
+                <i class="fas fa-check"></i> Verify & Update Password
+            </button>
+            <p style="margin:14px 0 0;font-size:0.78rem;color:var(--mu2);">Didn't receive it? Check your spam folder.</p>
+        </div>
+    </div>
+</div>
+
 <!-- ======== LOGOUT MODAL ======== -->
 <div class="logout-modal-bg" id="logoutModalBg" onclick="if(event.target===this)closeLogoutModal()">
     <div class="logout-modal">
@@ -578,8 +669,99 @@
     </div>
 </div>
 
-<script src="js/seller_dashboard.js">
+<!-- ══════════════════════════════════════════════════════════
+     PROFILE VERIFY OTP MODAL
+══════════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="sellerProfileOtpModal" onclick="if(event.target===this)closeSellerProfileOtpModal()">
+  <div class="modal-box" style="max-width:400px;border-radius:20px;padding:0;overflow:hidden;">
+    <div class="modal-head" style="background:var(--wh);border-radius:20px 20px 0 0;">
+      <div class="modal-title"><i class="fas fa-shield-alt" style="color:var(--pri);margin-right:8px;"></i>Verify Your Identity</div>
+      <button class="modal-close" onclick="closeSellerProfileOtpModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="text-align:center;padding:32px 28px;">
+      <div style="width:64px;height:64px;background:var(--pri-lt);border:2px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+        <i class="fas fa-envelope" style="font-size:1.6rem;color:var(--pri);"></i>
+      </div>
+      <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Check your email</p>
+      <p style="margin:0 0 4px;font-size:0.85rem;color:var(--mu);line-height:1.5;" id="sellerOtpHint">Sending code…</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin:24px 0;">
+        <input type="text" id="spCode1" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="spCode2" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="spCode3" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="spCode4" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <button class="btn-pri" style="width:100%;justify-content:center;" id="sellerProfileVerifyBtn" onclick="doSellerProfileVerify()">
+        <i class="fas fa-check"></i> Verify & Save
+      </button>
+      <p style="margin:14px 0 0;font-size:0.78rem;color:var(--mu2);">Didn't receive it? Check your spam folder.</p>
+    </div>
+  </div>
+</div>
 
-</script>
+<!-- ══════════════════════════════════════════════════════════
+     FORGOT PASSWORD — IN-DASHBOARD MODAL
+══════════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="sellerForgotPwModal" onclick="if(event.target===this)closeSellerForgotPwModal()">
+  <div class="modal-box" style="max-width:400px;border-radius:20px;padding:0;overflow:hidden;">
+    <div class="modal-head" style="background:var(--wh);border-radius:20px 20px 0 0;">
+      <div class="modal-title"><i class="fas fa-key" style="color:var(--pri);margin-right:8px;"></i>Reset Password</div>
+      <button class="modal-close" onclick="closeSellerForgotPwModal()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Step 1: Send OTP -->
+    <div id="sfStep1" style="text-align:center;padding:32px 28px;">
+      <div style="width:64px;height:64px;background:var(--pri-lt);border:2px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+        <i class="fas fa-envelope" style="font-size:1.6rem;color:var(--pri);"></i>
+      </div>
+      <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Send verification code</p>
+      <p style="margin:0 0 24px;font-size:0.85rem;color:var(--mu);line-height:1.5;">We'll send a 4-digit code to <strong id="sfEmail" style="color:var(--pri);"></strong></p>
+      <button class="btn-pri" style="width:100%;justify-content:center;" id="sfSendBtn" onclick="sendSellerForgotOtp()">
+        <i class="fas fa-paper-plane"></i> Send Code
+      </button>
+      <p style="margin:14px 0 0;font-size:0.78rem;color:var(--mu2);">Make sure you have access to your email inbox.</p>
+    </div>
+
+    <!-- Step 2: Enter OTP -->
+    <div id="sfStep2" style="text-align:center;padding:32px 28px;display:none;">
+      <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Enter verification code</p>
+      <p style="margin:0 0 24px;font-size:0.85rem;color:var(--mu);line-height:1.5;">Code sent to <strong id="sfEmailConfirm" style="color:var(--pri);"></strong></p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:24px;">
+        <input type="text" id="sfCode1" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="sfCode2" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="sfCode3" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="sfCode4" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <button class="btn-pri" style="width:100%;justify-content:center;" onclick="verifySellerForgotOtp()"><i class="fas fa-check"></i> Verify Code</button>
+      <button class="btn-sec" style="width:100%;margin-top:8px;justify-content:center;" onclick="sendSellerForgotOtp(true)"><i class="fas fa-redo"></i> Resend Code</button>
+    </div>
+
+    <!-- Step 3: New Password -->
+    <div id="sfStep3" style="padding:32px 28px;display:none;">
+      <p style="margin:0 0 20px;font-weight:700;color:var(--tx);font-size:1rem;text-align:center;">Set new password</p>
+      <div class="form-group">
+        <label class="form-label">New Password <span style="color:var(--err);">*</span></label>
+        <div style="position:relative;">
+          <input type="password" class="form-input" id="sf_new_pw" placeholder="Enter new password" style="padding-right:44px;" oninput="checkSfStrength(this)">
+          <button type="button" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--mu2);cursor:pointer;font-size:.9rem;" onclick="togglePw('sf_new_pw',this)"><i class="fas fa-eye-slash"></i></button>
+        </div>
+        <div style="height:5px;background:var(--bd);border-radius:99px;margin-top:8px;overflow:hidden;"><div id="sfStrengthBar" style="height:100%;width:0;border-radius:99px;transition:width .4s,background .4s;"></div></div>
+        <div class="err-msg" id="sf_new_pw_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Password must be at least 8 characters</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password <span style="color:var(--err);">*</span></label>
+        <div style="position:relative;">
+          <input type="password" class="form-input" id="sf_confirm_pw" placeholder="Re-enter new password" style="padding-right:44px;">
+          <button type="button" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--mu2);cursor:pointer;font-size:.9rem;" onclick="togglePw('sf_confirm_pw',this)"><i class="fas fa-eye-slash"></i></button>
+        </div>
+        <div class="err-msg" id="sf_confirm_pw_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Passwords do not match</div>
+      </div>
+      <button class="btn-pri" style="width:100%;justify-content:center;" onclick="doSellerForgotPasswordReset()"><i class="fas fa-lock"></i> Reset Password</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/seller_dashboard.js"></script>
+
 </body>
 </html>

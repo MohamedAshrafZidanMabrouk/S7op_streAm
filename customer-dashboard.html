@@ -6,8 +6,65 @@
     <title>My Account - Amazino</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-       <link rel="stylesheet" href="css/customer_dashboard.css">
-
+    <link rel="stylesheet" href="css/customer_dashboard.css">
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+      (function(){ emailjs.init("38fW8AWlUoUtFifrX"); })();
+    </script>
+    <style>
+        /* ── Back to Store btn in topbar ── */
+        .tb-back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: var(--pri-glass);
+            color: var(--pri);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1.5px solid var(--acc);
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+        .tb-back-home:hover {
+            background: var(--acc);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124,29,124,0.15);
+            color: var(--pri);
+        }
+        .tb-back-home i { font-size: 0.82rem; }
+        @media (max-width: 480px) {
+            .tb-back-home span { display: none; }
+        }
+        /* sidebar anchor nav-item fix */
+        a.nav-item {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            border-radius: var(--r-sm);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--t), color var(--t);
+        }
+        a.nav-item:hover {
+            background: var(--pri-glass);
+            color: var(--pri);
+        }
+        a.nav-item i {
+            width: 18px;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--mu);
+        }
+        a.nav-item:hover i { color: var(--pri); }
+    </style>
 </head>
 <body>
 
@@ -15,7 +72,8 @@
 
 <!-- SIDEBAR -->
 <nav class="sb" id="sb">
-    <a class="sb-brand" href="#">
+    <!-- Logo → goes to home -->
+    <a class="sb-brand" href="index.html" title="Back to Store">
         <div class="sb-brand-icon"><i class="fas fa-shopping-bag"></i></div>
         <span class="sb-brand-name">Amazino</span>
     </a>
@@ -35,8 +93,12 @@
         <div class="nav-item" onclick="go('password')"><i class="fas fa-lock"></i><span>Password Manager</span></div>
         <div class="nav-item" onclick="go('notifications')"><i class="fas fa-bell"></i><span>Notifications</span></div>
         <div class="sb-sep"></div>
-        <div class="nav-item" onclick="go('help')"><i class="fas fa-headset"></i><span>Help Center</span></div>
-        <div class="nav-item" onclick="go('settings')"><i class="fas fa-cog"></i><span>Settings</span></div>
+
+        <div class="sb-sep"></div>
+        <!-- Back to Store -->
+        <a class="nav-item" href="index.html">
+            <i class="fas fa-home"></i><span>Back to Store</span>
+        </a>
         <div class="sb-sep"></div>
         <div class="nav-item logout-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>Log out</span></div>
     </div>
@@ -50,11 +112,16 @@
     <header class="topbar" id="topbar">
         <div class="tb-left">
             <button class="menu-btn" onclick="toggleSB()"><i class="fas fa-bars"></i></button>
+            <!-- Back to Store button -->
+            <a href="index.html" class="tb-back-home" title="Back to Store">
+                <i class="fas fa-home"></i>
+                <span>Store</span>
+            </a>
             <span class="page-title-bar" id="pageTitleBar">Dashboard</span>
         </div>
         <div class="tb-right">
-            <a href="#" class="tb-icon-btn" title="Wishlist"><i class="fas fa-heart"></i></a>
-            <a href="#" class="tb-icon-btn" title="Cart">
+            <a href="index.html" class="tb-icon-btn" title="Wishlist"><i class="fas fa-heart"></i></a>
+            <a href="cart.html" class="tb-icon-btn" title="Cart">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="badge" id="cartCount">0</span>
             </a>
@@ -110,7 +177,7 @@
             <div id="recentOrdersList">
                 <div class="empty-state">
                     <i class="fas fa-shopping-bag"></i>
-                    <p>No orders yet.<br><a href="#">Start shopping</a></p>
+                    <p>No orders yet.<br><a href="index.html">Start shopping</a></p>
                 </div>
             </div>
         </div>
@@ -341,8 +408,7 @@
                 </div>
             </div>
 
-            <div style="margin-top:4px;" id="cashInfo" style="display:none;"></div>
-
+            <div style="margin-top:4px;" id="cashInfo"></div>
             <button class="btn-primary full" onclick="confirmPaymentMethod()"><i class="fas fa-lock"></i>Confirm Payment</button>
         </div>
 
@@ -359,7 +425,6 @@
             <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
             <h1 class="page-title">My Orders</h1>
         </div>
-
         <div class="filter-row">
             <button class="filter-btn active" onclick="filterOrders(this,'all')">All</button>
             <button class="filter-btn" onclick="filterOrders(this,'pending')">Pending</button>
@@ -367,11 +432,10 @@
             <button class="filter-btn" onclick="filterOrders(this,'shipped')">Shipped</button>
             <button class="filter-btn" onclick="filterOrders(this,'delivered')">Delivered</button>
         </div>
-
         <div id="ordersList">
             <div class="empty-state">
                 <i class="fas fa-box-open"></i>
-                <p>No orders found.<br><a href="#">Start shopping</a></p>
+                <p>No orders found.<br><a href="index.html">Start shopping</a></p>
             </div>
         </div>
     </div>
@@ -382,9 +446,7 @@
             <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
             <h1 class="page-title">Manage Address</h1>
         </div>
-
         <div id="savedAddressesList" style="margin-bottom:8px;"></div>
-
         <div class="card">
             <div class="card-title">Add New Address</div>
             <form id="addressForm" novalidate onsubmit="submitAddress(event)">
@@ -455,7 +517,6 @@
             <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
             <h1 class="page-title">Password Manager</h1>
         </div>
-
         <div class="card">
             <div class="pw-success-banner" id="pwSuccessBanner">
                 <i class="fas fa-check-circle"></i>
@@ -471,7 +532,7 @@
                         <input type="password" id="pw_current" class="form-input" placeholder="Enter Password" autocomplete="current-password">
                         <button type="button" class="toggle-pw" onclick="togglePasswordView('pw_current',this)"><i class="fas fa-eye-slash"></i></button>
                     </div>
-                    <a href="#" class="forget-link">Forget Password?</a>
+                    <a href="#" class="forget-link" onclick="openForgotPasswordFlow(event)">Forget Password?</a>
                     <div class="err-msg" id="pw_current_err" style="clear:both;"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please enter your current password</div>
                 </div>
                 <div class="form-group" style="clear:both;">
@@ -505,34 +566,37 @@
         <div class="notif-list" id="notifList"></div>
     </div>
 
-    <!-- ===== HELP ===== -->
-    <div class="page section" id="section-help">
-        <div class="page-header">
-            <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
-            <h1 class="page-title">Help Center</h1>
-        </div>
-        <div class="card">
-            <div class="empty-state">
-                <i class="fas fa-headset"></i>
-                <p>Need help? Contact our support team.<br><a href="mailto:support@amazino.com">support@amazino.com</a></p>
-            </div>
-        </div>
-    </div>
+ 
 
-    <!-- ===== SETTINGS ===== -->
-    <div class="page section" id="section-settings">
-        <div class="page-header">
-            <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
-            <h1 class="page-title">Settings</h1>
+
+</div><!-- end .main -->
+
+<!-- PASSWORD OTP MODAL -->
+<div class="modal-bg" id="pwOtpModal" onclick="if(event.target===this)closePwOtpModal()">
+    <div class="modal-box" style="max-width:380px;border-radius:20px;padding:0;overflow:hidden;">
+        <div class="modal-head" style="background:var(--wh);border-radius:20px 20px 0 0;">
+            <div class="modal-title"><i class="fas fa-shield-alt" style="color:var(--pri);margin-right:8px;"></i>Verify Your Identity</div>
+            <button class="modal-close" onclick="closePwOtpModal()"><i class="fas fa-times"></i></button>
         </div>
-        <div class="card">
-            <div class="empty-state">
-                <i class="fas fa-cog"></i>
-                <p>Settings panel coming soon.</p>
+        <div style="text-align:center;padding:32px 28px;">
+            <div style="width:64px;height:64px;background:var(--pri-lt);border:2px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+                <i class="fas fa-envelope" style="font-size:1.6rem;color:var(--pri);"></i>
             </div>
+            <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Check your email</p>
+            <p style="margin:0 0 28px;font-size:0.85rem;color:var(--mu);line-height:1.5;">We sent a 4-digit code to confirm your new password.</p>
+            <div class="code-row" style="margin-bottom:24px;">
+                <input type="text" id="pwCode1" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="pwCode2" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="pwCode3" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="pwCode4" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+            </div>
+            <button class="btn-primary full" onclick="doPwOtpVerify()">
+                <i class="fas fa-check"></i> Verify & Update Password
+            </button>
+            <p style="margin:14px 0 0;font-size:0.78rem;color:var(--mu2);">Didn't receive it? Check your spam folder.</p>
         </div>
     </div>
-</div><!-- end .main -->
+</div>
 
 <!-- VERIFICATION MODAL -->
 <div class="modal-bg" id="verifyModal">
@@ -580,8 +644,69 @@
     </div>
 </div>
 
-<script src="js/customer_dashboard.js">
+<!-- ══════════════════════════════════════════════════════════
+     FORGOT PASSWORD — OTP MODAL (in-dashboard)
+══════════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="forgotPwModal" onclick="if(event.target===this)closeForgotPwModal()">
+  <div class="modal-box" style="max-width:400px;border-radius:20px;padding:0;overflow:hidden;">
+    <div class="modal-head" style="background:var(--wh);border-radius:20px 20px 0 0;">
+      <div class="modal-title"><i class="fas fa-key" style="color:var(--pri);margin-right:8px;"></i><span id="forgotPwModalTitle">Reset Password</span></div>
+      <button class="modal-close" onclick="closeForgotPwModal()"><i class="fas fa-times"></i></button>
+    </div>
 
-</script>
+    <!-- Step 1: Send OTP -->
+    <div id="forgotStep1" style="text-align:center;padding:32px 28px;">
+      <div style="width:64px;height:64px;background:var(--pri-lt);border:2px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+        <i class="fas fa-envelope" style="font-size:1.6rem;color:var(--pri);"></i>
+      </div>
+      <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Send verification code</p>
+      <p style="margin:0 0 24px;font-size:0.85rem;color:var(--mu);line-height:1.5;">We'll send a 4-digit code to <strong id="forgotPwEmail" style="color:var(--pri);"></strong></p>
+      <button class="btn-primary full" id="forgotSendBtn" onclick="sendForgotOtp()">
+        <i class="fas fa-paper-plane"></i> Send Code
+      </button>
+      <p style="margin:14px 0 0;font-size:0.78rem;color:var(--mu2);">Make sure you have access to your email inbox.</p>
+    </div>
+
+    <!-- Step 2: Enter OTP -->
+    <div id="forgotStep2" style="text-align:center;padding:32px 28px;display:none;">
+      <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Enter verification code</p>
+      <p style="margin:0 0 24px;font-size:0.85rem;color:var(--mu);line-height:1.5;">Code sent to <strong style="color:var(--pri);" id="forgotPwEmailConfirm"></strong></p>
+      <div class="code-row" style="margin-bottom:24px;">
+        <input type="text" id="fpCode1" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="fpCode2" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="fpCode3" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="fpCode4" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <button class="btn-primary full" onclick="verifyForgotOtp()"><i class="fas fa-check"></i> Verify Code</button>
+      <button class="btn-secondary full" style="margin-top:8px;" onclick="sendForgotOtp(true)"><i class="fas fa-redo"></i> Resend Code</button>
+    </div>
+
+    <!-- Step 3: New Password -->
+    <div id="forgotStep3" style="padding:32px 28px;display:none;">
+      <p style="margin:0 0 20px;font-weight:700;color:var(--tx);font-size:1rem;text-align:center;">Set new password</p>
+      <div class="form-group">
+        <label class="form-label">New Password <span class="req">*</span></label>
+        <div class="password-field">
+          <input type="password" id="fp_new_pw" class="form-input" placeholder="Enter new password" oninput="checkFpStrength(this)">
+          <button type="button" class="toggle-pw" onclick="togglePasswordView('fp_new_pw',this)"><i class="fas fa-eye-slash"></i></button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="fpStrengthBar"></div></div>
+        <div class="err-msg" id="fp_new_pw_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Password must be at least 8 characters</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password <span class="req">*</span></label>
+        <div class="password-field">
+          <input type="password" id="fp_confirm_pw" class="form-input" placeholder="Re-enter new password">
+          <button type="button" class="toggle-pw" onclick="togglePasswordView('fp_confirm_pw',this)"><i class="fas fa-eye-slash"></i></button>
+        </div>
+        <div class="err-msg" id="fp_confirm_pw_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Passwords do not match</div>
+      </div>
+      <button class="btn-primary full" onclick="doForgotPasswordReset()"><i class="fas fa-lock"></i> Reset Password</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/customer_dashboard.js"></script>
 </body>
 </html>

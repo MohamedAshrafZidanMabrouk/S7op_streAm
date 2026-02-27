@@ -1,0 +1,121 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --main-color : rgb(124, 29, 124);
+    --main-color-hover: rgb(144, 86, 144);
+    --secondary-color: #B19470;
+}
+body{
+    height: 100vh;
+}
+
+.bg-main-color{
+    background-color: var(--main-color) !important;
+}
+
+.bg-color{
+    color: var(--main-color) !important;
+}
+
+.mylink{
+    text-decoration: none;
+
+}
+
+.mylink:hover{
+    text-decoration: underline;
+}
+
+.mybutton:hover{
+    background-color: var(--main-color-hover) !important;
+}
+
+.title-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.title-wrapper h1 {
+  cursor: pointer;
+  margin: 0;
+}
+
+.title-wrapper h1:hover{
+    color: var(--main-color-hover) !important;
+}
+
+.title-wrapper hr {
+  position: absolute;
+  bottom: -20px; /* تحتي النص */
+  left: 0;
+  width: 35px; /* الابتدائي */
+  border: 3px solid var(--secondary-color);
+  transition: width 0.3s;
+  opacity: 1;
+  border-radius: 5px;
+}
+
+.title-wrapper h1:hover + hr {
+  width: 100%; /* يتوسع بنفس عرض الـ wrapper */
+}
+
+.active{
+    background-color: white;
+    border-radius: 5px;
+    color: var(--main-color);
+}
+
+.options{
+    cursor: pointer;
+    display: flex !important;
+    align-items: center !important;
+}
+
+a.signin:hover{
+    color: var(--main-color-hover) !important;
+}
+
+.link{
+    cursor: pointer !important;
+}
+
+.link:hover{
+    background-color: rgb(241, 241, 241) !important;
+}
+
+
+.right{
+    height: 120vh;
+}
+
+.left{
+    /* padding-inline: 200px; */
+}
+
+#togglePassword {
+    /* نغير الـ top من 50% لقيمة ثابتة أو نحسبها */
+    top: 7px !important; /* جربي تغيري الرقم ده لحد ما تيجي في النص بالظبط */
+    cursor: pointer;
+    z-index: 10; /* عشان نضمن إنها فوق الـ input */
+    margin-right: 30px;
+}
+
+.verifyBtn:hover{
+    background-color: var(--main-color-hover) !important;
+}
+
+.modal-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--main-color);
+    
+}
+
+.modal-header h5{
+font-weight:bold;
+}

@@ -1,4 +1,4 @@
-        :root {
+:root {
             --pri: #7c1d7c; --pri-hover: #905690; --pri-dk: #5a0f5a;
             --pri-lt: #f9f0f9; --pri-glass: rgba(124,29,124,0.08); --acc: #e8c8e8;
             --bg: #f7f5f8; --wh: #ffffff; --bd: #ede8ed; --bd2: #d9cfd9;
@@ -241,6 +241,20 @@
         .modal-close:hover { background: var(--err-lt); color: var(--err); border-color: #f5c6c6; }
         .modal-body { padding: 22px 24px; }
         .modal-foot { padding: 16px 24px; border-top: 1px solid var(--bd); display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* ===== OTP CODE BOXES ===== */
+        .code-box {
+            width: 56px; height: 64px;
+            border: 2px solid var(--bd);
+            border-radius: 12px;
+            font-size: 1.6rem; font-weight: 800;
+            text-align: center; outline: none;
+            font-family: 'Outfit', sans-serif; color: var(--tx);
+            background: var(--wh);
+            transition: border-color var(--t), box-shadow var(--t), background var(--t);
+        }
+        .code-box:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(124,29,124,0.12); }
+        .code-box.err { border-color: var(--err); animation: shake 0.35s; background: var(--err-lt); }
 
         /* Image upload */
         .img-upload { border: 2px dashed var(--bd2); border-radius: var(--r); padding: 28px; text-align: center; cursor: pointer; transition: all var(--t); position: relative; min-height: 130px; display: flex; align-items: center; justify-content: center; }
