@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+ 
+  <script src="js/navbar.js" defer></script>
+  <script src="js/footer.js" defer></script>
+  <link rel="stylesheet" type="text/css" href="css/components.css">
+  
+  <style>
+    * {
+      margin: 0 ;
+      padding: 0 ;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    :root {
+      --main-color:  rgb(124, 29, 124);
+      --main-color-hover:rgb(144, 86, 144);
+      --secondary-color: #B19470;
+      --gray-light: #e0e0e0;
+      --gray-medium: #a7a7a7;
+      --gray-dark: #948d8d;
+      --gray-border: #cbc8c8;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      padding: 0;
+      margin: 0;
+    }
+
+    .cart-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--main-color);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .shop-hero {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .shop-hero .shop-above {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--main-color);
+      letter-spacing: 1px;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    
+    .shop-hero .breadcrumb-center {
+      background: transparent;
+      justify-content: center;
+      padding: 0.3rem 0 0;
+      margin-bottom: 0;
+      display: flex;
+      list-style: none;
+    }
+    
+    .shop-hero .breadcrumb-item.home-link a {
+      color: var(--gray-medium) !important;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      text-decoration: none;
+    }
+    
+    .shop-hero .breadcrumb-item.home-link a:hover {
+      color: var(--main-color) !important;
+    }
+    
+    .shop-hero .breadcrumb-item.active-shop {
+      color: var(--main-color) !important;
+      font-weight: 500;
+    }
+    
+    .shop-hero .breadcrumb-item.home-link + .breadcrumb-item::before {
+      content: "/";
+      color: var(--secondary-color);
+      font-weight: 500;
+      padding: 0 0.5rem;
+    }
+
+    .steps-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5rem;
+      position: relative;
+      padding: 0 1rem;
+      width: 100%;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      z-index: 3;
+      background-color: transparent;
+      padding: 0 0.5rem;
+    }
+
+    .circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--gray-light);
+      border: 2px solid var(--gray-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: var(--gray-medium);
+      transition: all 0.3s ease;
+    }
+
+    .step-item.active .circle {
+      background-color: var(--main-color);
+      border-color: var(--main-color);
+      color: white;
+    }
+
+    .step-label {
+      font-weight: 500;
+      color: var(--gray-medium);
+      font-size: 0.95rem;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .step-label i {
+      color: var(--gray-medium);
+      font-size: 1rem;
+    }
+
+    .step-item.active .step-label {
+      color: var(--main-color);
+      font-weight: 700;
+    }
+
+    .step-item.active .step-label i {
+      color: var(--main-color);
+    }
+
+    .step-line {
+      width: 100px;
+      height: 2px;
+      background-color: var(--gray-border);
+      margin: 0 0.5rem;
+      z-index: 2;
+      position: relative;
+      top: -0.6rem;
+    }
+
+    .cart-headers {
+      background-color: var(--secondary-color);
+      border-radius: 50px;
+      padding: 0.8rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .header-item {
+      font-weight: 600;
+      color: white;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    .header-product { flex: 2.2; text-align: left; }
+    .header-price { flex: 1; text-align: center; }
+    .header-quantity { flex: 1; text-align: center; }
+    .header-subtotal { flex: 1; text-align: center; }
+
+    .cart-items-section {
+      margin-bottom: 2rem;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .cart-item:hover {
+      box-shadow: 0 8px 20px rgba(124, 29, 124, 0.1);
+    }
+
+    .item-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-right: 1rem;
+    }
+
+    .item-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-details {
+      flex: 2.2;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .item-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--main-color);
+      margin-bottom: 0.25rem;
+    }
+
+    .item-subtitle {
+      color: var(--gray-medium);
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .item-color {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--gray-dark);
+      font-size: 0.8rem;
+    }
+
+    .color-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .price-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .price-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .current-price {
+      font-weight: 700;
+      color: var(--main-color);
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      color: var(--gray-medium);
+      font-size: 0.8rem;
+    }
+
+    .delete-item {
+      background: transparent;
+      border: none;
+      color: #dc3545;
+      cursor: pointer;
+      font-size: 1.2rem;
+      opacity: 0.5;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+    }
+
+    .delete-item:hover {
+      opacity: 1;
+      transform: scale(1.1);
+      color: #b02a37;
+    }
+
+    .item-quantity {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--gray-border);
+      border-radius: 30px;
+      overflow: hidden;
+    }
+
+    .quantity-btn {
+      width: 30px;
+      height: 30px;
+      background: white;
+      border: none;
+      font-weight: 600;
+      color: var(--main-color);
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .quantity-btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    .quantity-input {
+      width: 35px;
+      height: 30px;
+      border: none;
+      border-left: 1px solid var(--gray-border);
+      border-right: 1px solid var(--gray-border);
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .item-subtotal {
+      flex: 1;
+      text-align: center;
+      font-weight: 700;
+      color: var(--main-color);
+      font-size: 1.1rem;
+    }
+
+    .left-section-footer {
+      margin-top: 1.5rem;
+    }
+
+    .coupon-box {
+      display: flex;
+      align-items: center;
+      background: white;
+      border: 1px solid var(--gray-border);
+      border-radius: 50px;
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    .coupon-box input {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      border: none;
+      outline: none;
+      font-size: 0.9rem;
+    }
+
+    .coupon-box input:focus {
+      box-shadow: inset 0 0 0 2px var(--main-color);
+    }
+
+    .coupon-box button {
+      background-color: var(--main-color);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      height: 100%;
+      border-radius: 0 50px 50px 0;
+    }
+
+    .coupon-box button:hover {
+      background-color: var(--main-color-hover);
+    }
+
+    .action-links {
+      display: flex;
+      gap: 2rem;
+      margin: 1rem 0 0;
+    }
+
+    .action-link {
+      color: var(--main-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: 0.2s;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .action-link:hover {
+      color: var(--main-color-hover);
+      text-decoration: underline;
+    }
+
+    .action-link i {
+      font-size: 0.9rem;
+    }
+
+    .action-link.clear {
+      color: #dc3545;
+    }
+
+    .action-link.clear:hover {
+      color: #b02a37;
+    }
+
+    .order-summary {
+      background: white;
+      border-radius: 30px;
+      padding: 1.8rem;
+      position: sticky;
+      top: 2rem;
+    }
+
+    .summary-title {
+      color: var(--main-color);
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      color: var(--gray-dark);
+      font-size: 0.95rem;
+    }
+
+    .summary-row.total {
+      font-weight: 700;
+      color: var(--main-color);
+      font-size: 1.2rem;
+      border-top: 2px dashed var(--gray-border);
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+
+    .tax-note {
+      text-align: right;
+      color: var(--gray-medium);
+      font-size: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkout-btn {
+      background-color: var(--main-color);
+      color: white;
+      padding: 0.9rem;
+      border-radius: 50px;
+      font-weight: 600;
+      border: none;
+      width: 100%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: 0.2s;
+    }
+
+    .checkout-btn:hover {
+      background-color: var(--main-color-hover);
+    }
+
+    .empty-cart-wrapper {
+      margin: 2rem 0;
+    }
+
+    .empty-message {
+      text-align: center;
+      background-color: white;
+      border-radius: 50px;
+      padding: 4rem 2rem;
+      border: 1px dashed var(--gray-border);
+      transition: all 0.3s ease;
+    }
+
+    .empty-message:hover {
+      box-shadow: 0 15px 40px rgba(124, 29, 124, 0.08);
+      border-color: var(--main-color);
+    }
+
+    .empty-message i {
+      font-size: 5rem;
+      color: var(--main-color);
+      opacity: 0.3;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .empty-message:hover i {
+      opacity: 0.6;
+      transform: scale(1.05);
+    }
+
+    .empty-message h3 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--main-color);
+      margin-bottom: 1rem;
+    }
+
+    .empty-message p {
+      color: var(--gray-dark);
+      margin-bottom: 2.5rem;
+      font-size: 1.1rem;
+    }
+
+    .start-shopping {
+      background-color: var(--main-color);
+      color: white;
+      padding: 1rem 3rem;
+      border-radius: 60px;
+      font-weight: 600;
+      border: none;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(124, 29, 124, 0.2);
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .start-shopping:hover {
+      background-color: var(--main-color-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(124, 29, 124, 0.3);
+    }
+
+    .start-shopping i {
+      color: white;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+      margin: 0;
+    }
+
+    .start-shopping:hover i {
+      transform: translateX(5px);
+    }
+
+    @media (max-width: 768px) {
+      .step-line { display: none; }
+      .steps-container { flex-wrap: wrap; gap: 1rem; }
+      .cart-item { flex-wrap: wrap; }
+      .item-image { margin-bottom: 0.5rem; }
+      .cart-headers { display: none; }
+      .price-container { margin: 0.5rem 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="cart-container">
+    <div class="shop-hero">
+      <div class="shop-above">Shopping Cart</div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-center">
+          <li class="breadcrumb-item home-link"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active-shop" aria-current="page">Shopping Cart</li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="steps-container">
+      <div class="step-item active">
+        <div class="circle">1</div>
+        <div class="step-label">
+          <i class="fas fa-shopping-cart"></i> Shopping Cart
+        </div>
+      </div>
+      
+      <div class="step-line"></div>
+      
+      <div class="step-item">
+        <div class="circle">2</div>
+        <div class="step-label">
+          <i class="fas fa-truck"></i> Shipping
+        </div>
+      </div>
+      
+      <div class="step-line"></div>
+      
+      <div class="step-item">
+        <div class="circle">3</div>
+        <div class="step-label">
+          <i class="fas fa-credit-card"></i> Payment
+        </div>
+      </div>
+      
+      <div class="step-line"></div>
+      
+      <div class="step-item">
+        <div class="circle">4</div>
+        <div class="step-label">
+          <i class="fas fa-file-invoice"></i> Summary
+        </div>
+      </div>
+    </div>
+
+    <div id="dynamic-content"></div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script>
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+      const container = document.getElementById('dynamic-content');
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="empty-cart-wrapper">
+            <div class="empty-message">
+              <i class="fas fa-shopping-bag"></i>
+              <h3>Your cart is empty</h3>
+              <p>Looks like you haven't added anything to your cart yet.</p>
+              <a href="shop.html" class="start-shopping">
+                Start Shopping<i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '<div class="row"><div class="col-lg-8">';
+      let subtotal = 0;
+
+      html += `
+        <div class="cart-headers">
+          <div class="header-item header-product">PRODUCT</div>
+          <div class="header-item header-price">PRICE</div>
+          <div class="header-item header-quantity">QUANTITY</div>
+          <div class="header-item header-subtotal">SUBTOTAL</div>
+        </div>
+        <div class="cart-items-section">
+      `;
+
+      cart.forEach((item, index) => {
+        const itemSubtotal = item.price * item.quantity;
+        subtotal += itemSubtotal;
+
+        html += `
+          <div class="cart-item">
+            <div class="item-image">
+              <img src="${item.image}" alt="${item.name}">
+            </div>
+            <div class="item-details">
+              <div class="item-title">${item.name}</div>
+              <div class="item-subtitle">Handheld Bidet Sprayer</div>
+              <div class="item-color">
+                <span class="color-dot" style="background-color: ${getColorCode(item.color)};"></span>
+                <span>${item.color}</span>
+              </div>
+            </div>
+            
+            <div class="price-container">
+              <div class="price-wrapper">
+                <span class="current-price">$${item.price.toFixed(2)}</span>
+                <span class="old-price">$${(item.price * 1.1).toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div class="item-quantity">
+              <div class="quantity-selector">
+                <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                <input type="text" class="quantity-input" value="${item.quantity}" readonly>
+                <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+              </div>
+            </div>
+            <div class="item-subtotal">$${itemSubtotal.toFixed(2)}</div>
+            <button class="delete-item" onclick="deleteItem(${index})" title="Remove item">
+                <i class="fas fa-times-circle"></i>
+              </button>
+          </div>
+        `;
+      });
+
+      
+      html += `
+        </div>
+        
+        <div class="left-section-footer">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+            <div class="coupon-box" style="flex: 1; min-width: 300px;">
+              <input type="text" placeholder="Coupon Code" id="coupon-input">
+              <button onclick="applyCoupon()">Apply Coupon</button>
+            </div>
+            
+            <div class="action-links" style="display: flex; gap: 2rem;">
+              <a href="shop.html" class="action-link">
+                <i class="fas fa-arrow-left"></i> Continue Shopping
+              </a>
+              <button class="action-link clear" onclick="clearCart()">
+                <i class="fas fa-trash"></i> Clear Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+     
+      html += `<div class="col-lg-4">
+        <div class="order-summary">
+          <div class="summary-title">ORDER SUMMARY</div>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>$${subtotal.toFixed(2)}</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span>Free</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>$${subtotal.toFixed(2)}</span>
+          </div>
+          <div class="tax-note">Including Valid Tax</div>
+
+          <button class="checkout-btn" onclick="checkout()">
+            Checkout <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div></div>`;
+
+      container.innerHTML = html;
+    }
+
+    function getColorCode(color) {
+      const colors = {
+        'black': '#2d2d2d', 'white': '#f8f8f8', 'gray': '#9ea5a9',
+        'silver': '#c0c0c0', 'gold': '#d4af37', 'brown': '#8b5a2b',
+        'blue': '#4a7ae3', 'red': '#e34a4a', 'green': '#4ae37a',
+        'navy': '#2c4059', 'beige': '#e8d9c5', 'purple': '#a64ae3',
+        'pink': '#e34aa6', 'orange': '#ffa500', 'olive': '#7a8b6b'
+      };
+      return colors[color?.toLowerCase()] || '#2d2d2d';
+    }
+
+    window.updateQuantity = function(index, change) {
+      let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+      cart[index].quantity = Math.max(1, cart[index].quantity + change);
+      localStorage.setItem('shoppingCart', JSON.stringify(cart));
+      loadCart();
+    };
+
+    window.deleteItem = function(index) {
+      if (confirm('Are you sure you want to remove this item?')) {
+        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+        cart.splice(index, 1);
+        localStorage.setItem('shoppingCart', JSON.stringify(cart));
+        loadCart();
+      }
+    };
+
+    window.clearCart = function() {
+      if (confirm('Are you sure you want to clear your cart?')) {
+        localStorage.removeItem('shoppingCart');
+        loadCart();
+      }
+    };
+
+    window.applyCoupon = function() {
+      const coupon = document.getElementById('coupon-input').value;
+      if (coupon.trim()) {
+        alert(`Coupon "${coupon}" applied! (Demo only)`);
+      } else {
+        alert('Please enter a coupon code');
+      }
+    };
+
+    window.checkout = function() {
+      window.location.href = 'shipping.html';
+    };
+
+    loadCart();
+  </script>
+</body>
+</html>
