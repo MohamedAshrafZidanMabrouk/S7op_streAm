@@ -124,8 +124,16 @@ document.querySelectorAll('.needs-validation').forEach(form => {
         localStorage.removeItem(REMEMBER_KEY);
       }
 
-      // Redirect to home page — user can go to their dashboard from the navbar
-      window.location.href = 'index.html';
+      // Redirect based on role: sellers go directly to their dashboard
+      const role = (user.role || '').toLowerCase();
+      if (role === 'seller') {
+        window.location.href = getDashboard(role);
+      } else if (role === 'admin') {
+        window.location.href = getDashboard(role);
+      } else {
+        // Buyers go to home page
+        window.location.href = 'index.html';
+      }
 
     } catch (err) {
       submitBtn.innerHTML = origHtml;

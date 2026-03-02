@@ -126,17 +126,38 @@ const API_URL =
                         body: JSON.stringify(newUser),
                       });
 
-                      const savedUser = await postResponse.json(); // صلحنا الـ syntax هنا
+                      const savedUser = await postResponse.json();
 
-                      localStorage.setItem("isLoggedIn", "true");
-                      localStorage.setItem(
-                        "currentUser",
-                        JSON.stringify(savedUser), // حفظنا الداتا اللي رجعت من الـ API
-                      );
+                      // Create a proper auth session so all guarded pages work immediately.
+                      // AUTH.initUserData sets up user_data_<id> and legacy keys.
+                      if (typeof AUTH !== 'undefined') {
+                        // Build session manually (AUTH.login requires password which we don't pass back)
+                        localStorage.setItem('auth_session', JSON.stringify({
+                          userId:  savedUser.id,
+                          role:    (savedUser.role || 'buyer').toLowerCase(),
+                          email:   savedUser.email,
+                          loginAt: Date.now(),
+                        }));
+                        localStorage.setItem('isLoggedIn', 'true');
+                        AUTH.initUserData(savedUser);
+                      } else {
+                        // Fallback: legacy keys only
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('currentUser', JSON.stringify(savedUser));
+                        localStorage.setItem('ecommerce_current_user', JSON.stringify(savedUser));
+                      }
 
                       setTimeout(() => {
                         otpModal.hide();
-                        window.location.href = "index.html";
+                        // Redirect based on role
+                        const role = (savedUser.role || 'buyer').toLowerCase();
+                        if (role === 'seller') {
+                          window.location.href = 'seller-dashboard.html';
+                        } else if (role === 'admin') {
+                          window.location.href = 'admin-dashboard.html';
+                        } else {
+                          window.location.href = 'index.html';
+                        }
                       }, 1500);
                     } catch (apiError) {
                       console.error("Error saving to MockAPI:", apiError);

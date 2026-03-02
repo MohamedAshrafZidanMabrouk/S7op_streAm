@@ -362,3 +362,6 @@
         font-size: 12px;
     }
 }
+
+/* ── Shared Footer Styles ────────────────────────── */
+.section-bg { background-color: rgb(124,29,124); }

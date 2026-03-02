@@ -1,86 +1,54 @@
-const products = [
-  {
-    id: 1,
-    name: "Classic Tufted Upholstered Dining Chair",
-    price: 110,
-    oldPrice: 160,
-    category: "Chair",
-    image: "assets/dining_chair.png",
-    description: "Elegant tufted design with premium gray fabric and sturdy wooden legs",
-    featured: true,
-    rating: 4.9,
-    discount: 5,
-    stock: 10
-  },
-  {
-    id: 2,
-    name: "Luna Rattan Papasan Chair",
-    price: 170,
-    oldPrice: 220,
-    category: "Armchair",
-    image: "assets/papasan_chair.png",
-    description: "Bohemian-style rattan frame with plush cushion for ultimate comfort",
-    featured: true,
-    rating: 4.7,
-    discount: 30,
-    stock: 5
-  },
-  {
-    id: 3,
-    name: "Eleanor Tufted Velvet Loveseat Chair",
-    price: 75,
-    oldPrice: 110,
-    category: "Dining Chair",
-    image: "assets/nightstand.png",
-    description: "Mid-century modern nightstand with two spacious drawers",
-    featured: true,
-    rating: 4.5,
-    discount: 20,
-    stock: 8
-  },
-  {
-    id: 4,
-    name: "Elara Mid-Century Modern Bar Stool",
-    price: 500,
-    oldPrice: 600,
-    category: "Bar Stool",
-    image: "assets/Frame.png",
-    description: "Sleek mid-century bar stool with cream upholstered seat",
-    featured: true,
-    rating: 4.8,
-    discount: 25,
-    stock: 3
-  },
-  {
-    id: 5,
-    name: "Modern Minimalist Coffee Table",
-    price: 250,
-    oldPrice: 320,
-    category: "Table",
-    image: "assets/Frame.png",
-    description: "Clean-lined coffee table with natural wood finish",
-    featured: true,
-    rating: 4.6,
-    discount: 15,
-    stock: 7
-  },
-  {
-    id: 6,
-    name: "Velvet Accent Lounge Chair",
-    price: 340,
-    oldPrice: 420,
-    category: "Lounge Chair",
-    image: "assets/dining_chair.png",
-    description: "Luxurious velvet lounge chair with gold-tipped legs",
-    featured: true,
-    rating: 4.4,
-    discount: 10,
-    stock: 4
-  }
-];
+/**
+ * data.js — Amazino Product Loader
+ *
+ * Fetches the live product catalog from MockAPI on every page load.
+ * Dispatches 'productsReady' event so pages can render.
+ * Does NOT cache in localStorage — store.js always fetches fresh from API.
+ */
 
-if (!localStorage.getItem("products")) {
-  localStorage.setItem("products", JSON.stringify(products));
-} else {
-  localStorage.setItem("products", JSON.stringify(products));
-}
+(function initProducts() {
+  'use strict';
+
+  const PRODUCTS_API = 'https://699c4912110b5b738cc24139.mockapi.io/api/ecomerce/users/products';
+
+  function normalise(p) {
+    let colors = [];
+    if (Array.isArray(p.colors)) colors = p.colors.map(c => String(c).toLowerCase().trim()).filter(Boolean);
+    else if (typeof p.colors === 'string' && p.colors.trim()) colors = [p.colors.toLowerCase().trim()];
+    colors = [...new Set(colors)];
+    return {
+      id:          String(p.id),
+      name:        p.name        || '',
+      price:       parseFloat(p.price)   || 0,
+      oldPrice:    p.oldPrice    ? parseFloat(p.oldPrice) : null,
+      rating:      parseFloat(p.rating)  || 0,
+      category:    p.category    || 'General',
+      colors,
+      discount:    p.discount    || null,
+      image:       (p.image      || '').trim(),
+      description: p.description || (p.name + ' — ' + (p.category || 'Product') + '.'),
+      stock:       typeof p.stock === 'number' ? p.stock : 999,
+      sellerId:    p.sellerId    ? String(p.sellerId) : null,
+      sales:       p.sales       || 0,
+      createdAt:   p.createdAt   || new Date().toISOString(),
+    };
+  }
+
+  async function fetchAndReady() {
+    try {
+      const res = await fetch(PRODUCTS_API);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const raw = await res.json();
+      const products = raw.map(normalise);
+      window.__productsCache = products;
+      window.dispatchEvent(new CustomEvent('productsReady', { detail: { products } }));
+      console.log('[data.js] Loaded ' + products.length + ' products from API.');
+    } catch (err) {
+      console.warn('[data.js] Product API fetch failed:', err.message);
+      window.__productsCache = [];
+      window.dispatchEvent(new CustomEvent('productsReady', { detail: { products: [] } }));
+    }
+  }
+
+  fetchAndReady();
+})();

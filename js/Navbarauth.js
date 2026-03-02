@@ -30,6 +30,26 @@
     return (name || "U").split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
   }
 
+  /* ── Cart Badge ──────────────────────────────────────────── */
+  function updateCartBadge() {
+    let userId = null;
+    if (typeof AUTH !== "undefined") {
+      try { const s = AUTH.getSession(); if (s) userId = s.userId; } catch(e) {}
+    }
+    const cartKey = userId ? "shoppingCart_" + userId : "shoppingCart";
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem(cartKey) || "[]"); } catch(e) {}
+    if (!cart.length && userId) {
+      try { cart = JSON.parse(localStorage.getItem("shoppingCart") || "[]"); } catch(e) {}
+    }
+    const total = cart.reduce(function(s, i) { return s + (i.quantity || 1); }, 0);
+    const badge = document.getElementById("cartBadge");
+    if (badge) {
+      badge.textContent = total;
+      badge.style.display = total > 0 ? "inline-flex" : "none";
+    }
+  }
+
   /* ── Read session — supports BOTH auth.js (new) and legacy ── */
   function getActiveSession() {
     // Priority 1: new auth.js session
@@ -60,6 +80,8 @@
   function render() {
     const area = document.getElementById("navbarAuthArea");
     if (!area) return;
+
+    updateCartBadge();
 
     const session = getActiveSession();
 
@@ -180,6 +202,10 @@
   window.addEventListener("storage", e => {
     if (["auth_session","ecommerce_current_user","seller_current"].includes(e.key)) {
       render();
+    }
+    // Update cart badge if cart changed in another tab
+    if (e.key && e.key.startsWith("shoppingCart")) {
+      updateCartBadge();
     }
   });
 
