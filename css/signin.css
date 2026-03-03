@@ -44,7 +44,12 @@ body{
   margin: 0;
 }
 
-.title-wrapper h1:hover{
+.title-wrapper h1 a{
+    color: var(--main-color);
+    text-decoration: none;
+}
+
+.title-wrapper h1 a:hover {
     color: var(--main-color-hover) !important;
 }
 
@@ -150,3 +155,16 @@ a.signin:hover{
 /* .modal .invalid-feedback {
   display: block;
 } */
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

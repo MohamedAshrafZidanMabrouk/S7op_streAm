@@ -11,6 +11,12 @@ const submitBtn = document.getElementById("submitBtn"); // تأكدي إن ال�
 const btnText = document.getElementById("btnText");
 const btnSpinner = document.getElementById("btnSpinner");
 
+// === fieldset ===
+const numberCodeForm = document.querySelector("[data-number-code-form]");
+const numberCodeInputs = [
+  ...numberCodeForm.querySelectorAll("[data-number-code-input]"),
+];
+
 // api link
 // api link
 const API_URL =
@@ -23,10 +29,10 @@ const API_URL =
   document
     .getElementById("otpModal")
     .addEventListener("hidden.bs.modal", function () {
-      otpInput.value = ""; // مسح النص المكتوب
+      // otpInput.value = ""; // مسح النص المكتوب
       otpError.classList.add("d-none"); // إخفاء رسالة الخطأ
       otpSuccess.classList.add("d-none");
-      otpInput.classList.remove("is-invalid"); // إزالة اللون الأحمر
+      // otpInput.classList.remove("is-invalid"); // إزالة اللون الأحمر
       verifyBtn.innerHTML = "Apply"; // إرجاع نص الزرار لو كان اتغير
       verifyBtn.disabled = false;
     });
@@ -100,7 +106,13 @@ const API_URL =
                 // برمجة زرار التأكيد داخل المودال
                 verifyBtn.onclick = async function () {
                   // ضفنا كلمة async هنا
-                  if (otpInput.value === otp) {
+                  let otpValue = "";
+
+                  // بنلف على كل input وناخد الرقم اللي جواه ونلزقه في الـ String
+                  numberCodeInputs.forEach((input) => {
+                    otpValue += input.value;
+                  });
+                  if (otpValue === otp) {
                     // لو الكود صح:
                     verifyBtn.innerHTML =
                       '<span class="spinner-grow spinner-grow-sm"></span>';
@@ -126,38 +138,17 @@ const API_URL =
                         body: JSON.stringify(newUser),
                       });
 
-                      const savedUser = await postResponse.json();
+                      const savedUser = await postResponse.json(); // صلحنا الـ syntax هنا
 
-                      // Create a proper auth session so all guarded pages work immediately.
-                      // AUTH.initUserData sets up user_data_<id> and legacy keys.
-                      if (typeof AUTH !== 'undefined') {
-                        // Build session manually (AUTH.login requires password which we don't pass back)
-                        localStorage.setItem('auth_session', JSON.stringify({
-                          userId:  savedUser.id,
-                          role:    (savedUser.role || 'buyer').toLowerCase(),
-                          email:   savedUser.email,
-                          loginAt: Date.now(),
-                        }));
-                        localStorage.setItem('isLoggedIn', 'true');
-                        AUTH.initUserData(savedUser);
-                      } else {
-                        // Fallback: legacy keys only
-                        localStorage.setItem('isLoggedIn', 'true');
-                        localStorage.setItem('currentUser', JSON.stringify(savedUser));
-                        localStorage.setItem('ecommerce_current_user', JSON.stringify(savedUser));
-                      }
+                      localStorage.setItem("isLoggedIn", "true");
+                      localStorage.setItem(
+                        "currentUser",
+                        JSON.stringify(savedUser), // حفظنا الداتا اللي رجعت من الـ API
+                      );
 
                       setTimeout(() => {
                         otpModal.hide();
-                        // Redirect based on role
-                        const role = (savedUser.role || 'buyer').toLowerCase();
-                        if (role === 'seller') {
-                          window.location.href = 'seller-dashboard.html';
-                        } else if (role === 'admin') {
-                          window.location.href = 'admin-dashboard.html';
-                        } else {
-                          window.location.href = 'index.html';
-                        }
+                        window.location.href = "index.html";
                       }, 1500);
                     } catch (apiError) {
                       console.error("Error saving to MockAPI:", apiError);
@@ -170,14 +161,14 @@ const API_URL =
                   } else {
                     // لو الكود غلط:
                     otpError.classList.remove("d-none");
-                    otpInput.classList.add("is-invalid");
+                    // otpInput.classList.add("is-invalid");
                   }
                 };
-                otpInput.addEventListener("keypress", function (e) {
-                  if (e.key === "Enter") {
-                    verifyBtn.click();
-                  }
-                });
+                // otpInput.addEventListener("keypress", function (e) {
+                //   if (e.key === "Enter") {
+                //     verifyBtn.click();
+                //   }
+                // });
               })
               .catch(function (error) {
                 submitBtn.disabled = false;
@@ -382,5 +373,35 @@ options.forEach((option) => {
     roleInput.value = option.id;
 
     console.log("Current Role:", roleInput.value); // عشان تتأكدي في الـ Console إنه شغال
+  });
+});
+
+// === fieldset ===
+numberCodeInputs.forEach((input) => {
+  // Listen for typing events
+  input.addEventListener("input", (e) => {
+    // Prevent entering more than 1 digit per box
+    if (e.target.value.length > 1) {
+      e.target.value = e.target.value.slice(0, 1);
+    }
+
+    let currentIndex = Number(e.target.dataset.numberCodeInput);
+    const nextIndex = currentIndex + 1;
+
+    // If a number was typed and it's not the last input, focus the next one
+    if (e.target.value !== "" && nextIndex < numberCodeInputs.length) {
+      numberCodeInputs[nextIndex].focus();
+    }
+  });
+
+  // Listen for Backspace to move focus backwards
+  input.addEventListener("keydown", (e) => {
+    let currentIndex = Number(e.target.dataset.numberCodeInput);
+    const prevIndex = currentIndex - 1;
+
+    // If Backspace is pressed, the input is already empty, and it's not the first input
+    if (e.key === "Backspace" && e.target.value === "" && prevIndex >= 0) {
+      numberCodeInputs[prevIndex].focus();
+    }
   });
 });
