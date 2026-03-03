@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Amazino</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">(function(){ emailjs.init("38fW8AWlUoUtFifrX"); })();</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pri:#7c1d7c; --pri-hover:#6a186a; --pri-dk:#5a125a; --pri-lt:#f5eaf5; --acc:#e8d0e8;
+      --suc:#1e7a5e; --suc-lt:#e6f5f0; --err:#c03b2b; --err-lt:#fdf0ee;
+      --warn:#b86b00; --warn-lt:#fff8e6; --info:#1a5f9e; --info-lt:#e8f2fc;
+      --tx:#1a0a1a; --tx2:#4a3a4a; --mu:#7a6a7a; --mu2:#b0a0b0;
+      --bg:#f8f4f8; --wh:#ffffff; --bd:#ece3ec;
+      --sh-xs:0 1px 3px rgba(0,0,0,.06); --sh-sm:0 2px 8px rgba(0,0,0,.07);
+      --sh:0 4px 16px rgba(0,0,0,.09); --sh-md:0 8px 24px rgba(0,0,0,.11);
+      --r:14px; --r-sm:10px; --r-pill:999px; --t:.18s ease;
+      --sb-w:240px; --tb-h:64px;
+    }
+    html{font-size:16px;} body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;}
+
+    /* SIDEBAR */
+    .sb{position:fixed;top:0;left:0;bottom:0;width:var(--sb-w);background:var(--wh);border-right:1px solid var(--bd);display:flex;flex-direction:column;z-index:1000;transition:transform var(--t);}
+    .sb-brand{display:flex;align-items:center;gap:10px;padding:20px 18px;text-decoration:none;border-bottom:1px solid var(--bd);}
+    .sb-brand-icon{width:36px;height:36px;border-radius:var(--r-sm);background:var(--pri);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+    .sb-brand-name{font-size:1.15rem;font-weight:800;color:var(--tx);letter-spacing:-.03em;}
+    .sb-user{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--bd);}
+    .sb-avatar{width:48px;height:48px;border-radius:50%;background:var(--pri-lt);border:2.5px solid var(--acc);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:var(--pri);overflow:hidden;flex-shrink:0;}
+    .sb-name{font-weight:700;font-size:.9rem;color:var(--tx);}
+    .sb-role{font-size:.7rem;color:var(--err);font-weight:600;display:flex;align-items:center;gap:5px;}
+    .sb-role::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--err);display:inline-block;}
+    .sb-nav{padding:10px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+    .sb-sec-lbl{font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mu2);padding:10px 10px 4px;margin-top:4px;}
+    .ni{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--r-sm);color:var(--mu);font-size:.875rem;font-weight:500;cursor:pointer;transition:all var(--t);text-decoration:none;border:1px solid transparent;}
+    .ni i{width:18px;font-size:.82rem;flex-shrink:0;transition:color var(--t),transform var(--t);}
+    .ni:hover{background:var(--pri-lt);color:var(--pri-dk);border-color:var(--acc);}
+    .ni:hover i{color:var(--pri);transform:scale(1.1);}
+    .ni.active{background:var(--pri);color:white;border-color:var(--pri);box-shadow:0 4px 14px rgba(124,29,124,.3);font-weight:600;}
+    .ni.active i{color:white;}
+    .ni.logout-item{color:var(--err);} .ni.logout-item i{color:var(--err);}
+    .ni.logout-item:hover{background:var(--err-lt);color:#a53030;border-color:#f5c6c6;}
+    .sb-sep{height:1px;background:var(--bd);margin:6px 0;}
+    .sb-footer{padding:14px 18px;border-top:1px solid var(--bd);}
+    .sb-footer-text{font-size:.68rem;color:var(--mu2);}
+    .ov{display:none;position:fixed;inset:0;background:rgba(10,0,20,.5);backdrop-filter:blur(4px);z-index:999;}
+    .ov.open{display:block;animation:fadeIn .2s;}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+    /* MAIN */
+    .main{margin-left:var(--sb-w);min-height:100vh;display:flex;flex-direction:column;}
+    .topbar{height:var(--tb-h);background:var(--wh);padding:0 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100;transition:box-shadow var(--t);}
+    .topbar.scrolled{box-shadow:var(--sh);}
+    .tb-left{display:flex;align-items:center;gap:14px;}
+    .menu-btn{display:none;background:none;border:none;width:38px;height:38px;border-radius:var(--r-sm);font-size:1rem;cursor:pointer;color:var(--tx2);transition:all var(--t);align-items:center;justify-content:center;}
+    .menu-btn:hover{background:var(--bg);color:var(--pri);}
+    .page-title-bar{font-size:1rem;font-weight:700;color:var(--tx);}
+    .tb-back-home{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:var(--pri-lt);color:var(--pri);font-size:0.78rem;font-weight:600;text-decoration:none;border:1.5px solid var(--pri);transition:background 0.2s,transform 0.15s,box-shadow 0.2s;white-space:nowrap;}
+    .tb-back-home:hover{background:var(--pri);color:#fff;transform:translateY(-1px);box-shadow:0 4px 12px rgba(124,29,124,0.2);}
+    .tb-right{display:flex;align-items:center;gap:10px;}
+    .tb-divider{width:1px;height:24px;background:var(--bd);}
+    .tb-user-pill{display:flex;align-items:center;gap:10px;padding:5px 10px 5px 6px;border-radius:var(--r-pill);cursor:pointer;transition:all var(--t);border:1px solid transparent;}
+    .tb-user-pill:hover{background:var(--bg);border-color:var(--bd);}
+    .tb-avatar{width:34px;height:34px;border-radius:50%;background:var(--pri-lt);border:2px solid var(--acc);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:var(--pri);overflow:hidden;flex-shrink:0;}
+    .tb-name{font-size:.82rem;font-weight:700;color:var(--tx);} .tb-role{font-size:.68rem;color:var(--mu);}
+
+    /* SECTIONS */
+    .page{padding:28px 32px;}
+    .section{display:none;animation:sectionIn .3s ease;}
+    .section.active{display:block;}
+    @keyframes sectionIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+    /* PAGE HEADER */
+    .phd{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px;flex-wrap:wrap;}
+    .phd-left{display:flex;align-items:center;gap:12px;}
+    .back-btn{width:38px;height:38px;background:var(--wh);border:1px solid var(--bd);border-radius:var(--r-sm);font-size:.85rem;cursor:pointer;color:var(--tx2);display:flex;align-items:center;justify-content:center;transition:all var(--t);box-shadow:var(--sh-xs);flex-shrink:0;}
+    .back-btn:hover{background:var(--pri-lt);color:var(--pri);border-color:var(--acc);transform:translateX(-2px);}
+    .page-title{font-family:'Playfair Display',serif;font-size:1.55rem;color:var(--tx);letter-spacing:-.02em;}
+
+    /* CARDS */
+    .card{background:var(--wh);border-radius:var(--r);padding:24px;box-shadow:var(--sh-sm);border:1px solid var(--bd);margin-bottom:16px;transition:box-shadow var(--t);}
+    .card:hover{box-shadow:var(--sh);}
+    .card-title{font-size:.95rem;font-weight:700;color:var(--tx);margin-bottom:20px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;}
+
+    /* WELCOME */
+    .welcome-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px;gap:16px;flex-wrap:wrap;}
+    .welcome-text h2{font-family:'Playfair Display',serif;font-size:1.75rem;color:var(--tx);letter-spacing:-.03em;line-height:1.2;}
+    .welcome-text p{font-size:.875rem;color:var(--mu);margin-top:4px;}
+    .welcome-date{font-size:.78rem;color:var(--mu);text-align:right;}
+
+    /* STATS */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+    .stat-card{background:var(--wh);border-radius:var(--r);padding:20px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh-sm);border:1px solid var(--bd);transition:transform var(--t),box-shadow var(--t);position:relative;overflow:hidden;}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0;}
+    .stat-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);}
+    .stat-card:nth-child(1)::before{background:linear-gradient(90deg,var(--pri),var(--pri-hover));}
+    .stat-card:nth-child(2)::before{background:linear-gradient(90deg,#1e7a5e,#2db58a);}
+    .stat-card:nth-child(3)::before{background:linear-gradient(90deg,#c0932a,#e8b94a);}
+    .stat-card:nth-child(4)::before{background:linear-gradient(90deg,#1a5f9e,#3a8fe0);}
+    .stat-icon{width:48px;height:48px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .si-purple{background:var(--pri-lt);color:var(--pri);} .si-green{background:var(--suc-lt);color:var(--suc);}
+    .si-gold{background:var(--warn-lt);color:var(--warn);} .si-blue{background:var(--info-lt);color:var(--info);}
+    .stat-label{font-size:.72rem;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;}
+    .stat-val{font-size:1.7rem;font-weight:800;color:var(--tx);letter-spacing:-.03em;line-height:1.1;}
+    .stat-trend{font-size:.7rem;color:var(--mu);margin-top:3px;display:flex;align-items:center;gap:4px;}
+
+    /* CHARTS */
+    .chart-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;}
+    .chart-wrap{position:relative;height:200px;}
+    .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+
+    /* QUICK ACTIONS */
+    .qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .qa{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 8px;border-radius:var(--r-sm);cursor:pointer;border:1.5px solid var(--bd);background:var(--bg);transition:all var(--t);text-align:center;}
+    .qa:hover{background:var(--pri-lt);border-color:var(--acc);transform:translateY(-2px);box-shadow:var(--sh-xs);}
+    .qa-icon{width:40px;height:40px;border-radius:var(--r-sm);background:var(--pri-lt);color:var(--pri);display:flex;align-items:center;justify-content:center;font-size:1rem;}
+    .qa:hover .qa-icon{background:var(--pri);color:#fff;}
+    .qa-label{font-size:.72rem;font-weight:600;color:var(--tx2);}
+
+    /* FILTER BAR */
+    .filter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+    .search-box{position:relative;flex:1;min-width:180px;max-width:280px;}
+    .search-box i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--mu2);font-size:.85rem;pointer-events:none;}
+    .search-box input{padding-left:34px;}
+
+    /* INPUTS */
+    .form-input{width:100%;border:1.5px solid var(--bd);border-radius:var(--r-sm);padding:10px 14px;font-size:.875rem;font-family:'Outfit',sans-serif;color:var(--tx);background:var(--wh);outline:none;transition:border-color var(--t),box-shadow var(--t);}
+    .form-input::placeholder{color:var(--mu2);}
+    .form-input:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(124,29,124,.1);}
+    .form-select{width:100%;border:1.5px solid var(--bd);border-radius:var(--r-sm);padding:10px 34px 10px 14px;font-size:.875rem;font-family:'Outfit',sans-serif;color:var(--tx);background:var(--wh);outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%237a6a7a'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:15px;transition:border-color var(--t),box-shadow var(--t);}
+    .form-select:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(124,29,124,.1);outline:none;}
+    .form-label{display:block;font-size:.8rem;font-weight:600;margin-bottom:6px;color:var(--tx2);}
+    .form-group{margin-bottom:16px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+    /* BUTTONS */
+    .btn-pri{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;background:var(--pri);color:#fff;border:none;border-radius:var(--r-sm);font-size:.875rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:background var(--t),transform var(--t),box-shadow var(--t);white-space:nowrap;}
+    .btn-pri:hover{background:var(--pri-hover);transform:translateY(-1px);box-shadow:0 4px 14px rgba(124,29,124,.3);}
+    .btn-sec{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;background:var(--wh);color:var(--tx2);border:1.5px solid var(--bd);border-radius:var(--r-sm);font-size:.875rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all var(--t);white-space:nowrap;}
+    .btn-sec:hover{background:var(--bg);border-color:var(--pri);color:var(--pri);}
+    .btn-danger{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;background:var(--err-lt);color:var(--err);border:1px solid #f5c6c6;border-radius:var(--r-sm);font-size:.78rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all var(--t);}
+    .btn-danger:hover{background:var(--err);color:#fff;}
+    .btn-warn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;background:var(--warn-lt);color:var(--warn);border:1px solid #f0d8a0;border-radius:var(--r-sm);font-size:.78rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all var(--t);}
+    .btn-warn:hover{background:var(--warn);color:#fff;}
+    .btn-info{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--info-lt);color:var(--info);border:1px solid #b8d4f0;border-radius:var(--r-sm);font-size:.78rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all var(--t);}
+    .btn-info:hover{background:var(--info);color:#fff;}
+
+    /* TABLE */
+    .table-wrap{border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;overflow-x:auto;}
+    .data-table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:600px;}
+    .data-table th{padding:11px 14px;text-align:left;color:var(--mu);font-weight:700;background:var(--bg);font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--bd);white-space:nowrap;}
+    .data-table td{padding:13px 14px;border-bottom:1px solid var(--bd);vertical-align:middle;}
+    .data-table tr:last-child td{border-bottom:none;}
+    .data-table tbody tr:hover td{background:var(--pri-lt);}
+    .td-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+
+    /* CHIPS */
+    .chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:.68rem;font-weight:700;white-space:nowrap;}
+    .chip-purple{background:var(--pri-lt);color:var(--pri);}
+    .chip-green{background:var(--suc-lt);color:var(--suc);}
+    .chip-gold{background:var(--warn-lt);color:var(--warn);}
+    .chip-blue{background:var(--info-lt);color:var(--info);}
+    .chip-red{background:var(--err-lt);color:var(--err);}
+    .chip-gray{background:var(--bg);color:var(--mu);border:1px solid var(--bd);}
+
+    /* USER CELL */
+    .user-av{width:32px;height:32px;border-radius:50%;background:var(--pri-lt);border:2px solid var(--acc);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;color:var(--pri);overflow:hidden;flex-shrink:0;}
+    .user-cell{display:flex;align-items:center;gap:10px;}
+    .user-name{font-weight:600;color:var(--tx);font-size:.82rem;}
+    .user-email{font-size:.72rem;color:var(--mu);}
+
+    /* PRODUCT THUMB */
+    .prod-thumb{width:40px;height:40px;border-radius:var(--r-sm);object-fit:cover;background:var(--bg);border:1px solid var(--bd);}
+    .prod-cell{display:flex;align-items:center;gap:10px;}
+
+    /* PROFILE */
+    .profile-banner{background:linear-gradient(135deg,var(--pri) 0%,#a040a0 100%);border-radius:var(--r);padding:32px 28px;margin-bottom:20px;display:flex;align-items:center;gap:24px;position:relative;overflow:hidden;}
+    .profile-banner::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.07);}
+    .pav{width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.25);border:3px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:#fff;overflow:hidden;}
+    .pb-info{flex:1;}
+    .pb-name{font-size:1.4rem;font-weight:800;color:#fff;font-family:'Playfair Display',serif;}
+    .pb-email{font-size:.85rem;color:rgba(255,255,255,.8);margin-top:4px;}
+    .pb-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.2);color:#fff;font-size:.72rem;font-weight:700;margin-top:8px;}
+    .view-edit-tabs{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+    .tab-btn{padding:8px 20px;border-radius:999px;font-size:.85rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all var(--t);border:none;}
+    .tab-btn.active{background:var(--pri);color:#fff;}
+    .tab-btn:not(.active){background:var(--bg);color:var(--mu);border:1px solid var(--bd);}
+    .tab-btn:not(.active):hover{background:var(--pri-lt);color:var(--pri);}
+    .tab-pane{display:none;} .tab-pane.active{display:block;}
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .info-lbl{font-size:.72rem;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+    .info-val{font-size:.9rem;color:var(--tx);font-weight:500;}
+
+    /* TOP ROW */
+    .top-product-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd);}
+    .top-product-row:last-child{border-bottom:none;}
+    .tpr-rank{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;flex-shrink:0;background:var(--bg);color:var(--mu);}
+    .tpr-rank.gold{background:#fef3c7;color:#b45309;} .tpr-rank.silver{background:#f1f5f9;color:#475569;} .tpr-rank.bronze{background:#fff7ed;color:#c2410c;}
+    .tpr-info{flex:1;min-width:0;}
+    .tpr-name{font-size:.82rem;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .tpr-cat{font-size:.7rem;color:var(--mu);}
+    .tpr-val{font-size:.82rem;font-weight:700;color:var(--pri);flex-shrink:0;}
+    .tpr-bar-wrap{flex:1;height:6px;background:var(--bg);border-radius:99px;overflow:hidden;}
+    .tpr-bar{height:100%;background:var(--pri);border-radius:99px;}
+
+    /* EMPTY STATE */
+    .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;color:var(--mu2);}
+    .empty-state i{font-size:2.5rem;margin-bottom:12px;opacity:.4;}
+    .empty-state p{font-size:.9rem;text-align:center;line-height:1.5;}
+
+    /* TOAST */
+    .toast-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+    .toast{padding:12px 18px;border-radius:var(--r-sm);background:var(--tx);color:#fff;font-size:.85rem;font-weight:500;box-shadow:var(--sh-md);animation:slideUp .3s ease;display:flex;align-items:center;gap:8px;max-width:340px;}
+    .toast.err{background:var(--err);} .toast.suc{background:var(--suc);}
+    @keyframes slideUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+    /* MODAL */
+    .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(10,0,20,.5);backdrop-filter:blur(4px);z-index:2000;align-items:center;justify-content:center;padding:20px;}
+    .modal-backdrop.open{display:flex;}
+    .modal{background:var(--wh);border-radius:var(--r);padding:28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:var(--sh-md);animation:sectionIn .25s ease;}
+    .modal-title{font-size:1.1rem;font-weight:700;color:var(--tx);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+    .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+    .logout-modal{background:var(--wh);border-radius:var(--r);padding:32px 28px;text-align:center;max-width:360px;width:100%;box-shadow:var(--sh-md);animation:sectionIn .25s ease;}
+    .logout-av{width:64px;height:64px;border-radius:50%;background:var(--pri-lt);border:2.5px solid var(--acc);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:var(--pri);margin:0 auto 12px;overflow:hidden;}
+
+    /* RESPONSIVE */
+    @media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr);}.chart-grid{grid-template-columns:1fr;}.analytics-grid{grid-template-columns:1fr;}}
+    @media(max-width:900px){.sb{transform:translateX(-100%);}.sb.open{transform:translateX(0);box-shadow:var(--sh-md);}.main{margin-left:0;}.menu-btn{display:flex;}.page{padding:20px 16px;}.topbar{padding:0 16px;}.form-row{grid-template-columns:1fr;}.info-grid{grid-template-columns:1fr;}#dashBottom{grid-template-columns:1fr !important;}}
+    @media(max-width:600px){.stats-grid{grid-template-columns:1fr 1fr;}.welcome-text h2{font-size:1.35rem;}.stat-val{font-size:1.3rem;}.tb-name,.tb-role{display:none;}}
+    @media(max-width:480px){.stats-grid{grid-template-columns:1fr;}.tb-back-home span{display:none;}}
+
+    ::-webkit-scrollbar{width:5px;height:5px;} ::-webkit-scrollbar-track{background:transparent;}
+    ::-webkit-scrollbar-thumb{background:var(--bd);border-radius:99px;} ::-webkit-scrollbar-thumb:hover{background:var(--mu2);}
+  </style>
+</head>
+<body>
+
+<div class="ov" id="ov" onclick="closeSB()"></div>
+
+<!-- SIDEBAR -->
+<nav class="sb" id="sb">
+  <a class="sb-brand" href="index.html">
+    <div class="sb-brand-icon"><i class="fas fa-shopping-bag"></i></div>
+    <span class="sb-brand-name">Amazino</span>
+  </a>
+  <div class="sb-user">
+    <div class="sb-avatar" id="sbAvatar">AD</div>
+    <div><div class="sb-name" id="sbName">Admin</div><div class="sb-role">Administrator</div></div>
+  </div>
+  <nav class="sb-nav">
+    <span class="sb-sec-lbl">Overview</span>
+    <div class="ni active" onclick="go('dashboard')"><i class="fas fa-chart-pie"></i>Dashboard</div>
+    <span class="sb-sec-lbl">Management</span>
+    <div class="ni" onclick="go('users')"><i class="fas fa-users"></i>Users</div>
+    <div class="ni" onclick="go('products')"><i class="fas fa-box-open"></i>Products</div>
+    <div class="ni" onclick="go('orders')"><i class="fas fa-shopping-bag"></i>Orders</div>
+    <span class="sb-sec-lbl">Insights</span>
+    <div class="ni" onclick="go('analytics')"><i class="fas fa-chart-line"></i>Analytics</div>
+    <span class="sb-sec-lbl">Account</span>
+    <div class="ni" onclick="go('profile')"><i class="fas fa-user-shield"></i>My Profile</div>
+    <div class="sb-sep"></div>
+    <div class="ni logout-item" onclick="openLogoutModal()"><i class="fas fa-sign-out-alt"></i>Sign Out</div>
+  </nav>
+  <div class="sb-footer"><div class="sb-footer-text">Amazino Admin Panel v2.0</div></div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar" id="topbar">
+    <div class="tb-left">
+      <button class="menu-btn" onclick="toggleSB()"><i class="fas fa-bars"></i></button>
+      <a href="index.html" class="tb-back-home"><i class="fas fa-home"></i><span>Store</span></a>
+      <span class="page-title-bar" id="pageTitleBar">Dashboard</span>
+    </div>
+    <div class="tb-right">
+      <div class="tb-divider"></div>
+      <div class="tb-user-pill">
+        <div class="tb-avatar" id="tbAvatar">AD</div>
+        <div><div class="tb-name" id="tbName">Admin</div><div class="tb-role">Administrator</div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <!-- DASHBOARD -->
+  <div class="page section active" id="section-dashboard">
+    <div class="welcome-row">
+      <div class="welcome-text">
+        <h2>Welcome back, <span id="welcomeName">Admin</span> 👋</h2>
+        <p>Here's your platform overview for today.</p>
+      </div>
+      <div class="welcome-date" id="dashDate"></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon si-purple"><i class="fas fa-users"></i></div><div><div class="stat-label">Total Users</div><div class="stat-val" id="dStat1">—</div><div class="stat-trend"><i class="fas fa-arrow-up"></i>Registered accounts</div></div></div>
+      <div class="stat-card"><div class="stat-icon si-green"><i class="fas fa-dollar-sign"></i></div><div><div class="stat-label">Total Revenue</div><div class="stat-val" id="dStat2">—</div><div class="stat-trend"><i class="fas fa-arrow-up"></i>All completed orders</div></div></div>
+      <div class="stat-card"><div class="stat-icon si-gold"><i class="fas fa-box"></i></div><div><div class="stat-label">Products</div><div class="stat-val" id="dStat3">—</div><div class="stat-trend"><i class="fas fa-store"></i>Active listings</div></div></div>
+      <div class="stat-card"><div class="stat-icon si-blue"><i class="fas fa-shopping-bag"></i></div><div><div class="stat-label">Total Orders</div><div class="stat-val" id="dStat4">—</div><div class="stat-trend"><i class="fas fa-receipt"></i>Platform-wide</div></div></div>
+    </div>
+    <div class="chart-grid">
+      <div class="card" style="margin-bottom:0;"><div class="card-title"><i class="fas fa-chart-line" style="color:var(--pri);"></i>Revenue — Last 7 Days</div><div class="chart-wrap"><canvas id="revenueChart"></canvas></div></div>
+      <div class="card" style="margin-bottom:0;"><div class="card-title"><i class="fas fa-chart-pie" style="color:var(--pri);"></i>Users by Role</div><div class="chart-wrap" style="display:flex;align-items:center;justify-content:center;"><canvas id="roleChart" style="max-height:200px;"></canvas></div></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;" id="dashBottom">
+      <div class="card" style="margin-bottom:0;"><div class="card-title"><i class="fas fa-bolt" style="color:var(--pri);"></i>Quick Actions</div>
+        <div class="qa-grid">
+          <div class="qa" onclick="go('users')"><div class="qa-icon"><i class="fas fa-users"></i></div><span class="qa-label">Manage Users</span></div>
+          <div class="qa" onclick="go('products')"><div class="qa-icon"><i class="fas fa-box"></i></div><span class="qa-label">Products</span></div>
+          <div class="qa" onclick="go('orders')"><div class="qa-icon"><i class="fas fa-shopping-bag"></i></div><span class="qa-label">Orders</span></div>
+          <div class="qa" onclick="go('analytics')"><div class="qa-icon"><i class="fas fa-chart-bar"></i></div><span class="qa-label">Analytics</span></div>
+          <div class="qa" onclick="go('profile')"><div class="qa-icon"><i class="fas fa-user-shield"></i></div><span class="qa-label">Profile</span></div>
+          <div class="qa" onclick="refreshAll()"><div class="qa-icon"><i class="fas fa-sync-alt"></i></div><span class="qa-label">Refresh</span></div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0;"><div class="card-title"><i class="fas fa-trophy" style="color:var(--pri);"></i>Top Sellers</div><div id="dashTopSellers"><div class="empty-state" style="padding:20px;"><i class="fas fa-spinner fa-spin"></i><p>Loading…</p></div></div></div>
+    </div>
+    <div class="card"><div class="card-title"><i class="fas fa-receipt" style="color:var(--pri);"></i>Recent Orders</div><div id="dashRecentOrders"><div class="empty-state"><i class="fas fa-shopping-bag"></i><p>Loading orders…</p></div></div></div>
+  </div>
+
+  <!-- USERS -->
+  <div class="page section" id="section-users">
+    <div class="phd">
+      <div class="phd-left"><button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button><h1 class="page-title">User Management</h1></div>
+      <button class="btn-sec" onclick="refreshAll()"><i class="fas fa-sync-alt"></i>Refresh</button>
+    </div>
+    <div class="card">
+      <div class="filter-bar">
+        <div class="search-box"><i class="fas fa-search"></i><input type="text" class="form-input" id="searchUsers" placeholder="Search name or email…" oninput="filterUsers()"></div>
+        <select class="form-select" id="filterRole" style="max-width:170px;" onchange="filterUsers()">
+          <option value="">All Roles</option>
+          <option value="admin">Admin</option>
+          <option value="seller">Seller</option>
+          <option value="buyer">Buyer</option>
+          <option value="customer">Customer</option>
+        </select>
+        <div style="margin-left:auto;font-size:.8rem;color:var(--mu);" id="userCount"></div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>User</th><th>Role</th><th>Phone</th><th>Joined</th><th>Actions</th></tr></thead>
+          <tbody id="usersTableBody"><tr><td colspan="5"><div class="empty-state" style="padding:28px;"><i class="fas fa-spinner fa-spin"></i><p>Loading users…</p></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="page section" id="section-products">
+    <div class="phd">
+      <div class="phd-left"><button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button><h1 class="page-title">Products</h1></div>
+      <button class="btn-sec" onclick="refreshAll()"><i class="fas fa-sync-alt"></i>Refresh</button>
+    </div>
+    <div class="card">
+      <div class="filter-bar">
+        <div class="search-box"><i class="fas fa-search"></i><input type="text" class="form-input" id="searchProducts" placeholder="Search products…" oninput="filterProducts()"></div>
+        <select class="form-select" id="filterCategory" style="max-width:160px;" onchange="filterProducts()">
+          <option value="">All Categories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Books">Books</option>
+          <option value="Home">Home & Garden</option>
+          <option value="Sports">Sports</option>
+          <option value="Beauty">Beauty</option>
+          <option value="Food">Food & Drinks</option>
+          <option value="Furniture">Furniture</option>
+        </select>
+        <div style="margin-left:auto;font-size:.8rem;color:var(--mu);" id="productCount"></div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Seller</th><th>Actions</th></tr></thead>
+          <tbody id="productsTableBody"><tr><td colspan="6"><div class="empty-state" style="padding:28px;"><i class="fas fa-spinner fa-spin"></i><p>Loading products…</p></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDERS -->
+  <div class="page section" id="section-orders">
+    <div class="phd">
+      <div class="phd-left"><button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button><h1 class="page-title">Orders</h1></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <select class="form-select" id="filterOrderStatus" style="max-width:170px;" onchange="filterOrders()">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <div class="search-box" style="max-width:220px;"><i class="fas fa-search"></i><input type="text" class="form-input" id="searchOrders" placeholder="Search order ID or customer…" oninput="filterOrders()"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody id="ordersTableBody"><tr><td colspan="7"><div class="empty-state" style="padding:28px;"><i class="fas fa-spinner fa-spin"></i><p>Loading orders…</p></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="page section" id="section-analytics">
+    <div class="phd">
+      <div class="phd-left"><button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button><h1 class="page-title">Analytics</h1></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon si-green"><i class="fas fa-dollar-sign"></i></div><div><div class="stat-label">Total Revenue</div><div class="stat-val" id="aStat1">—</div></div></div>
+      <div class="stat-card"><div class="stat-icon si-blue"><i class="fas fa-shopping-bag"></i></div><div><div class="stat-label">Total Orders</div><div class="stat-val" id="aStat2">—</div></div></div>
+      <div class="stat-card"><div class="stat-icon si-purple"><i class="fas fa-users"></i></div><div><div class="stat-label">Total Users</div><div class="stat-val" id="aStat3">—</div></div></div>
+      <div class="stat-card"><div class="stat-icon si-gold"><i class="fas fa-box"></i></div><div><div class="stat-label">Products Listed</div><div class="stat-val" id="aStat4">—</div></div></div>
+    </div>
+    <div class="analytics-grid">
+      <div class="card" style="margin-bottom:0;"><div class="card-title"><i class="fas fa-chart-line" style="color:var(--pri);"></i>Revenue — Last 14 Days</div><div class="chart-wrap" style="height:220px;"><canvas id="analyticsRevenueChart"></canvas></div></div>
+      <div class="card" style="margin-bottom:0;"><div class="card-title"><i class="fas fa-chart-donut" style="color:var(--pri);"></i>Orders by Status</div><div class="chart-wrap" style="height:220px;display:flex;align-items:center;justify-content:center;"><canvas id="analyticsStatusChart" style="max-height:220px;"></canvas></div></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="analytics-grid">
+      <div class="card" style="margin-bottom:0;"><div class="card-title"><i class="fas fa-store" style="color:var(--pri);"></i>Top Sellers by Revenue</div><div id="topSellersAnalytics"><div class="empty-state" style="padding:16px;"><i class="fas fa-spinner fa-spin"></i></div></div></div>
+      <div class="card" style="margin-bottom:0;"><div class="card-title"><i class="fas fa-box" style="color:var(--pri);"></i>Top Products by Sales</div><div id="topProductsAnalytics"><div class="empty-state" style="padding:16px;"><i class="fas fa-spinner fa-spin"></i></div></div></div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page section" id="section-profile">
+    <div class="phd">
+      <div class="phd-left"><button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button><h1 class="page-title">My Profile</h1></div>
+    </div>
+    <div class="profile-banner">
+      <div class="pav" id="profileAv">AD</div>
+      <div class="pb-info">
+        <div class="pb-name" id="profileName">Admin User</div>
+        <div class="pb-email" id="profileEmail">admin@amazino.com</div>
+        <div class="pb-badge"><i class="fas fa-shield-alt"></i>Administrator</div>
+      </div>
+    </div>
+    <div class="view-edit-tabs">
+      <button class="tab-btn active" onclick="switchTab('view')">View Info</button>
+      <button class="tab-btn" onclick="switchTab('edit')">Edit Profile</button>
+      <button class="tab-btn" onclick="switchTab('password')">Change Password</button>
+    </div>
+    <div class="tab-pane active" id="tab-view">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-user-circle" style="color:var(--pri);"></i>Personal Information</div>
+        <div class="info-grid">
+          <div><div class="info-lbl">Full Name</div><div class="info-val" id="viewName">—</div></div>
+          <div><div class="info-lbl">Email</div><div class="info-val" id="viewEmail">—</div></div>
+          <div><div class="info-lbl">Phone</div><div class="info-val" id="viewPhone">—</div></div>
+          <div><div class="info-lbl">Role</div><div class="info-val">Administrator</div></div>
+          <div><div class="info-lbl">Joined</div><div class="info-val" id="viewJoined">—</div></div>
+          <div><div class="info-lbl">Country</div><div class="info-val" id="viewCountry">—</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab-edit">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-edit" style="color:var(--pri);"></i>Edit Information</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="editName" type="text" placeholder="Your full name"></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="editEmail" type="email" placeholder="Email address"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="editPhone" type="tel" placeholder="Phone number"></div>
+          <div class="form-group"><label class="form-label">Country</label><input class="form-input" id="editCountry" type="text" placeholder="Country"></div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-pri" onclick="saveProfile()"><i class="fas fa-save"></i>Save Changes</button>
+          <button class="btn-sec" onclick="switchTab('view')">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab-password">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-lock" style="color:var(--pri);"></i>Change Password</div>
+        <div class="form-group"><label class="form-label">Current Password</label><input class="form-input" id="pwCurrent" type="password" placeholder="Current password"></div>
+        <div class="form-group"><label class="form-label">New Password</label><input class="form-input" id="pwNew" type="password" placeholder="New password (min 8 chars)"></div>
+        <div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-input" id="pwConfirm" type="password" placeholder="Repeat new password"></div>
+        <button class="btn-pri" onclick="changePassword()"><i class="fas fa-key"></i>Update Password</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-backdrop" id="logoutModal">
+  <div class="logout-modal">
+    <div class="logout-av" id="logoutAv">AD</div>
+    <div style="font-size:.85rem;color:var(--mu);margin-bottom:4px;">Signed in as</div>
+    <div style="font-weight:700;color:var(--tx);margin-bottom:16px;" id="logoutName">Admin</div>
+    <p style="font-size:.88rem;color:var(--mu);margin-bottom:24px;">Are you sure you want to sign out?</p>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button class="btn-danger" onclick="confirmLogout()"><i class="fas fa-sign-out-alt"></i>Sign Out</button>
+      <button class="btn-sec" onclick="closeModal('logoutModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="userModal">
+  <div class="modal">
+    <div class="modal-title"><i class="fas fa-user-circle" style="color:var(--pri);"></i><span id="userModalTitle">User Details</span></div>
+    <div id="userModalBody"></div>
+    <div class="modal-footer"><button class="btn-sec" onclick="closeModal('userModal')">Close</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="roleModal">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-title"><i class="fas fa-user-tag" style="color:var(--pri);"></i>Change Role</div>
+    <div class="form-group"><label class="form-label">New role for <strong id="roleUserName">user</strong></label>
+      <select class="form-select" id="newRoleSelect">
+        <option value="buyer">Buyer / Customer</option>
+        <option value="seller">Seller</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-pri" onclick="confirmRoleChange()"><i class="fas fa-check"></i>Apply</button>
+      <button class="btn-sec" onclick="closeModal('roleModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="deleteModal">
+  <div class="modal" style="max-width:360px;text-align:center;">
+    <div style="width:56px;height:56px;border-radius:50%;background:var(--err-lt);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.4rem;color:var(--err);"><i class="fas fa-trash-alt"></i></div>
+    <div style="font-size:1rem;font-weight:700;color:var(--tx);margin-bottom:8px;">Confirm Delete</div>
+    <p style="font-size:.88rem;color:var(--mu);margin-bottom:24px;" id="deleteMsg">Are you sure?</p>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="btn-danger" onclick="confirmDelete()"><i class="fas fa-trash-alt"></i>Delete</button>
+      <button class="btn-sec" onclick="closeModal('deleteModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="orderStatusModal">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-title"><i class="fas fa-edit" style="color:var(--pri);"></i>Update Order Status</div>
+    <div class="form-group"><label class="form-label">Order <strong id="orderStatusId"></strong></label>
+      <select class="form-select" id="orderStatusSelect">
+        <option value="pending">Pending</option>
+        <option value="processing">Processing</option>
+        <option value="shipped">Shipped</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-pri" onclick="confirmOrderStatus()"><i class="fas fa-check"></i>Update</button>
+      <button class="btn-sec" onclick="closeModal('orderStatusModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
