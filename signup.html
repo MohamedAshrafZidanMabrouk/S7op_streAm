@@ -32,9 +32,6 @@
         emailjs.init("38fW8AWlUoUtFifrX"); // حطي الـ Key بتاعك هنا
       })();
     </script>
-
-    <!-- sign up with gmail -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
     <div
@@ -45,9 +42,7 @@
       >
         <div class="col left p-5 w-25">
           <div class="title-wrapper">
-            <h1 class="bg-color fw-bold fs-1">
-              <a href="index.html">Amazino</a>
-            </h1>
+            <h1 class="bg-color fw-bold fs-1">Amazino</h1>
             <hr />
           </div>
 
@@ -239,15 +234,15 @@
           <div class="mt-5 text-center w-100">
             <div class="position-relative mb-4">
               <hr class="text-secondary" />
-              <!-- <span
+              <span
                 class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-secondary"
               >
                 Continue With
-              </span> -->
+              </span>
             </div>
 
             <div class="d-flex justify-content-between gap-3 mb-4">
-              <!-- <div class="link btn border rounded-3 py-2 flex-grow-1 shadow-sm">
+              <div class="link btn border rounded-3 py-2 flex-grow-1 shadow-sm">
                 <i class="fab fa-google text-danger fs-4"></i>
               </div>
               <div class="link btn border rounded-3 py-2 flex-grow-1 shadow-sm">
@@ -255,25 +250,6 @@
               </div>
               <div class="link btn border rounded-3 py-2 flex-grow-1 shadow-sm">
                 <i class="fab fa-apple text-dark fs-4"></i>
-              </div> -->
-
-              <!-- sign up with gmail -->
-              <div class="link btn rounded-3 py-2 flex-grow-1 shadow-sm">
-                <div
-                  id="g_id_onload"
-                  data-client_id="553184103433-7r8e8i2v2p4qvauhsp0ergle1ll94i5n.apps.googleusercontent.com"
-                  data-callback="handleCredentialResponse"
-                ></div>
-
-                <div
-                  class="g_id_signin"
-                  data-type="standard"
-                  data-size="large"
-                  data-theme="outline"
-                  data-text="continue_with"
-                  data-shape="rectangular"
-                  data-logo_alignment="left"
-                ></div>
               </div>
             </div>
 
@@ -307,60 +283,13 @@
           </div>
           <div class="modal-body">
             <p>We've sent a confirmation code to your email.</p>
-            <!-- <input
+            <input
               type="text"
               id="otpInput"
               class="form-control"
               placeholder="Enter 4 numbers here"
               maxlength="4"
-            /> -->
-            <fieldset
-              name="number-code"
-              data-number-code-form
-              class="d-flex justify-content-center gap-2 border-0 p-0 m-0"
-            >
-              <legend class="visually-hidden">Number Code</legend>
-              <input
-                type="number"
-                min="0"
-                max="9"
-                name="number-code-0"
-                data-number-code-input="0"
-                class="form-control text-center fs-4"
-                style="width: 3.5rem; height: 3.5rem"
-                required
-              />
-              <input
-                type="number"
-                min="0"
-                max="9"
-                name="number-code-1"
-                data-number-code-input="1"
-                class="form-control text-center fs-4"
-                style="width: 3.5rem; height: 3.5rem"
-                required
-              />
-              <input
-                type="number"
-                min="0"
-                max="9"
-                name="number-code-2"
-                data-number-code-input="2"
-                class="form-control text-center fs-4"
-                style="width: 3.5rem; height: 3.5rem"
-                required
-              />
-              <input
-                type="number"
-                min="0"
-                max="9"
-                name="number-code-3"
-                data-number-code-input="3"
-                class="form-control text-center fs-4"
-                style="width: 3.5rem; height: 3.5rem"
-                required
-              />
-            </fieldset>
+            />
             <div id="otpError" class="text-danger mt-2 d-none">
               sorry! this code is wrong please try again
             </div>
@@ -391,8 +320,5 @@
 
     <!-- password eye -->
     <script src="./js/passwordEyeToggle.js"></script>
-
-    <!-- sign up with gmail -->
-    <script src="./js/signinWithGmail.js"></script>
   </body>
 </html>

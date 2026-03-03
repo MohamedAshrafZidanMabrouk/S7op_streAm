@@ -1,325 +1,282 @@
-// **** variables ****
-// api link
-const API_URL =
-  "https://699c4912110b5b738cc24139.mockapi.io/api/ecomerce/users/users_table";
+/**
+ * ═══════════════════════════════════════════════════════════════
+ *  signinFormValidation.js
+ *  Amazino Sign-In Page Logic
+ *
+ *  Requires: auth.js (must be loaded BEFORE this file)
+ *
+ *  Features:
+ *   - Form validation
+ *   - Login via AUTH.login() → API verification
+ *   - Role-based redirect after login
+ *   - Remember Me
+ *   - Auto-redirect if already logged in
+ *   - Forgot Password (OTP via EmailJS)
+ *   - Password eye toggle
+ * ═══════════════════════════════════════════════════════════════
+ */
 
-// form
-const forms = document.querySelectorAll(".needs-validation");
-const email = document.getElementById("validationCustomUsername");
-const password = document.getElementById("password");
-const alertmsg = document.getElementById("alertmsg");
-const rememberCheckbox = document.getElementById("invalidCheck");
+/* ── Role → dashboard map ──────────────────────────────────── */
+const ROLE_REDIRECT = {
+  seller:   'seller-dashboard.html',
+  admin:    'admin-dashboard.html',
+  buyer:    'customer-dashboard.html',
+  customer: 'customer-dashboard.html',
+  user:     'customer-dashboard.html',
+};
 
-// modal variables
-const otpModal = new bootstrap.Modal(document.getElementById("otpModal"));
-const verifyBtn = document.getElementById("verifyBtn");
-const otpInput = document.getElementById("otpInput");
-const otpError = document.getElementById("otpError");
-const otpSuccess = document.getElementById("otpSuccess");
-const emailNotExist = document.getElementById("emailNotExist");
-const modalBody = document.querySelector(".modal-body p");
-
-// email js
-const forgetLink = document.querySelector(".forgetlink");
-let isOtpSent = false;
-let generatedOTP = "";
-let targetEmail = "";
-
-//fieldset
-let fieldset = document.getElementById("fieldset");
-const numberCodeForm = document.querySelector("[data-number-code-form]");
-const numberCodeInputs = [
-  ...numberCodeForm.querySelectorAll("[data-number-code-input]"),
-];
-
-// (Validation)
-function isEmailValid() {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email.value.trim());
+function getDashboard(role) {
+  return ROLE_REDIRECT[(role || '').toLowerCase()] || 'customer-dashboard.html';
 }
 
-function isPasswordValid() {
-  return password.value.length > 0;
-}
-
-function isOtpEmailValid() {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(otpInput.value.trim());
-}
-
-// ---------------------------------------------------------
-// رسائل الخطأ (Validation Messages)
-
-// Email
-email.addEventListener("input", function () {
-  const invalidFeedback =
-    email.parentElement.querySelector(".invalid-feedback");
-  const validFeedback = email.parentElement.querySelector(".valid-feedback");
-
-  if (!isEmailValid()) {
-    invalidFeedback.textContent = "Please enter a valid email address";
-    email.classList.add("is-invalid");
-    email.classList.remove("is-valid");
-    email.setCustomValidity("invalid");
-  } else {
-    email.classList.remove("is-invalid");
-    email.setCustomValidity("");
+/* ── Auto-redirect if already logged in ────────────────────── */
+(function checkAlreadyLoggedIn() {
+  const sess = (typeof AUTH !== 'undefined') && AUTH.getSession();
+  if (sess) {
+    // Already logged in → go to home, not directly to dashboard
+    window.location.replace('index.html');
   }
-});
-
-// Password
-password.addEventListener("input", function () {
-  const invalidFeedback =
-    password.parentElement.parentElement.querySelector(".invalid-feedback");
-  const validFeedback =
-    password.parentElement.parentElement.querySelector(".valid-feedback");
-
-  if (!isPasswordValid()) {
-    invalidFeedback.textContent = "Please enter your password";
-    password.setCustomValidity("invalid");
-  } else {
-    password.setCustomValidity("");
-  }
-});
-
-// otp email
-otpInput.addEventListener("input", function () {
-  const invalidFeedback =
-    otpInput.parentElement.querySelector(".invalid-feedback");
-
-  emailNotExist.classList.add("d-none");
-
-  if (!isOtpSent) {
-    if (!isOtpEmailValid()) {
-      invalidFeedback.textContent = "Please enter a valid email address";
-      otpInput.classList.add("is-invalid");
-      invalidFeedback.classList.remove("d-none");
-    } else {
-      otpInput.classList.remove("is-invalid");
-      invalidFeedback.classList.add("d-none");
-    }
-  } else {
-    otpInput.classList.remove("is-invalid");
-    invalidFeedback.classList.add("d-none");
-    otpSuccess.textContent = "";
-  }
-});
-
-// remember me
-window.addEventListener("DOMContentLoaded", () => {
-  const rememberedUser = JSON.parse(localStorage.getItem("currentUser"));
-  if (rememberedUser) {
-    email.value = rememberedUser.email;
-    password.value = rememberedUser.password;
-    rememberCheckbox.checked = true;
-  }
-});
-
-// ---------------------------------------------------------
-// (Login Logic)
-
-(() => {
-  "use strict";
-
-  forms.forEach((form) => {
-    form.addEventListener(
-      "submit",
-      async (event) => {
-        // ضفنا async هنا
-        event.preventDefault();
-
-        if (!form.checkValidity() || !isEmailValid() || !isPasswordValid()) {
-          event.stopPropagation();
-          form.classList.add("was-validated");
-          password.classList.add("is-invalid");
-          return;
-        }
-
-        try {
-          // 3. نجيب البيانات من الـ Mock API بدل الـ LocalStorage
-          const response = await fetch(API_URL);
-          const allUsers = await response.json();
-
-          // 4. ندور على اليوزر اللي الإيميل والباسورد بتوعه متطابقين
-          const userMatch = allUsers.find(
-            (user) =>
-              user.email === email.value && user.password === password.value,
-          );
-
-          if (userMatch) {
-            localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("currentUser", JSON.stringify(userMatch));
-
-            if (rememberCheckbox.checked) {
-              localStorage.setItem(
-                "currentUser",
-                JSON.stringify({
-                  email: email.value,
-                  password: password.value,
-                }),
-              );
-            } else {
-              localStorage.removeItem("currentUser");
-            }
-            window.location.href = "index.html";
-          } else {
-            alertmsg.classList.remove("d-none");
-            password.setCustomValidity("Invalid email or password");
-            password.value = "";
-            password.classList.remove("is-valid");
-            email.classList.remove("is-valid");
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          alert("حدث خطأ في الاتصال بالسيرفر، يرجى المحاولة مرة أخرى.");
-        }
-
-        form.classList.add("was-validated");
-      },
-      false,
-    );
-  });
 })();
 
-// ---------------------------------------------------------
-// email js / Forget Password
+/* ── DOM refs ──────────────────────────────────────────────── */
+const emailInput    = document.getElementById('validationCustomUsername');
+const passwordInput = document.getElementById('password');
+const alertMsg      = document.getElementById('alertmsg');
+const rememberChk   = document.getElementById('invalidCheck');
+const forgetLink    = document.querySelector('.forgetlink');
+const submitBtn     = document.querySelector('button[type="submit"]');
 
-forgetLink.addEventListener("click", function (e) {
-  e.preventDefault();
-  modalBody.textContent = "Please enter your email";
-  otpInput.type = "email";
-  verifyBtn.textContent = "Apply";
+/* ── OTP / Forget Password state ───────────────────────────── */
+const REMEMBER_KEY = 'amazino_remember_me';
+let isOtpSent    = false;
+let generatedOTP = '';
+let targetEmail  = '';
 
-  otpInput.value = "";
-  otpError.classList.add("d-none");
-  otpSuccess.classList.add("d-none");
-  emailNotExist.classList.add("d-none");
+/* ─────────────────────────────────────────────────────────────
+   FORM VALIDATION HELPERS
+───────────────────────────────────────────────────────────── */
+function isValidEmail(val) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((val || '').trim());
+}
 
-  otpModal.show();
+emailInput.addEventListener('input', () => {
+  if (!isValidEmail(emailInput.value)) {
+    emailInput.classList.add('is-invalid');
+    emailInput.setCustomValidity('invalid');
+  } else {
+    emailInput.classList.remove('is-invalid');
+    emailInput.setCustomValidity('');
+  }
 });
 
-// ضفنا async هنا عشان نقدر نكلم الـ API
-verifyBtn.addEventListener("click", async function () {
-  otpInput.classList.remove("is-invalid");
-  otpError.classList.add("d-none");
-  otpSuccess.classList.add("d-none");
-  emailNotExist.classList.add("d-none");
+passwordInput.addEventListener('input', () => {
+  if (!passwordInput.value) {
+    passwordInput.setCustomValidity('invalid');
+  } else {
+    passwordInput.setCustomValidity('');
+    alertMsg.classList.add('d-none');
+  }
+});
 
-  if (!isOtpSent) {
-    const enteredEmail = otpInput.value.trim();
-    if (!enteredEmail) {
-      otpInput.classList.add("is-invalid");
+/* ─────────────────────────────────────────────────────────────
+   REMEMBER ME — pre-fill on load
+───────────────────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  const remembered = JSON.parse(localStorage.getItem(REMEMBER_KEY) || 'null');
+  if (remembered && remembered.email) {
+    emailInput.value    = remembered.email;
+    passwordInput.value = remembered.password || '';
+    if (rememberChk) rememberChk.checked = true;
+  }
+});
+
+/* ─────────────────────────────────────────────────────────────
+   FORM SUBMIT — main login flow
+───────────────────────────────────────────────────────────── */
+document.querySelectorAll('.needs-validation').forEach(form => {
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    alertMsg.classList.add('d-none');
+
+    // HTML5 validation
+    if (!form.checkValidity() || !isValidEmail(emailInput.value) || !passwordInput.value) {
+      e.stopPropagation();
+      form.classList.add('was-validated');
       return;
     }
 
-    verifyBtn.disabled = true;
-    verifyBtn.textContent = "Checking..."; // ندي لليوزر إحساس إننا بنبحث
+    const email    = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    // Show loading state
+    const origHtml  = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in…';
+    submitBtn.disabled  = true;
 
     try {
-      // نجيب كل اليوزرز من الـ Mock API عشان نتأكد إن الإيميل موجود
-      const response = await fetch(API_URL);
-      let users = await response.json();
-      const user = users.find((u) => u.email === enteredEmail);
+      // AUTH.login → verifies with API, creates session, inits localStorage
+      const user = await AUTH.login(email, password);
 
-      if (user) {
-        generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
-        targetEmail = user.email;
-
-        const templateParams = {
-          to_email: user.email,
-          code: generatedOTP,
-          name: user.firstName,
-        };
-
-        verifyBtn.textContent = "Sending...";
-
-        emailjs
-          .send("service_elxefnw", "template_1o90chi", templateParams)
-          .then(
-            function (response) {
-              verifyBtn.disabled = false;
-              otpSuccess.textContent =
-                "Code has been sent to your email successfully!";
-              otpSuccess.classList.remove("d-none");
-
-              isOtpSent = true;
-              // otpInput.value = "";
-              // otpInput.type = "text";
-              // otpInput.placeholder = "Enter 4-digit code";
-              // otpInput.maxLength = 4;
-              // otpInput.minLength = 4;
-              otpInput.classList.add("d-none");
-              fieldset.classList.remove("d-none");
-              fieldset.classList.add("d-flex");
-              modalBody.textContent = "Enter the verification code";
-              verifyBtn.textContent = "Verify Code";
-            },
-            function (error) {
-              verifyBtn.disabled = false;
-              verifyBtn.textContent = "Apply";
-              otpError.textContent =
-                "Failed to send email. Please try again later.";
-              otpError.classList.remove("d-none");
-            },
-          );
+      // Remember Me
+      if (rememberChk && rememberChk.checked) {
+        localStorage.setItem(REMEMBER_KEY, JSON.stringify({ email, password }));
       } else {
-        verifyBtn.disabled = false;
-        verifyBtn.textContent = "Apply";
-        emailNotExist.classList.remove("d-none");
+        localStorage.removeItem(REMEMBER_KEY);
       }
-    } catch (error) {
-      console.error("Error connecting to API:", error);
-      verifyBtn.disabled = false;
-      verifyBtn.textContent = "Apply";
-      alert("حدث خطأ في الاتصال بالسيرفر. تأكد من الإنترنت.");
+
+      // Redirect based on role: sellers go directly to their dashboard
+      const role = (user.role || '').toLowerCase();
+      if (role === 'seller') {
+        window.location.href = getDashboard(role);
+      } else if (role === 'admin') {
+        window.location.href = getDashboard(role);
+      } else {
+        // Buyers go to home page
+        window.location.href = 'index.html';
+      }
+
+    } catch (err) {
+      submitBtn.innerHTML = origHtml;
+      submitBtn.disabled  = false;
+
+      const msg = err.message || 'Connection error — please try again.';
+      alertMsg.textContent = msg.includes('Invalid') ? 'Invalid email or password. Please try again!' : msg;
+      alertMsg.classList.remove('d-none');
+
+      passwordInput.value = '';
+      passwordInput.setCustomValidity('invalid');
+      passwordInput.classList.add('is-invalid');
+      emailInput.classList.add('is-invalid');
+      form.classList.add('was-validated');
     }
-  } else {
-    // التحقق من الـ OTP
-    // const enteredCode = otpInput.value.trim();
-    let otpValue = "";
+  }, false);
+});
 
-    // بنلف على كل input وناخد الرقم اللي جواه ونلزقه في الـ String
-    numberCodeInputs.forEach((input) => {
-      otpValue += input.value;
-    });
+/* ─────────────────────────────────────────────────────────────
+   PASSWORD EYE TOGGLE
+───────────────────────────────────────────────────────────── */
+const togglePwBtn = document.getElementById('togglePassword');
 
-    if (otpValue === generatedOTP) {
-      localStorage.setItem("emailForReset", targetEmail);
-      otpModal.hide();
-      window.location.href = "forgetPassword.html";
+if (togglePwBtn && passwordInput) {
+  togglePwBtn.addEventListener('click', () => {
+
+    const isPassword = passwordInput.type === 'password';
+
+    passwordInput.type = isPassword ? 'text' : 'password';
+
+    togglePwBtn.classList.toggle('bi-eye');
+    togglePwBtn.classList.toggle('bi-eye-slash');
+
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FORGOT PASSWORD — OTP FLOW (EmailJS)
+───────────────────────────────────────────────────────────── */
+const otpModalEl  = document.getElementById('otpModal');
+const verifyBtn   = document.getElementById('verifyBtn');
+const otpInput    = document.getElementById('otpInput');
+const otpError    = document.getElementById('otpError');
+const otpSuccess  = document.getElementById('otpSuccess');
+const emailNotExist = document.getElementById('emailNotExist');
+const modalBodyP  = document.querySelector('.modal-body p');
+
+let bsOtpModal = null;
+if (otpModalEl && typeof bootstrap !== 'undefined') {
+  bsOtpModal = new bootstrap.Modal(otpModalEl);
+}
+
+if (forgetLink) {
+  forgetLink.addEventListener('click', e => {
+    e.preventDefault();
+    // Reset modal state
+    isOtpSent    = false;
+    generatedOTP = '';
+    targetEmail  = '';
+    if (modalBodyP) modalBodyP.textContent = 'Enter your email';
+    otpInput.type        = 'email';
+    otpInput.placeholder = 'Enter email address';
+    otpInput.value       = '';
+    if (verifyBtn) { verifyBtn.textContent = 'Apply'; verifyBtn.disabled = false; }
+    [otpError, otpSuccess, emailNotExist].forEach(el => { if (el) el.classList.add('d-none'); });
+    otpInput.classList.remove('is-invalid');
+    if (bsOtpModal) bsOtpModal.show();
+  });
+}
+
+if (verifyBtn) {
+  verifyBtn.addEventListener('click', async () => {
+    [otpError, otpSuccess, emailNotExist].forEach(el => { if (el) el.classList.add('d-none'); });
+    otpInput.classList.remove('is-invalid');
+
+    if (!isOtpSent) {
+      /* ── Step 1: verify email exists in API, then send OTP ── */
+      const entered = otpInput.value.trim();
+      if (!isValidEmail(entered)) { otpInput.classList.add('is-invalid'); return; }
+
+      verifyBtn.disabled    = true;
+      verifyBtn.textContent = 'Checking…';
+
+      try {
+        const res   = await fetch(API_URL);
+        const users = await res.json();
+        const user  = users.find(u => (u.email || '').toLowerCase() === entered.toLowerCase());
+
+        if (!user) {
+          verifyBtn.disabled    = false;
+          verifyBtn.textContent = 'Apply';
+          if (emailNotExist) emailNotExist.classList.remove('d-none');
+          return;
+        }
+
+        generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
+        targetEmail  = user.email;
+
+        verifyBtn.textContent = 'Sending…';
+
+        emailjs.send('service_elxefnw', 'template_1o90chi', {
+          to_email: user.email,
+          code:     generatedOTP,
+          name:     user.firstName || user.name || 'User',
+        }).then(
+          () => {
+            verifyBtn.disabled = false;
+            if (otpSuccess) { otpSuccess.textContent = 'Code sent to your email!'; otpSuccess.classList.remove('d-none'); }
+            _switchToOtpEntry();
+          },
+          () => {
+            verifyBtn.disabled    = false;
+            verifyBtn.textContent = 'Apply';
+            if (otpError) { otpError.textContent = 'Failed to send email. Please try again.'; otpError.classList.remove('d-none'); }
+          }
+        );
+
+      } catch (err) {
+        verifyBtn.disabled    = false;
+        verifyBtn.textContent = 'Apply';
+        if (otpError) { otpError.textContent = 'Connection error — please try again.'; otpError.classList.remove('d-none'); }
+      }
+
     } else {
-      otpError.textContent = "Invalid code. Please try again.";
-      otpError.classList.remove("d-none");
-    }
-  }
-});
-
-// === fieldset ===
-numberCodeInputs.forEach((input) => {
-  // Listen for typing events
-  input.addEventListener("input", (e) => {
-    // Prevent entering more than 1 digit per box
-    if (e.target.value.length > 1) {
-      e.target.value = e.target.value.slice(0, 1);
-    }
-
-    let currentIndex = Number(e.target.dataset.numberCodeInput);
-    const nextIndex = currentIndex + 1;
-
-    // If a number was typed and it's not the last input, focus the next one
-    if (e.target.value !== "" && nextIndex < numberCodeInputs.length) {
-      numberCodeInputs[nextIndex].focus();
+      /* ── Step 2: verify entered code ── */
+      const entered = otpInput.value.trim();
+      if (entered === generatedOTP) {
+        localStorage.setItem('emailForReset', targetEmail);
+        if (bsOtpModal) bsOtpModal.hide();
+        window.location.href = 'forgetPassword.html';
+      } else {
+        if (otpError) { otpError.textContent = 'Invalid code. Please try again.'; otpError.classList.remove('d-none'); }
+      }
     }
   });
+}
 
-  // Listen for Backspace to move focus backwards
-  input.addEventListener("keydown", (e) => {
-    let currentIndex = Number(e.target.dataset.numberCodeInput);
-    const prevIndex = currentIndex - 1;
-
-    // If Backspace is pressed, the input is already empty, and it's not the first input
-    if (e.key === "Backspace" && e.target.value === "" && prevIndex >= 0) {
-      numberCodeInputs[prevIndex].focus();
-    }
-  });
-});
+function _switchToOtpEntry() {
+  isOtpSent             = true;
+  otpInput.value        = '';
+  otpInput.type         = 'text';
+  otpInput.placeholder  = 'Enter 4-digit code';
+  otpInput.maxLength    = 4;
+  if (modalBodyP) modalBodyP.textContent = 'Enter the verification code';
+  if (verifyBtn) { verifyBtn.textContent = 'Verify Code'; verifyBtn.disabled = false; }
+}

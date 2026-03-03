@@ -43,12 +43,8 @@ body{
   cursor: pointer;
   margin: 0;
 }
-.title-wrapper h1 a{
-    color: var(--main-color);
-    text-decoration: none;
-}
 
-.title-wrapper h1 a:hover{
+.title-wrapper h1:hover{
     color: var(--main-color-hover) !important;
 }
 
