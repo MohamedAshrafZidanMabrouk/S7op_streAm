@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Home Page</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='css/home.css'>
+    <link rel='stylesheet' type='text/css' href='css/components.css'>
+    <link rel='stylesheet' href='css/Navbarauth.css'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="hero d-flex align-items-end text-white" id="heroSection">
+        <div class="container-fluid px-4 px-lg-5 pb-5 mb-3">
+            <div class="hero-content">
+              <h1 class="hero-title">
+    Discover the latest trends,<br>
+    exclusive deals, and premium quality products in one place
+</h1>
+<p class="hero-subtitle">
+    Shop with confidence and enjoy a seamless experience with our carefully selected collection.
+</p>
+                <div class="hero-buttons d-flex align-items-center gap-3">
+                    <a href="products.html" class="btn btn-shopnow">Shop Now <i class="bi bi-arrow-right"></i></a>
+                    <a href="products.html" class="btn-viewall">View All</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shipping Info -->
+    <div class="container-fluid my-5">
+        <div class="row text-center justify-content-center ">
+            <div class="col-12 col-lg-4">
+                <div class="shipping-box d-flex align-items-center ">
+                    <img src="assets/boxicon.png" alt="shipping">
+                    <div class="text-start">
+                        <h5 class="mb-1 fw-bold">Free Shipping</h5>
+                        <p class="mb-0 text-muted">Free shipping for order above $180</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="shipping-box d-flex align-items-center">
+                    <img src="assets/cardicon.png" alt="card">
+                    <div class="text-start">
+                        <h5 class="mb-1 fw-bold">Flexible Payment</h5>
+                        <p class="mb-0 text-muted">Multiple secure payment options</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="shipping-box d-flex align-items-center">
+                    <img src="assets/headseticon.png" alt="support">
+                    <div class="text-start">
+                        <h5 class="mb-1 fw-bold">support</h5>
+                        <p class="mb-0 text-muted">We support online all days.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    <section class="featured-section">
+        <div class="container-fluid px-4 px-lg-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="section-header">
+                    <h2 class="section-title">Our Products</h2>
+                    <a href="products.html" class="section-viewall">View All</a>
+                </div>
+                <div class="slider-nav d-none d-md-flex gap-2">
+                    <button class="slider-arrow" id="slideLeft" aria-label="Scroll left">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button class="slider-arrow" id="slideRight" aria-label="Scroll right">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="product-slider" id="productSlider">
+                <!-- Cards rendered by Home.js -->
+            </div>
+            <div class="slider-progress">
+                <div class="slider-progress-bar" id="sliderProgressBar"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promotions -->
+    <section class="promo-section text-center">
+        <div class="container-fluid px-4 px-lg-5">
+            <div class="promo-card">
+                <div class="row align-items-center g-0">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="promo-content text-center">
+                            <h2 class="promo-title">Flash sale!</h2>
+                            <p class="promo-subtitle">Get 25% off - Limited Time Offer!</p>
+                            <div class="countdown d-flex justify-content-center gap-3 gap-md-4" id="countdown">
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countDays">00</span>
+                                    <span class="countdown-label">Days</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countHours">00</span>
+                                    <span class="countdown-label">Hours</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countMinutes">00</span>
+                                    <span class="countdown-label">Minutes</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countSeconds">00</span>
+                                    <span class="countdown-label">Seconds</span>
+                                </div>
+                            </div>
+                            <a href="products.html" class="btn btn-promo mt-4">Shop Now -></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="promo-img-wrapper">
+                            <img src="assets/promo.png" alt="Flash Sale" class="promo-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deals of the Day -->
+    <section class="deals-section py-5">
+        <div class="container-fluid px-4 px-lg-5">
+            <div class="mb-4">
+                <h2 class="section-title mb-1">Deals Of The Day</h2>
+                <p class="text-muted" style="letter-spacing: -0.5px;">Discover Quality</p>
+            </div>
+            <div class="row g-4 justify-content-center" id="dealsContainer">
+                <div class="col-12 text-center py-4">
+                    <div class="spinner-border text-secondary" role="status"><span class="visually-hidden">Loading…</span></div>
+                </div>
+            </div>
+
+            <!-- Collection Banners -->
+            <div class="row g-4 mt-2">
+                <!-- Wood Chair Collection -->
+                <div class="col-12 col-md-6">
+                    <div class="collection-card wood-collection p-4 h-100 position-relative overflow-hidden rounded-4">
+                        <div class="row align-items-center h-100 position-relative z-index-1">
+                            <div class="col-7">
+                                <span class="d-block text-secondary mb-2 fw-medium">Flat 20% Discount</span>
+                                <h3 class="fw-bold mb-2 text-dark">Wood Chair Collection</h3>
+                                <p class="text-muted small mb-4">Handcrafted Masterpieces</p>
+                                <a href="products.html" class="btn btn-collection text-white px-4 py-2 rounded-pill">Shop Now <i
+                                        class="bi bi-arrow-right ms-1"></i></a>
+                            </div>
+                            <div class="col-5 text-center">
+                                <img src="assets/dining_chair.png" alt="Wood Chair" class="img-fluid collection-img"
+                                    style="max-height: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modern Sofa Collection -->
+                <div class="col-12 col-md-6">
+                    <div class="collection-card sofa-collection p-4 h-100 position-relative overflow-hidden rounded-4">
+                        <div class="row align-items-center h-100 position-relative z-index-1">
+                            <div class="col-7 text-white">
+                                <span class="d-block mb-2 text-white-50 fw-medium">Flat 20% Discount</span>
+                                <h3 class="fw-bold mb-2">Modern Sofa Collection</h3>
+                                <p class="text-white-50 small mb-4">Exclusive Range</p>
+                                <a href="products.html" class="btn btn-collection text-white px-4 py-2 rounded-pill">Shop Now <i
+                                        class="bi bi-arrow-right ms-1"></i></a>
+                            </div>
+                            <div class="col-5 text-center">
+                                <img src="assets/papasan_chair.png" alt="Sofa Collection"
+                                    class="img-fluid collection-img" style="max-height: 200px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-------subscribe newsletter------->
+    <section class="py-5">
+        <div class="container text-center">
+
+            <div class="mx-auto" style="max-width:650px">
+
+                <h2 class="newsletter-title fw-medium">
+                    Subscribe to Our Newsletter to Get
+                    <span class="highlight">Updates to Our Latest Collection</span>
+                </h2>
+
+                <p class="text-muted fs-5">
+                    Get 20% off on your first order just by subscribing to our newsletter
+                </p>
+
+                <form class="row g-3 justify-content-center mt-3" onsubmit="return false;">
+
+                    <div class="col-12 col-md-8">
+                        <div class="d-flex align-items-center border newsletter-input px-3 bg-white">
+
+                            <div class="icon-circle">
+                                ✉
+                            </div>
+
+                            <input type="email" class="form-control border-0 shadow-none"
+                                placeholder="Enter Email Address">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-auto">
+                        <button class="newsletter-btn w-100">
+                            Subscribe
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <script src="js/Home.js"></script>
+</body>
+</html>

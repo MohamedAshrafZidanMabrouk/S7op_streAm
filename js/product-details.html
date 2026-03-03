@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details – Amazino</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="css/Navbarauth.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    :root {
+      --main-color: rgb(124, 29, 124);
+    }
+
+    body {
+      background: #f5f5f5;
+      margin: 0;
+    }
+
+    .product-detail-img {
+      width: 100%;
+      max-height: 480px;
+      object-fit: contain;
+      border-radius: 16px;
+      background: #fff;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .08);
+    }
+
+    .product-detail-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .08);
+    }
+
+    .price-main {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--main-color);
+    }
+
+    .price-old {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 1.1rem;
+      margin-left: .5rem;
+    }
+
+    .color-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: border .2s;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .color-swatch.selected {
+      border-color: var(--main-color);
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border: 2px solid #ddd;
+      background: #fff;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .qty-btn:hover {
+      border-color: var(--main-color);
+      color: var(--main-color);
+    }
+
+    .btn-add-cart {
+      background: var(--main-color);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: background .2s;
+    }
+
+    .btn-add-cart:hover {
+      background: #5a0f5a;
+    }
+
+    .btn-add-cart:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .rating-star {
+      color: #f5a623;
+    }
+
+    .stock-badge {
+      font-size: .85rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .in-stock {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .out-of-stock {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .breadcrumb {
+      background: transparent;
+      padding: 1rem 0;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/footer.js"></script>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div id="navbar-container"></div>
+
+  <div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="products.html">Products</a></li>
+        <li class="breadcrumb-item active" id="breadcrumb-name">Product</li>
+      </ol>
+    </nav>
+
+    <!-- Loading state -->
+    <div id="loading-state" class="text-center py-5">
+      <div class="spinner-border" style="color:var(--main-color)"></div>
+      <p class="mt-2 text-muted">Loading product…</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="error-state" class="text-center py-5 d-none">
+      <i class="bi bi-exclamation-circle" style="font-size:4rem;color:#dc3545"></i>
+      <h3 class="mt-3">Product Not Found</h3>
+      <p class="text-muted">The product you're looking for doesn't exist or has been removed.</p>
+      <a href="products.html" class="btn btn-outline-secondary mt-2">← Back to Products</a>
+    </div>
+
+    <!-- Product detail -->
+    <div id="product-detail" class="d-none">
+      <div class="row g-4 align-items-start">
+        <!-- Image -->
+        <div class="col-lg-5">
+          <img id="product-image" src="" alt="" class="product-detail-img">
+        </div>
+
+        <!-- Info -->
+        <div class="col-lg-7">
+          <div class="product-detail-card">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span id="product-category" class="badge bg-secondary"></span>
+              <span id="product-stock-badge" class="stock-badge in-stock">In Stock</span>
+            </div>
+
+            <h1 id="product-name" class="h3 fw-bold mb-2"></h1>
+
+            <div class="d-flex align-items-center mb-3">
+              <div id="product-stars"></div>
+              <span id="product-rating" class="ms-2 text-muted small"></span>
+            </div>
+
+            <div class="mb-3">
+              <span id="product-price" class="price-main"></span>
+              <span id="product-old-price" class="price-old"></span>
+              <span id="product-discount" class="badge ms-2" style="background:var(--main-color)"></span>
+            </div>
+
+            <p id="product-description" class="text-muted mb-4"></p>
+
+            <!-- Color selector -->
+            <div class="mb-3" id="color-section" style="display:none">
+              <div class="fw-600 mb-2">Color: <span id="selected-color-name">—</span></div>
+              <div id="color-swatches"></div>
+            </div>
+
+            <!-- Quantity -->
+            <div class="mb-4">
+              <div class="fw-600 mb-2">Quantity</div>
+              <div class="d-flex align-items-center gap-3">
+                <button class="qty-btn" id="qty-down">−</button>
+                <span id="qty-display" class="fw-bold fs-5">1</span>
+                <button class="qty-btn" id="qty-up">+</button>
+                <span id="stock-remaining" class="text-muted small ms-2"></span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex gap-3 flex-wrap justify-content-between">
+              <button class="btn-add-cart" id="btn-add-cart">
+                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+              </button>
+              <a href="Shopping_Cart.html" class="btn btn-outline-secondary">
+                <i class="bi bi-cart me-2"></i>View Cart
+              </a>
+              <a href="products.html" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Catalog
+              </a>
+            </div>
+
+            <!-- Toast area -->
+            <div id="detail-toast" class="mt-3 d-none alert" role="alert"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Products -->
+      <div class="mt-5">
+        <h4 class="fw-bold mb-3">You May Also Like</h4>
+        <div class="row row-cols-2 row-cols-md-4 g-3" id="related-products"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <!-- Footer -->
+  <div id="footer-container"></div>
+
+  <script>
+    const PRODUCTS_API = 'https://699c4912110b5b738cc24139.mockapi.io/api/ecomerce/users/products';
+
+    let currentProduct = null;
+    let selectedColor = '';
+    let quantity = 1;
+    const COLOR_MAP = { black: '#2d2d2d', white: '#f8f8f8', gray: '#9ea5a9', silver: '#c0c0c0', gold: '#d4af37', brown: '#8b5a2b', blue: '#4a7ae3', red: '#e34a4a', green: '#4ae37a', navy: '#2c4059', beige: '#e8d9c5', purple: '#a64ae3', pink: '#e34aa6', orange: '#ffa500', olive: '#7a8b6b' };
+
+    function getUserId() {
+      try {
+        if (typeof AUTH !== 'undefined') {
+          const sess = AUTH.getSession();
+          return sess ? sess.userId : null;
+        }
+      } catch (e) { }
+      return null;
+    }
+
+    function getCart(userId) {
+      if (userId) {
+        const scoped = JSON.parse(localStorage.getItem(`shoppingCart_${userId}`) || 'null');
+        if (scoped) return scoped;
+      }
+      return JSON.parse(localStorage.getItem('shoppingCart') || '[]');
+    }
+
+    function saveCart(cart, userId) {
+      const key = userId ? `shoppingCart_${userId}` : 'shoppingCart';
+      localStorage.setItem(key, JSON.stringify(cart));
+      localStorage.setItem('shoppingCart', JSON.stringify(cart));
+    }
+
+    function getParams() {
+      return new URLSearchParams(window.location.search);
+    }
+
+    function renderStars(rating) {
+      const r = parseFloat(rating) || 0;
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        if (i <= r) html += '<i class="fas fa-star rating-star"></i>';
+        else if (i - 0.5 <= r) html += '<i class="fas fa-star-half-alt rating-star"></i>';
+        else html += '<i class="far fa-star rating-star"></i>';
+      }
+      return html;
+    }
+
+    async function loadProduct() {
+      const id = getParams().get('id');
+      if (!id) { showError(); return; }
+
+      try {
+        const res = await fetch(`${PRODUCTS_API}/${id}`);
+        if (!res.ok) throw new Error('Not found');
+        const raw = await res.json();
+
+        // Normalise
+        let colors = [];
+        if (Array.isArray(raw.colors)) colors = raw.colors.map(c => String(c).toLowerCase().trim()).filter(Boolean);
+        else if (typeof raw.colors === 'string' && raw.colors.trim()) colors = [raw.colors.toLowerCase().trim()];
+        colors = [...new Set(colors)];
+
+        currentProduct = {
+          id: String(raw.id),
+          name: raw.name || '',
+          price: parseFloat(raw.price) || 0,
+          oldPrice: raw.oldPrice ? parseFloat(raw.oldPrice) : null,
+          rating: parseFloat(raw.rating) || 0,
+          category: raw.category || 'General',
+          colors,
+          discount: raw.discount || null,
+          image: (raw.image || '').trim(),
+          description: raw.description || raw.name + ' — ' + (raw.category || 'Product') + '.',
+          stock: typeof raw.stock === 'number' ? raw.stock : 999,
+          sellerId: raw.sellerId ? String(raw.sellerId) : null,
+        };
+
+        renderProduct(currentProduct);
+        renderRelated(currentProduct);
+        updateCartBadge();
+
+      } catch (err) {
+        console.error('[product-details] Failed to load product:', err);
+        showError();
+      }
+    }
+
+    function renderProduct(p) {
+      document.getElementById('loading-state').classList.add('d-none');
+      document.getElementById('product-detail').classList.remove('d-none');
+
+      document.title = `${p.name} – Amazino`;
+      document.getElementById('breadcrumb-name').textContent = p.name;
+
+      const imgEl = document.getElementById('product-image');
+      imgEl.src = p.image || 'Frame.png';
+      imgEl.alt = p.name;
+      imgEl.onerror = () => { imgEl.src = 'Frame.png'; };
+
+      document.getElementById('product-category').textContent = p.category || 'General';
+      document.getElementById('product-name').textContent = p.name;
+      document.getElementById('product-description').textContent = p.description || '';
+
+      document.getElementById('product-price').textContent = `$${p.price.toFixed(2)}`;
+      const oldPriceEl = document.getElementById('product-old-price');
+      if (p.oldPrice) { oldPriceEl.textContent = `$${p.oldPrice.toFixed(2)}`; } else { oldPriceEl.style.display = 'none'; }
+      const discEl = document.getElementById('product-discount');
+      if (p.discount) { discEl.textContent = `${p.discount} OFF`; } else { discEl.style.display = 'none'; }
+
+      document.getElementById('product-stars').innerHTML = renderStars(p.rating);
+      document.getElementById('product-rating').textContent = p.rating ? `${p.rating} / 5` : '';
+
+      const stock = typeof p.stock === 'number' ? p.stock : 999;
+      const stockBadge = document.getElementById('product-stock-badge');
+      if (stock === 0) {
+        stockBadge.textContent = 'Out of Stock';
+        stockBadge.className = 'stock-badge out-of-stock';
+      } else {
+        stockBadge.textContent = `In Stock (${stock})`;
+        stockBadge.className = 'stock-badge in-stock';
+      }
+      document.getElementById('stock-remaining').textContent = stock > 0 ? `${stock} available` : '';
+
+      // Colors
+      const colors = Array.isArray(p.colors) ? p.colors : [];
+      const colorSection = document.getElementById('color-section');
+      if (colors.length > 0) {
+        colorSection.style.display = '';
+        const swatchContainer = document.getElementById('color-swatches');
+        swatchContainer.innerHTML = colors.map(c => `
+          <span class="color-swatch" data-color="${c}" title="${c}"
+                style="background:${COLOR_MAP[c.toLowerCase()] || '#ccc'}">
+          </span>`).join('');
+        swatchContainer.querySelectorAll('.color-swatch').forEach(s => {
+          s.addEventListener('click', () => {
+            swatchContainer.querySelectorAll('.color-swatch').forEach(x => x.classList.remove('selected'));
+            s.classList.add('selected');
+            selectedColor = s.dataset.color;
+            document.getElementById('selected-color-name').textContent = selectedColor;
+          });
+        });
+        selectedColor = colors[0];
+        swatchContainer.querySelector('.color-swatch').classList.add('selected');
+        document.getElementById('selected-color-name').textContent = selectedColor;
+      } else {
+        colorSection.style.display = 'none';
+        selectedColor = 'default';
+      }
+
+      // Quantity controls
+      const qtyDisplay = document.getElementById('qty-display');
+      document.getElementById('qty-up').addEventListener('click', () => {
+        if (quantity < stock) { quantity++; qtyDisplay.textContent = quantity; }
+      });
+      document.getElementById('qty-down').addEventListener('click', () => {
+        if (quantity > 1) { quantity--; qtyDisplay.textContent = quantity; }
+      });
+
+      // Add to cart button
+      const btn = document.getElementById('btn-add-cart');
+      if (stock === 0) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-x-circle me-2"></i>Out of Stock';
+      } else {
+        btn.addEventListener('click', handleAddToCart);
+      }
+    }
+
+    async function handleAddToCart() {
+      if (!currentProduct) return;
+
+      const btn = document.getElementById('btn-add-cart');
+      const origHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Adding…';
+
+      const userId = getUserId();
+
+      try {
+        // Add directly to localStorage cart (no async API call needed for cart)
+        const cart = getCart(userId);
+        const color = selectedColor || 'default';
+        const existing = cart.find(i => String(i.id) === String(currentProduct.id) && i.color === color);
+
+        if (existing) {
+          existing.quantity = (existing.quantity || 1) + quantity;
+        } else {
+          cart.push({
+            id: String(currentProduct.id),
+            name: currentProduct.name,
+            price: currentProduct.price,
+            oldPrice: currentProduct.oldPrice || null,
+            image: currentProduct.image || '',
+            color,
+            quantity,
+            sellerId: currentProduct.sellerId || null,
+          });
+        }
+
+        saveCart(cart, userId);
+
+        // Show success
+        const toast = document.getElementById('detail-toast');
+        toast.className = 'mt-3 alert alert-success';
+        toast.textContent = '✓ Added to cart!';
+        toast.classList.remove('d-none');
+        updateCartBadge();
+
+        btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Added!';
+        btn.style.background = '#28a745';
+        setTimeout(() => {
+          toast.classList.add('d-none');
+          btn.innerHTML = origHtml;
+          btn.style.background = '';
+          btn.disabled = false;
+        }, 2000);
+
+      } catch (err) {
+        const toast = document.getElementById('detail-toast');
+        toast.className = 'mt-3 alert alert-danger';
+        toast.textContent = 'Failed to add to cart. Please try again.';
+        toast.classList.remove('d-none');
+        setTimeout(() => toast.classList.add('d-none'), 3000);
+        btn.innerHTML = origHtml;
+        btn.disabled = false;
+      }
+    }
+
+    async function renderRelated(product) {
+      const container = document.getElementById('related-products');
+      try {
+        const res = await fetch(PRODUCTS_API);
+        if (!res.ok) throw new Error('Failed');
+        const all = await res.json();
+        const related = all
+          .filter(p => p.category === product.category && String(p.id) !== String(product.id))
+          .slice(0, 4);
+
+        if (!related.length) { container.parentElement.style.display = 'none'; return; }
+
+        container.innerHTML = related.map(p => `
+          <div class="col">
+            <div class="card shadow-sm border-0 h-100 rounded-3" style="cursor:pointer"
+                 onclick="window.location.href='product-details.html?id=${p.id}'">
+              <img src="${p.image || 'Frame.png'}" class="card-img-top rounded-top-3"
+                   style="height:160px;object-fit:contain;padding:.5rem"
+                   onerror="this.src='Frame.png'" alt="${p.name}">
+              <div class="card-body p-2">
+                <div class="small fw-bold text-truncate">${p.name}</div>
+                <div class="fw-bold" style="color:var(--main-color)">$${parseFloat(p.price).toFixed(2)}</div>
+              </div>
+            </div>
+          </div>`).join('');
+      } catch (err) {
+        container.parentElement.style.display = 'none';
+      }
+    }
+
+    function showError() {
+      document.getElementById('loading-state').classList.add('d-none');
+      document.getElementById('error-state').classList.remove('d-none');
+    }
+
+    function updateCartBadge() {
+      const userId = getUserId();
+      const cart = getCart(userId);
+      const total = cart.reduce((s, i) => s + (i.quantity || 1), 0);
+      const badge = document.getElementById('cartBadge');
+      if (badge) { badge.textContent = total; badge.style.display = total > 0 ? '' : 'none'; }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadProduct);
+  </script>
+</body>
+
+</html>

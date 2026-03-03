@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="js/swal.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shipping - Amazino</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel='stylesheet' type='text/css' href='css/components.css'>
+    <link rel='stylesheet' href='css/Navbarauth.css'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="js/auth.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/footer.js"></script>
+ 
+  <link rel="stylesheet" type="text/css" href="css/components.css">
+  <link rel="stylesheet" href="css/Navbarauth.css">
+  <script>
+    // FIX BREAK 5: Guard this page — guests who navigate directly are redirected to sign in.
+    // We do NOT use AUTH.guardRoute() here because Shipping should redirect to cart (not dashboard).
+    (function() {
+      try {
+        const sess = typeof AUTH !== 'undefined' ? AUTH.getSession() : null;
+        const legacyLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        if (!sess && !legacyLoggedIn) {
+          window.location.replace('signin.html');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    :root {
+      --main-color: rgb(124, 29, 124);
+      --main-color-hover: rgb(144, 86, 144);
+      --secondary-color: #B19470;
+      --gray-light: #e0e0e0;
+      --gray-medium: #a7a7a7;
+      --gray-dark: #6c757d;
+      --gray-border: #dee2e6;
+      --danger-color: #dc3545;
+      --success-color: #28a745;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .shipping-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--main-color);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb {
+      color: var(--gray-medium);
+      font-size: 1.2rem;
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .breadcrumb span {
+      color: var(--main-color);
+      font-weight: 500;
+    }
+
+    .breadcrumb a {
+      color: var(--gray-medium);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--main-color);
+    }
+
+    .steps-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5rem;
+      position: relative;
+      padding: 0 1rem;
+      width: 100%;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      z-index: 3;
+      background-color: transparent;
+      padding: 0 0.5rem;
+    }
+
+    .circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--gray-light);
+      border: 2px solid var(--gray-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: var(--gray-medium);
+      transition: all 0.3s ease;
+    }
+
+    .step-item.active .circle {
+      background-color: var(--main-color);
+      border-color: var(--main-color);
+      color: white;
+    }
+
+    .step-item.completed .circle {
+      background-color: var(--main-color);
+      border-color: var(--main-color);
+      color: white;
+    }
+
+    .step-label {
+      font-weight: 500;
+      color: var(--gray-medium);
+      font-size: 0.95rem;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .step-label i {
+      color: var(--gray-medium);
+      font-size: 1rem;
+    }
+
+    .step-item.active .step-label {
+      color: var(--main-color);
+      font-weight: 700;
+    }
+
+    .step-item.active .step-label i {
+      color: var(--main-color);
+    }
+
+    .step-item.completed .step-label {
+      color: var(--main-color);
+    }
+
+    .step-item.completed .step-label i {
+      color: var(--main-color);
+    }
+
+    .step-line {
+      width: 100px;
+      height: 2px;
+      background-color: var(--gray-border);
+      margin: 0 0.5rem;
+      z-index: 2;
+      position: relative;
+      top: -0.6rem;
+    }
+
+    .shipping-content {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .billing-details {
+      flex: 2;
+      min-width: 300px;
+    }
+
+    .section-title {
+      color: var(--main-color);
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+      margin-bottom: 1rem;
+    }
+
+    .form-group.full-width {
+      width: 100%;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: var(--gray-dark);
+      margin-bottom: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    .required-field::after {
+      content: " *";
+      color: var(--danger-color);
+      font-weight: bold;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 50px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--main-color);
+      box-shadow: 0 0 0 2px rgba(124, 29, 124, 0.1);
+    }
+
+    .form-control.error {
+      border-color: var(--danger-color);
+    }
+
+    .form-control.valid {
+      border-color: var(--success-color);
+    }
+
+    .form-control::placeholder {
+      color: #b0b0b0;
+      font-style: italic;
+    }
+
+    .error-message {
+      color: var(--danger-color);
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+      margin-left: 0.5rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 16px;
+      padding-right: 2.5rem;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 2rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+      accent-color: var(--main-color);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .radio-option span {
+      color: var(--gray-dark);
+      font-size: 0.95rem;
+    }
+
+    #differentBillingSection {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background-color: #f9f9f9;
+      border-radius: 20px;
+      border: 1px solid var(--gray-border);
+      display: none;
+    }
+
+    #differentBillingSection.show {
+      display: block;
+    }
+
+    #differentBillingSection h4 {
+      color: var(--main-color);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .order-summary {
+      flex: 1;
+      min-width: 280px;
+      background: white;
+      border-radius: 30px;
+      padding: 2rem;
+      position: sticky;
+      top: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      align-self: flex-start;
+    }
+
+    .summary-title {
+      color: var(--main-color);
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      color: var(--gray-dark);
+      font-size: 0.95rem;
+    }
+
+    .summary-row.total {
+      font-weight: 700;
+      color: var(--main-color);
+      font-size: 1.3rem;
+      border-top: 2px dashed var(--gray-border);
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+
+    .proceed-btn {
+      background-color: var(--main-color);
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      width: 100%;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .proceed-btn:hover {
+      background-color: var(--main-color-hover);
+    }
+
+    .shipping-note {
+      margin-top: 1rem;
+      color: var(--gray-medium);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .shipping-note i {
+      color: #28a745;
+    }
+
+    @media (max-width: 768px) {
+      .step-line {
+        display: none;
+      }
+      
+      .steps-container {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      
+      .shipping-content {
+        flex-direction: column;
+      }
+      
+      .order-summary {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="shipping-container">
+    <h1>Shipping</h1>
+
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> / 
+      <a href="Shopping_Cart.html">Shopping Cart</a> / 
+      <span>Shipping</span>
+    </div>
+
+    <div class="steps-container">
+      <div class="step-item completed">
+        <div class="circle">1</div>
+        <div class="step-label">
+          <i class="fas fa-shopping-cart"></i> Shopping Cart
+        </div>
+      </div>
+      
+      <div class="step-line"></div>
+      
+      <div class="step-item active">
+        <div class="circle">2</div>
+        <div class="step-label">
+          <i class="fas fa-truck"></i> Shipping
+        </div>
+      </div>
+      
+      <div class="step-line"></div>
+      
+      <div class="step-item">
+        <div class="circle">3</div>
+        <div class="step-label">
+          <i class="fas fa-credit-card"></i> Payment
+        </div>
+      </div>
+      
+      <div class="step-line"></div>
+      
+      <div class="step-item">
+        <div class="circle">4</div>
+        <div class="step-label">
+          <i class="fas fa-file-invoice"></i> Summary
+        </div>
+      </div>
+    </div>
+
+    <form id="shippingForm" novalidate>
+      <div class="shipping-content">
+        <div class="billing-details">
+          <div class="section-title">Billing Details</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName" class="required-field">First Name</label>
+              <input type="text" id="firstName" class="form-control" placeholder="Sara" required>
+              <div class="error-message" id="firstNameError">First name must be at least 3 letters and contain only letters</div>
+            </div>
+            <div class="form-group">
+              <label for="lastName" class="required-field">Last Name</label>
+              <input type="text" id="lastName" class="form-control" placeholder="Samir" required>
+              <div class="error-message" id="lastNameError">Last name must be at least 3 letters and contain only letters</div>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="country" class="required-field">Country</label>
+            <select id="country" class="form-control" required>
+              <option value="" disabled selected>Select your country</option>
+              <option value="Egypt">Egypt</option>
+              <option value="Saudi Arabia">Saudi Arabia</option>
+              <option value="Kuwait">Kuwait</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="Italy">Italy</option>
+            </select>
+            <div class="error-message" id="countryError">Please select your country</div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="street" class="required-field">Street Address</label>
+            <input type="text" id="street" class="form-control" placeholder="Elharam street" required>
+            <div class="error-message" id="streetError">Street address must be at least 5 characters</div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="city" class="required-field">City</label>
+            <input type="text" id="city" class="form-control" placeholder="Giza" required>
+            <div class="error-message" id="cityError">City must be at least 3 letters and contain only letters</div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="state" class="required-field">State</label>
+            <input type="text" id="state" class="form-control" placeholder="Egypt" required>
+            <div class="error-message" id="stateError">State must be at least 2 letters and contain only letters</div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="zip" class="required-field">Zip Code</label>
+            <input type="text" id="zip" class="form-control" placeholder="Enter Zip Code (e.g., 12345)" required>
+            <div class="error-message" id="zipError">Zip code must be exactly 5 digits</div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="phone" class="required-field">Phone</label>
+            <input type="tel" id="phone" class="form-control" placeholder="Enter Phone Number (e.g., 01234567890)" required>
+            <div class="error-message" id="phoneError">Phone number must be 11 digits starting with 01</div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="email" class="required-field">Email</label>
+            <input type="email" id="email" class="form-control" placeholder="sarasamir9202@gmail.com" required>
+            <div class="error-message" id="emailError">Please enter a valid email address</div>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="required-field">Delivery Address</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="delivery" value="same" id="deliverySame" checked>
+                <span>Same as shipping address</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="delivery" value="different" id="deliveryDifferent">
+                <span>Use a different billing address</span>
+              </label>
+            </div>
+            <div class="error-message" id="deliveryError">Please select a delivery option</div>
+          </div>
+
+          <div id="differentBillingSection">
+            <h4>Different Billing Address</h4>
+            
+            <div class="form-group full-width">
+              <label for="billingEmail">Billing Email</label>
+              <input type="email" id="billingEmail" class="form-control" placeholder="billing@example.com">
+              <div class="error-message" id="billingEmailError">Please enter a valid email address</div>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="billingFirstName">Billing First Name</label>
+              <input type="text" id="billingFirstName" class="form-control" placeholder="Billing First Name">
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="billingLastName">Billing Last Name</label>
+              <input type="text" id="billingLastName" class="form-control" placeholder="Billing Last Name">
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="billingStreet">Billing Street Address</label>
+              <input type="text" id="billingStreet" class="form-control" placeholder="Billing Street">
+            </div>
+          </div>
+        </div>
+
+        <div class="order-summary">
+          <div class="summary-title">Order Summary</div>
+          
+          <div class="summary-row">
+            <span>Items: <span id="items-count">0</span></span>
+            <span id="items-subtotal">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Sub Total</span>
+            <span id="subtotal">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Discount</span>
+            <span id="discount">-$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span id="shipping-cost">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Taxes</span>
+            <span id="taxes">$0.00</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span id="total">$0.00</span>
+          </div>
+
+          <button type="submit" class="proceed-btn">
+            Proceed to Payment <i class="fas fa-arrow-right"></i>
+          </button>
+
+          <div class="shipping-note">
+            <i class="fas fa-shipping-fast"></i>
+            <span>Free shipping for orders above $180</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div id="footer-container"></div>
+    <script src="js/navbar.js"></script>
+  <script src="js/footer.js"></script>
+  <script>
+    function loadCartData() {
+      try {
+        const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+        
+        const itemsCount = cart.length;
+        let subtotal = 0;
+        cart.forEach(item => {
+          subtotal += (item.price || 0) * (item.quantity || 1);
+        });
+        
+        const discount = 13.50;
+        const shipping = 0.00;
+        const taxes = 0.00;
+        const total = subtotal - discount + shipping + taxes;
+        
+        document.getElementById('items-count').textContent = itemsCount;
+        document.getElementById('items-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('discount').textContent = `-$${discount.toFixed(2)}`;
+        document.getElementById('shipping-cost').textContent = `$${shipping.toFixed(2)}`;
+        document.getElementById('taxes').textContent = `$${taxes.toFixed(2)}`;
+        document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+      } catch (error) {
+        console.error('Error loading cart data:', error);
+      }
+    }
+
+    function setupBillingToggle() {
+      const sameRadio = document.getElementById('deliverySame');
+      const differentRadio = document.getElementById('deliveryDifferent');
+      const differentSection = document.getElementById('differentBillingSection');
+      
+      if (sameRadio && differentRadio && differentSection) {
+        sameRadio.addEventListener('change', function() {
+          if (this.checked) {
+            differentSection.classList.remove('show');
+          }
+        });
+        
+        differentRadio.addEventListener('change', function() {
+          if (this.checked) {
+            differentSection.classList.add('show');
+          }
+        });
+      }
+    }
+
+    function validateName(name) {
+      return /^[A-Za-z]{3,50}$/.test(name?.trim() || '');
+    }
+
+    function validateCity(city) {
+      return /^[A-Za-z]{3,50}$/.test(city?.trim() || '');
+    }
+
+    function validateState(state) {
+      return /^[A-Za-z]{2,50}$/.test(state?.trim() || '');
+    }
+
+    function validateStreet(street) {
+      return (street?.trim() || '').length >= 5;
+    }
+
+    function validateZip(zip) {
+      return /^\d{5}$/.test(zip?.trim() || '');
+    }
+
+    function validatePhone(phone) {
+      return /^01\d{9}$/.test(phone?.trim() || '');
+    }
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email?.trim() || '');
+    }
+
+    function setupValidation() {
+      const fields = [
+        { id: 'firstName', validator: validateName, errorId: 'firstNameError' },
+        { id: 'lastName', validator: validateName, errorId: 'lastNameError' },
+        { id: 'street', validator: validateStreet, errorId: 'streetError' },
+        { id: 'city', validator: validateCity, errorId: 'cityError' },
+        { id: 'state', validator: validateState, errorId: 'stateError' },
+        { id: 'zip', validator: validateZip, errorId: 'zipError' },
+        { id: 'phone', validator: validatePhone, errorId: 'phoneError' },
+        { id: 'email', validator: validateEmail, errorId: 'emailError' }
+      ];
+
+      fields.forEach(field => {
+        const input = document.getElementById(field.id);
+        const error = document.getElementById(field.errorId);
+        
+        if (input && error) {
+          input.addEventListener('input', function() {
+            if (!field.validator(this.value)) {
+              this.classList.add('error');
+              this.classList.remove('valid');
+              error.classList.add('show');
+            } else {
+              this.classList.remove('error');
+              this.classList.add('valid');
+              error.classList.remove('show');
+            }
+          });
+        }
+      });
+
+      const country = document.getElementById('country');
+      const countryError = document.getElementById('countryError');
+      if (country && countryError) {
+        country.addEventListener('change', function() {
+          if (!this.value) {
+            this.classList.add('error');
+            this.classList.remove('valid');
+            countryError.classList.add('show');
+          } else {
+            this.classList.remove('error');
+            this.classList.add('valid');
+            countryError.classList.remove('show');
+          }
+        });
+      }
+
+      const billingEmail = document.getElementById('billingEmail');
+      const billingEmailError = document.getElementById('billingEmailError');
+      if (billingEmail && billingEmailError) {
+        billingEmail.addEventListener('input', function() {
+          if (!validateEmail(this.value) && this.value.trim() !== '') {
+            this.classList.add('error');
+            this.classList.remove('valid');
+            billingEmailError.classList.add('show');
+          } else {
+            this.classList.remove('error');
+            this.classList.add('valid');
+            billingEmailError.classList.remove('show');
+          }
+        });
+      }
+    }
+
+    document.getElementById('shippingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const firstName = document.getElementById('firstName')?.value?.trim() || '';
+      const lastName = document.getElementById('lastName')?.value?.trim() || '';
+      const country = document.getElementById('country')?.value || '';
+      const street = document.getElementById('street')?.value?.trim() || '';
+      const city = document.getElementById('city')?.value?.trim() || '';
+      const state = document.getElementById('state')?.value?.trim() || '';
+      const zip = document.getElementById('zip')?.value?.trim() || '';
+      const phone = document.getElementById('phone')?.value?.trim() || '';
+      const email = document.getElementById('email')?.value?.trim() || '';
+      const delivery = document.querySelector('input[name="delivery"]:checked');
+      const differentBillingEmail = document.getElementById('billingEmail')?.value?.trim() || '';
+
+      let isValid = true;
+      const errors = [];
+
+      if (!validateName(firstName)) {
+        document.getElementById('firstName')?.classList.add('error');
+        document.getElementById('firstNameError')?.classList.add('show');
+        isValid = false;
+        errors.push('First Name');
+      }
+
+      if (!validateName(lastName)) {
+        document.getElementById('lastName')?.classList.add('error');
+        document.getElementById('lastNameError')?.classList.add('show');
+        isValid = false;
+        errors.push('Last Name');
+      }
+
+      if (!country) {
+        document.getElementById('country')?.classList.add('error');
+        document.getElementById('countryError')?.classList.add('show');
+        isValid = false;
+        errors.push('Country');
+      }
+
+      if (!validateStreet(street)) {
+        document.getElementById('street')?.classList.add('error');
+        document.getElementById('streetError')?.classList.add('show');
+        isValid = false;
+        errors.push('Street Address');
+      }
+
+      if (!validateCity(city)) {
+        document.getElementById('city')?.classList.add('error');
+        document.getElementById('cityError')?.classList.add('show');
+        isValid = false;
+        errors.push('City');
+      }
+
+      if (!validateState(state)) {
+        document.getElementById('state')?.classList.add('error');
+        document.getElementById('stateError')?.classList.add('show');
+        isValid = false;
+        errors.push('State');
+      }
+
+      if (!validateZip(zip)) {
+        document.getElementById('zip')?.classList.add('error');
+        document.getElementById('zipError')?.classList.add('show');
+        isValid = false;
+        errors.push('Zip Code');
+      }
+
+      if (!validatePhone(phone)) {
+        document.getElementById('phone')?.classList.add('error');
+        document.getElementById('phoneError')?.classList.add('show');
+        isValid = false;
+        errors.push('Phone');
+      }
+
+      if (!validateEmail(email)) {
+        document.getElementById('email')?.classList.add('error');
+        document.getElementById('emailError')?.classList.add('show');
+        isValid = false;
+        errors.push('Email');
+      }
+
+      if (!delivery) {
+        document.getElementById('deliveryError')?.classList.add('show');
+        isValid = false;
+        errors.push('Delivery Address');
+      } else {
+        document.getElementById('deliveryError')?.classList.remove('show');
+      }
+
+      if (delivery?.value === 'different') {
+        if (!differentBillingEmail || !validateEmail(differentBillingEmail)) {
+          document.getElementById('billingEmail')?.classList.add('error');
+          document.getElementById('billingEmailError')?.classList.add('show');
+          isValid = false;
+          errors.push('Billing Email');
+        }
+      }
+
+      if (isValid) {
+        const orderEmail = (delivery?.value === 'different') ? differentBillingEmail : email;
+        
+        const shippingData = {
+          firstName: firstName,
+          lastName: lastName,
+          street: street,
+          city: city,
+          state: state,
+          zip: zip,
+          email: email,
+          orderEmail: orderEmail,
+          phone: phone,
+          country: country,
+          delivery: delivery.value
+        };
+        
+        if (delivery.value === 'different') {
+          shippingData.billingFirstName = document.getElementById('billingFirstName')?.value?.trim() || '';
+          shippingData.billingLastName = document.getElementById('billingLastName')?.value?.trim() || '';
+          shippingData.billingStreet = document.getElementById('billingStreet')?.value?.trim() || '';
+        }
+        
+        try {
+          localStorage.setItem('shippingData', JSON.stringify(shippingData));
+          console.log('Shipping data saved:', shippingData);
+          window.location.href = 'Payment.html';
+        } catch (error) {
+          console.error('Error saving shipping data:', error);
+          alert('There was an error saving your information. Please try again.');
+        }
+      } else {
+        alert(`Please fix the following fields: ${errors.join(', ')}`);
+      }
+    });
+
+    window.onload = function() {
+      loadCartData();
+      setupValidation();
+      setupBillingToggle();
+    };
+  </script>
+</body>
+</html>

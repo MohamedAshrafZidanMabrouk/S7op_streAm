@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Amazino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/customer_dashboard.css">
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+      (function(){ emailjs.init("38fW8AWlUoUtFifrX"); })();
+    </script>
+    <style>
+        /* ── Back to Store btn in topbar ── */
+        .tb-back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: var(--pri-glass);
+            color: var(--pri);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1.5px solid var(--acc);
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+        .tb-back-home:hover {
+            background: var(--acc);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124,29,124,0.15);
+            color: var(--pri);
+        }
+        .tb-back-home i { font-size: 0.82rem; }
+        @media (max-width: 480px) {
+            .tb-back-home span { display: none; }
+        }
+        /* sidebar anchor nav-item fix */
+        a.nav-item {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            border-radius: var(--r-sm);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--t), color var(--t);
+        }
+        a.nav-item:hover {
+            background: var(--pri-glass);
+            color: var(--pri);
+        }
+        a.nav-item i {
+            width: 18px;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--mu);
+        }
+        a.nav-item:hover i { color: var(--pri); }
+    </style>
+</head>
+<body>
+
+<div class="ov" id="ov" onclick="closeSB()"></div>
+
+<!-- SIDEBAR -->
+<nav class="sb" id="sb">
+    <!-- Logo → goes to home -->
+    <a class="sb-brand" href="index.html" title="Back to Store">
+        <div class="sb-brand-icon"><i class="fas fa-shopping-bag"></i></div>
+        <span class="sb-brand-name">Amazino</span>
+    </a>
+    <div class="sb-user">
+        <div class="sb-avatar" id="sbAvatar">--</div>
+        <div class="sb-user-info">
+            <div class="sb-name" id="sbName">User</div>
+            <div class="sb-role">Customer Operations</div>
+        </div>
+    </div>
+    <div class="sb-nav">
+        <div class="nav-item" onclick="go('dashboard')"><i class="fas fa-chart-pie"></i><span>Dashboard</span></div>
+        <div class="nav-item" onclick="go('profile')"><i class="fas fa-user-circle"></i><span>Personal Data</span></div>
+        <div class="nav-item" onclick="go('payment')"><i class="fas fa-credit-card"></i><span>Payment Account</span></div>
+        <div class="nav-item" onclick="go('orders')"><i class="fas fa-receipt"></i><span>My Orders</span></div>
+        <div class="nav-item" onclick="go('address')"><i class="fas fa-map-marker-alt"></i><span>Manage Address</span></div>
+        <div class="nav-item" onclick="go('password')"><i class="fas fa-lock"></i><span>Password Manager</span></div>
+        <div class="nav-item" onclick="go('notifications')"><i class="fas fa-bell"></i><span>Notifications</span></div>
+        <div class="sb-sep"></div>
+
+        <div class="sb-sep"></div>
+        <!-- Back to Store -->
+        <a class="nav-item" href="index.html">
+            <i class="fas fa-home"></i><span>Back to Store</span>
+        </a>
+        <div class="sb-sep"></div>
+        <div class="nav-item logout-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>Log out</span></div>
+    </div>
+    <div class="sb-footer">
+        <div class="sb-footer-text">© 2025 Amazino. All rights reserved.</div>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+    <header class="topbar" id="topbar">
+        <div class="tb-left">
+            <button class="menu-btn" onclick="toggleSB()"><i class="fas fa-bars"></i></button>
+            <!-- Back to Store button -->
+            <a href="index.html" class="tb-back-home" title="Back to Store">
+                <i class="fas fa-home"></i>
+                <span>Store</span>
+            </a>
+            <span class="page-title-bar" id="pageTitleBar">Dashboard</span>
+        </div>
+        <div class="tb-right">
+            <a href="index.html" class="tb-icon-btn" title="Wishlist"><i class="fas fa-heart"></i></a>
+            <a href="Shopping_Cart.html" class="tb-icon-btn" title="Cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge" id="cartCount">0</span>
+            </a>
+            <div class="tb-divider"></div>
+            <div class="tb-user-pill">
+                <div class="tb-avatar" id="tbAvatar">--</div>
+                <div>
+                    <div class="tb-name" id="tbName">Loading...</div>
+                    <div class="tb-role">Customer</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page section active" id="section-dashboard">
+        <div class="welcome-row">
+            <div class="welcome-text">
+                <h2>Welcome back, <span id="welcomeName">there</span> 👋</h2>
+                <p>Here's what's happening with your account today.</p>
+            </div>
+            <div class="welcome-date" id="dashDate"></div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon purple"><i class="fas fa-shopping-bag"></i></div>
+                <div>
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-val" id="statOrders">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon gold"><i class="fas fa-clock"></i></div>
+                <div>
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-val" id="statPending">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fas fa-dollar-sign"></i></div>
+                <div>
+                    <div class="stat-label">Total Spent</div>
+                    <div class="stat-val" id="statSpent">$0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Recent Orders</div>
+            <div id="recentOrdersList">
+                <div class="empty-state">
+                    <i class="fas fa-shopping-bag"></i>
+                    <p>No orders yet.<br><a href="index.html">Start shopping</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PERSONAL DATA ===== -->
+    <div class="page section" id="section-profile">
+        <div class="page-header">
+            <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
+            <h1 class="page-title">Personal Data</h1>
+        </div>
+
+        <div class="card" style="display:flex;align-items:center;gap:20px;padding:24px;flex-wrap:wrap;">
+            <div style="position:relative;flex-shrink:0;" class="profile-avatar-wrap">
+                <div class="profile-avatar" id="profileAvatar" style="width:88px;height:88px;font-size:1.8rem;border:3px solid var(--wh);box-shadow:var(--sh);">
+                    <img id="profileAvatarImg" src="" alt="">
+                    <i class="fas fa-user" id="profileAvatarIco"></i>
+                </div>
+                <div class="upload-overlay" onclick="document.getElementById('imgInput').click()">
+                    <i class="fas fa-camera"></i>
+                    <span>Change</span>
+                </div>
+                <div class="cam-btn" onclick="document.getElementById('imgInput').click()"><i class="fas fa-camera"></i></div>
+                <input type="file" id="imgInput" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;" onchange="handleImg(this)">
+            </div>
+            <div>
+                <div style="font-size:1.05rem;font-weight:700;color:var(--tx);" id="profileDisplayName">--</div>
+                <div style="font-size:0.8rem;color:var(--mu);margin-top:2px;">Customer Operations</div>
+                <div style="font-size:0.73rem;color:var(--mu2);margin-top:4px;"><i class="fas fa-image" style="margin-right:4px;"></i>At least 800×800 px recommended. JPG or PNG allowed.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <form id="personalDataForm" novalidate onsubmit="submitPersonalData(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name <span class="req">*</span></label>
+                        <input type="text" id="pd_fname" class="form-input" placeholder="Maram" autocomplete="given-name" oninput="validateNameField(this,'pd_fname_err')">
+                        <div class="err-msg" id="pd_fname_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Min 2 characters, no numbers</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name <span class="req">*</span></label>
+                        <input type="text" id="pd_lname" class="form-input" placeholder="Elamly" autocomplete="family-name" oninput="validateNameField(this,'pd_lname_err')">
+                        <div class="err-msg" id="pd_lname_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Min 2 characters, no numbers</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="pd_email" class="form-input" placeholder="maramahmed@gmail.com" autocomplete="email" oninput="validateEmailField(this,'pd_email_err')">
+                    <div class="err-msg" id="pd_email_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please enter a valid email address</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Email <span class="req">*</span></label>
+                    <input type="email" id="pd_cemail" class="form-input" placeholder="Re-enter your email">
+                    <div class="err-msg" id="pd_cemail_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Emails do not match</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mobile Number <span class="req">*</span></label>
+                    <div class="phone-row">
+                        <div class="phone-prefix">
+                            <span>🇪🇬</span>
+                            <select class="phone-country-select" id="pd_countrycode">
+                                <option value="+20">+20</option>
+                                <option value="+1">+1</option>
+                                <option value="+44">+44</option>
+                                <option value="+971">+971</option>
+                                <option value="+966">+966</option>
+                                <option value="+962">+962</option>
+                                <option value="+965">+965</option>
+                            </select>
+                        </div>
+                        <input type="tel" id="pd_phone" class="form-input" style="flex:1;" placeholder="0806 123 7890" autocomplete="tel" oninput="validatePhoneField(this,'pd_phone_err')">
+                    </div>
+                    <div class="err-msg" id="pd_phone_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Exactly 11 digits required</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <select id="pd_gender" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other / Prefer not to say</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Birthday</label>
+                        <input type="date" id="pd_birthday" class="form-input" oninput="validateBirthdayField(this,'pd_birthday_err')">
+                        <div class="err-msg" id="pd_birthday_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Age must be between 1 and 100 years</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Country <span class="req">*</span></label>
+                    <div style="position:relative;">
+                        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mu2);font-size:.82rem;pointer-events:none;"><i class="fas fa-globe"></i></span>
+                        <select id="pd_country" class="form-select" style="padding-left:36px;">
+                            <option value="">Select Country</option>
+                            <option value="EG">🇪🇬 Egypt</option>
+                            <option value="SA">🇸🇦 Saudi Arabia</option>
+                            <option value="AE">🇦🇪 United Arab Emirates</option>
+                            <option value="KW">🇰🇼 Kuwait</option>
+                            <option value="JO">🇯🇴 Jordan</option>
+                            <option value="US">🇺🇸 United States</option>
+                            <option value="GB">🇬🇧 United Kingdom</option>
+                            <option value="DE">🇩🇪 Germany</option>
+                            <option value="FR">🇫🇷 France</option>
+                        </select>
+                    </div>
+                    <div class="err-msg" id="pd_country_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please select your country</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Address <span class="req">*</span></label>
+                        <input type="text" id="pd_address" class="form-input" placeholder="123 Main Street, Spring Garden">
+                        <div class="err-msg" id="pd_address_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Min 10 characters required</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Zip Code <span class="req">*</span></label>
+                        <input type="text" id="pd_zip" class="form-input" placeholder="09021" maxlength="10" oninput="this.value=this.value.replace(/[^a-zA-Z0-9\- ]/g,'')">
+                        <div class="err-msg" id="pd_zip_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please enter a valid zip code</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <button type="submit" class="btn-primary"><i class="fas fa-check"></i>Save Changes</button>
+                    <button type="button" class="btn-secondary" onclick="resetPersonalData()"><i class="fas fa-undo"></i>Discard</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== PAYMENT ===== -->
+    <div class="page section" id="section-payment">
+        <div class="page-header">
+            <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
+            <h1 class="page-title">Payment Account</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Select Payment Method</div>
+            <div class="pay-options">
+                <div class="pay-opt selected" onclick="selectPayMethod(this,'paypal')">
+                    <div class="radio-circle"><div class="radio-dot"></div></div>
+                    <span class="pay-icon" style="color:#003087;"><i class="fab fa-paypal"></i></span>
+                    <span class="pay-label">Paypal</span>
+                    <span style="margin-left:auto;font-size:0.78rem;color:var(--pri);font-weight:600;cursor:pointer;" onclick="event.stopPropagation();">Link account</span>
+                </div>
+                <div class="pay-opt" onclick="selectPayMethod(this,'gpay')">
+                    <div class="radio-circle"><div class="radio-dot"></div></div>
+                    <span class="pay-icon" style="color:#4285F4;"><i class="fab fa-google"></i></span>
+                    <span class="pay-label">Google Pay</span>
+                </div>
+                <div class="pay-opt" onclick="selectPayMethod(this,'cash')">
+                    <div class="radio-circle"><div class="radio-dot"></div></div>
+                    <span class="pay-icon" style="color:var(--suc);"><i class="fas fa-money-bill-wave"></i></span>
+                    <span class="pay-label">Cash On Delivery</span>
+                </div>
+                <div class="pay-opt" onclick="selectPayMethod(this,'card')">
+                    <div class="radio-circle"><div class="radio-dot"></div></div>
+                    <span class="pay-icon" style="color:var(--pri);"><i class="fas fa-credit-card"></i></span>
+                    <span class="pay-label">Add New Credit / Debit Card</span>
+                </div>
+            </div>
+
+            <!-- PayPal form -->
+            <div id="paypalForm" class="form-section" style="display:none;">
+                <div class="form-section-title"><i class="fab fa-paypal"></i> PayPal Details</div>
+                <div class="form-group">
+                    <label class="form-label">PayPal Email <span class="req">*</span></label>
+                    <input type="email" id="pp_email" class="form-input" placeholder="paypal@email.com">
+                    <div class="err-msg" id="pp_email_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please enter a valid email</div>
+                </div>
+                <button class="btn-primary" onclick="savePaymentDetails('paypal')"><i class="fas fa-link"></i>Link PayPal</button>
+            </div>
+
+            <!-- Google Pay form -->
+            <div id="gpayForm" class="form-section" style="display:none;">
+                <div class="form-section-title"><i class="fab fa-google"></i> Google Pay Details</div>
+                <div class="form-group">
+                    <label class="form-label">Linked Phone <span class="req">*</span></label>
+                    <input type="tel" id="gp_phone" class="form-input" placeholder="Phone linked to Google Pay">
+                    <div class="err-msg" id="gp_phone_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please enter a valid phone number</div>
+                </div>
+                <button class="btn-primary" onclick="savePaymentDetails('gpay')"><i class="fas fa-link"></i>Link Google Pay</button>
+            </div>
+
+            <!-- Card form -->
+            <div id="cardForm" class="form-section" style="display:none;">
+                <div class="card-preview" id="cardPreview">
+                    <div class="cp-chip">💳</div>
+                    <div class="cp-number" id="cpNumber">•••• •••• •••• ••••</div>
+                    <div class="cp-row">
+                        <div><div class="cp-label">Card Holder</div><div class="cp-val" id="cpHolder">MARAM AHMED</div></div>
+                        <div><div class="cp-label">Expires</div><div class="cp-val" id="cpExpiry">MM/YY</div></div>
+                    </div>
+                </div>
+                <div class="form-section-title"><i class="fas fa-credit-card"></i> Card Details</div>
+                <div class="form-group">
+                    <label class="form-label">Card Holder Name <span class="req">*</span></label>
+                    <input type="text" id="card_name" class="form-input" placeholder="Maram Ahmed" oninput="document.getElementById('cpHolder').textContent=this.value.toUpperCase()||'MARAM AHMED'">
+                    <div class="err-msg" id="card_name_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please enter the cardholder name</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Card Number <span class="req">*</span></label>
+                    <input type="text" id="card_number" class="form-input" placeholder="7461 2796 8074 ****" maxlength="19" oninput="formatCardNumber(this)">
+                    <div class="err-msg" id="card_number_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please enter a valid 16-digit card number</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Expiry Date <span class="req">*</span></label>
+                        <input type="text" id="card_expiry" class="form-input" placeholder="02/30" maxlength="5" oninput="formatExpiry(this)">
+                        <div class="err-msg" id="card_expiry_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Invalid format (MM/YY)</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">CVV <span class="req">*</span></label>
+                        <div class="cvv-wrapper">
+                            <input type="text" id="card_cvv" class="form-input" placeholder="000" maxlength="3" oninput="this.value=this.value.replace(/\D/g,'')" onfocus="showCvvCartoon()" onblur="hideCvvCartoon()">
+                            <div class="cartoon-wrap" id="cartoonWrap">
+                                <div class="cartoon-bubble" id="cartoonBubble"></div>
+                                <div class="cartoon-face" id="cartoonFace">👀</div>
+                            </div>
+                        </div>
+                        <div class="err-msg" id="card_cvv_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>CVV must be 3 digits</div>
+                    </div>
+                </div>
+                <div class="checkbox-row">
+                    <div class="custom-checkbox" id="saveCardChk" onclick="toggleSaveCard()"><i class="fas fa-check"></i></div>
+                    <span class="checkbox-label">Save card for future payments</span>
+                </div>
+            </div>
+
+            <div style="margin-top:4px;" id="cashInfo"></div>
+            <button class="btn-primary full" onclick="confirmPaymentMethod()"><i class="fas fa-lock"></i>Confirm Payment</button>
+        </div>
+
+        <!-- Saved Methods -->
+        <div id="savedMethodsSection" style="margin-top:8px;display:none;">
+            <div class="section-label">Saved Methods</div>
+            <div id="savedMethodsList"></div>
+        </div>
+    </div>
+
+    <!-- ===== ORDERS ===== -->
+    <div class="page section" id="section-orders">
+        <div class="page-header">
+            <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
+            <h1 class="page-title">My Orders</h1>
+        </div>
+        <div class="filter-row">
+            <button class="filter-btn active" onclick="filterOrders(this,'all')">All</button>
+            <button class="filter-btn" onclick="filterOrders(this,'pending')">Pending</button>
+            <button class="filter-btn" onclick="filterOrders(this,'processing')">Processing</button>
+            <button class="filter-btn" onclick="filterOrders(this,'shipped')">Shipped</button>
+            <button class="filter-btn" onclick="filterOrders(this,'delivered')">Delivered</button>
+        </div>
+        <div id="ordersList">
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <p>No orders found.<br><a href="index.html">Start shopping</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ADDRESS ===== -->
+    <div class="page section" id="section-address">
+        <div class="page-header">
+            <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
+            <h1 class="page-title">Manage Address</h1>
+        </div>
+        <div id="savedAddressesList" style="margin-bottom:8px;"></div>
+        <div class="card">
+            <div class="card-title">Add New Address</div>
+            <form id="addressForm" novalidate onsubmit="submitAddress(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name <span class="req">*</span></label>
+                        <input type="text" id="addr_fname" class="form-input" placeholder="Maram" oninput="validateNameField(this,'addr_fname_err')">
+                        <div class="err-msg" id="addr_fname_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Min 2 characters, no numbers</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name <span class="req">*</span></label>
+                        <input type="text" id="addr_lname" class="form-input" placeholder="Elamly" oninput="validateNameField(this,'addr_lname_err')">
+                        <div class="err-msg" id="addr_lname_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Min 2 characters, no numbers</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Company Name <span style="color:var(--mu);font-weight:400;">(Optional)</span></label>
+                    <input type="text" id="addr_company" class="form-input" placeholder="Enter Company Name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Country <span class="req">*</span></label>
+                    <select id="addr_country" class="form-select">
+                        <option value="">Select Country</option>
+                        <option value="EG">🇪🇬 Egypt</option>
+                        <option value="SA">🇸🇦 Saudi Arabia</option>
+                        <option value="AE">🇦🇪 United Arab Emirates</option>
+                        <option value="KW">🇰🇼 Kuwait</option>
+                        <option value="JO">🇯🇴 Jordan</option>
+                        <option value="US">🇺🇸 United States</option>
+                        <option value="GB">🇬🇧 United Kingdom</option>
+                        <option value="DE">🇩🇪 Germany</option>
+                        <option value="FR">🇫🇷 France</option>
+                    </select>
+                    <div class="err-msg" id="addr_country_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please select a country</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Street Address <span class="req">*</span></label>
+                    <input type="text" id="addr_street" class="form-input" placeholder="123 Main Street, Spring Garden...">
+                    <div class="err-msg" id="addr_street_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Min 10 characters required</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">City <span class="req">*</span></label>
+                        <input type="text" id="addr_city" class="form-input" placeholder="Cairo">
+                        <div class="err-msg" id="addr_city_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>City required</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">State / Province</label>
+                        <input type="text" id="addr_state" class="form-input" placeholder="State / Province">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Zip Code <span class="req">*</span></label>
+                    <input type="text" id="addr_zip" class="form-input" placeholder="09021" maxlength="10">
+                    <div class="err-msg" id="addr_zip_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please enter a valid zip code</div>
+                </div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <button type="submit" class="btn-primary"><i class="fas fa-plus"></i>Add Address</button>
+                    <button type="button" class="btn-secondary" onclick="resetAddressForm()"><i class="fas fa-undo"></i>Discard</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== PASSWORD ===== -->
+    <div class="page section" id="section-password">
+        <div class="page-header">
+            <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
+            <h1 class="page-title">Password Manager</h1>
+        </div>
+        <div class="card">
+            <div class="pw-success-banner" id="pwSuccessBanner">
+                <i class="fas fa-check-circle"></i>
+                <div>
+                    <div class="pw-success-text">Password updated successfully!</div>
+                    <div style="font-size:0.78rem;color:var(--suc);margin-top:2px;">Your account is now secured with the new password.</div>
+                </div>
+            </div>
+            <form id="passwordForm" novalidate onsubmit="submitPassword(event)">
+                <div class="form-group">
+                    <label class="form-label">Password <span class="req">*</span></label>
+                    <div class="password-field">
+                        <input type="password" id="pw_current" class="form-input" placeholder="Enter Password" autocomplete="current-password">
+                        <button type="button" class="toggle-pw" onclick="togglePasswordView('pw_current',this)"><i class="fas fa-eye-slash"></i></button>
+                    </div>
+                    <a href="#" class="forget-link" onclick="openForgotPasswordFlow(event)">Forget Password?</a>
+                    <div class="err-msg" id="pw_current_err" style="clear:both;"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Please enter your current password</div>
+                </div>
+                <div class="form-group" style="clear:both;">
+                    <label class="form-label">New Password <span class="req">*</span></label>
+                    <div class="password-field">
+                        <input type="password" id="pw_new" class="form-input" placeholder="Enter Password" autocomplete="new-password" oninput="checkPasswordStrength(this)">
+                        <button type="button" class="toggle-pw" onclick="togglePasswordView('pw_new',this)"><i class="fas fa-eye-slash"></i></button>
+                    </div>
+                    <div class="strength-bar"><div class="strength-fill" id="strengthBar"></div></div>
+                    <div class="err-msg" id="pw_new_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Password must be at least 8 characters</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password <span class="req">*</span></label>
+                    <div class="password-field">
+                        <input type="password" id="pw_confirm" class="form-input" placeholder="Enter Password" autocomplete="new-password">
+                        <button type="button" class="toggle-pw" onclick="togglePasswordView('pw_confirm',this)"><i class="fas fa-eye-slash"></i></button>
+                    </div>
+                    <div class="err-msg" id="pw_confirm_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Passwords do not match</div>
+                </div>
+                <button type="submit" class="btn-primary"><i class="fas fa-key"></i>Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== NOTIFICATIONS ===== -->
+    <div class="page section" id="section-notifications">
+        <div class="page-header">
+            <button class="back-btn" onclick="go('dashboard')"><i class="fas fa-chevron-left"></i></button>
+            <h1 class="page-title">Notifications</h1>
+        </div>
+        <div class="notif-list" id="notifList"></div>
+    </div>
+
+ 
+
+
+</div><!-- end .main -->
+
+<!-- PASSWORD OTP MODAL -->
+<div class="modal-bg" id="pwOtpModal" onclick="if(event.target===this)closePwOtpModal()">
+    <div class="modal-box" style="max-width:380px;border-radius:20px;padding:0;overflow:hidden;">
+        <div class="modal-head" style="background:var(--wh);border-radius:20px 20px 0 0;">
+            <div class="modal-title"><i class="fas fa-shield-alt" style="color:var(--pri);margin-right:8px;"></i>Verify Your Identity</div>
+            <button class="modal-close" onclick="closePwOtpModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div style="text-align:center;padding:32px 28px;">
+            <div style="width:64px;height:64px;background:var(--pri-lt);border:2px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+                <i class="fas fa-envelope" style="font-size:1.6rem;color:var(--pri);"></i>
+            </div>
+            <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Check your email</p>
+            <p style="margin:0 0 28px;font-size:0.85rem;color:var(--mu);line-height:1.5;">We sent a 4-digit code to confirm your new password.</p>
+            <div class="code-row" style="margin-bottom:24px;">
+                <input type="text" id="pwCode1" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="pwCode2" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="pwCode3" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+                <input type="text" id="pwCode4" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+            </div>
+            <button class="btn-primary full" onclick="doPwOtpVerify()">
+                <i class="fas fa-check"></i> Verify & Update Password
+            </button>
+            <p style="margin:14px 0 0;font-size:0.78rem;color:var(--mu2);">Didn't receive it? Check your spam folder.</p>
+        </div>
+    </div>
+</div>
+
+<!-- VERIFICATION MODAL -->
+<div class="modal-bg" id="verifyModal">
+    <div class="modal-box">
+        <div class="modal-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="modal-title">Verify Your Changes</div>
+        <div class="modal-sub">For security, enter the 4-digit verification code sent to your contact information.</div>
+        <div class="code-row">
+            <input type="text" class="code-box" maxlength="1" id="code1">
+            <input type="text" class="code-box" maxlength="1" id="code2">
+            <input type="text" class="code-box" maxlength="1" id="code3">
+            <input type="text" class="code-box" maxlength="1" id="code4">
+        </div>
+        <p class="code-hint">Enter code <strong>1234</strong> to verify</p>
+        <button class="btn-primary full" onclick="doVerify()" style="margin-bottom:10px;"><i class="fas fa-check"></i>Verify & Save</button>
+        <button class="btn-secondary full" onclick="closeModal()">Cancel</button>
+    </div>
+</div>
+
+<!-- LOGOUT CONFIRMATION MODAL -->
+<div class="logout-modal-bg" id="logoutModal" onclick="if(event.target===this)closeLogoutModal()">
+    <div class="logout-modal">
+        <div class="logout-avatar-ring" id="logoutAvatar">MA</div>
+        <div class="logout-modal-title">Leaving so soon?</div>
+        <div class="logout-modal-sub">
+            You're about to log out of your account,<br>
+            <span class="logout-modal-name" id="logoutName">Maram Ahmed</span>.
+            <br>See you next time! 👋
+        </div>
+        <div class="logout-btn-row">
+            <button class="btn-logout-cancel" onclick="closeLogoutModal()"><i class="fas fa-times"></i>&nbsp; Stay</button>
+            <button class="btn-logout-confirm" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i>&nbsp; Log Out</button>
+        </div>
+    </div>
+</div>
+
+<!-- ORDER DETAIL MODAL -->
+<div class="order-modal-bg" id="orderModal" onclick="if(event.target===this)closeOrderModal()">
+    <div class="order-modal">
+        <div class="order-modal-head">
+            <div class="order-modal-title">Order Details</div>
+            <button class="order-modal-close" onclick="closeOrderModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="order-modal-body" id="orderModalBody"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     FORGOT PASSWORD — OTP MODAL (in-dashboard)
+══════════════════════════════════════════════════════════ -->
+<div class="modal-bg" id="forgotPwModal" onclick="if(event.target===this)closeForgotPwModal()">
+  <div class="modal-box" style="max-width:400px;border-radius:20px;padding:0;overflow:hidden;">
+    <div class="modal-head" style="background:var(--wh);border-radius:20px 20px 0 0;">
+      <div class="modal-title"><i class="fas fa-key" style="color:var(--pri);margin-right:8px;"></i><span id="forgotPwModalTitle">Reset Password</span></div>
+      <button class="modal-close" onclick="closeForgotPwModal()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Step 1: Send OTP -->
+    <div id="forgotStep1" style="text-align:center;padding:32px 28px;">
+      <div style="width:64px;height:64px;background:var(--pri-lt);border:2px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+        <i class="fas fa-envelope" style="font-size:1.6rem;color:var(--pri);"></i>
+      </div>
+      <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Send verification code</p>
+      <p style="margin:0 0 24px;font-size:0.85rem;color:var(--mu);line-height:1.5;">We'll send a 4-digit code to <strong id="forgotPwEmail" style="color:var(--pri);"></strong></p>
+      <button class="btn-primary full" id="forgotSendBtn" onclick="sendForgotOtp()">
+        <i class="fas fa-paper-plane"></i> Send Code
+      </button>
+      <p style="margin:14px 0 0;font-size:0.78rem;color:var(--mu2);">Make sure you have access to your email inbox.</p>
+    </div>
+
+    <!-- Step 2: Enter OTP -->
+    <div id="forgotStep2" style="text-align:center;padding:32px 28px;display:none;">
+      <p style="margin:0 0 6px;font-weight:700;color:var(--tx);font-size:1rem;">Enter verification code</p>
+      <p style="margin:0 0 24px;font-size:0.85rem;color:var(--mu);line-height:1.5;">Code sent to <strong style="color:var(--pri);" id="forgotPwEmailConfirm"></strong></p>
+      <div class="code-row" style="margin-bottom:24px;">
+        <input type="text" id="fpCode1" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="fpCode2" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="fpCode3" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="fpCode4" maxlength="1" class="code-box" inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <button class="btn-primary full" onclick="verifyForgotOtp()"><i class="fas fa-check"></i> Verify Code</button>
+      <button class="btn-secondary full" style="margin-top:8px;" onclick="sendForgotOtp(true)"><i class="fas fa-redo"></i> Resend Code</button>
+    </div>
+
+    <!-- Step 3: New Password -->
+    <div id="forgotStep3" style="padding:32px 28px;display:none;">
+      <p style="margin:0 0 20px;font-weight:700;color:var(--tx);font-size:1rem;text-align:center;">Set new password</p>
+      <div class="form-group">
+        <label class="form-label">New Password <span class="req">*</span></label>
+        <div class="password-field">
+          <input type="password" id="fp_new_pw" class="form-input" placeholder="Enter new password" oninput="checkFpStrength(this)">
+          <button type="button" class="toggle-pw" onclick="togglePasswordView('fp_new_pw',this)"><i class="fas fa-eye-slash"></i></button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="fpStrengthBar"></div></div>
+        <div class="err-msg" id="fp_new_pw_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Password must be at least 8 characters</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password <span class="req">*</span></label>
+        <div class="password-field">
+          <input type="password" id="fp_confirm_pw" class="form-input" placeholder="Re-enter new password">
+          <button type="button" class="toggle-pw" onclick="togglePasswordView('fp_confirm_pw',this)"><i class="fas fa-eye-slash"></i></button>
+        </div>
+        <div class="err-msg" id="fp_confirm_pw_err"><i class="fas fa-circle-exclamation" style="font-size:.65rem;"></i>Passwords do not match</div>
+      </div>
+      <button class="btn-primary full" onclick="doForgotPasswordReset()"><i class="fas fa-lock"></i> Reset Password</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/customer_dashboard.js"></script>
+<script src="js/customer_notfication.js"></script>  
+
+</body>
+</html>
