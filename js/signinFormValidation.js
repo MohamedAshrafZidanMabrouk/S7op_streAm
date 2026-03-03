@@ -25,6 +25,13 @@ let isOtpSent = false;
 let generatedOTP = "";
 let targetEmail = "";
 
+//fieldset
+let fieldset = document.getElementById("fieldset");
+const numberCodeForm = document.querySelector("[data-number-code-form]");
+const numberCodeInputs = [
+  ...numberCodeForm.querySelectorAll("[data-number-code-input]"),
+];
+
 // (Validation)
 function isEmailValid() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -79,6 +86,8 @@ password.addEventListener("input", function () {
 otpInput.addEventListener("input", function () {
   const invalidFeedback =
     otpInput.parentElement.querySelector(".invalid-feedback");
+
+  emailNotExist.classList.add("d-none");
 
   if (!isOtpSent) {
     if (!isOtpEmailValid()) {
@@ -234,11 +243,14 @@ verifyBtn.addEventListener("click", async function () {
               otpSuccess.classList.remove("d-none");
 
               isOtpSent = true;
-              otpInput.value = "";
-              otpInput.type = "text";
-              otpInput.placeholder = "Enter 4-digit code";
-              otpInput.maxLength = 4;
-              otpInput.minLength = 4;
+              // otpInput.value = "";
+              // otpInput.type = "text";
+              // otpInput.placeholder = "Enter 4-digit code";
+              // otpInput.maxLength = 4;
+              // otpInput.minLength = 4;
+              otpInput.classList.add("d-none");
+              fieldset.classList.remove("d-none");
+              fieldset.classList.add("d-flex");
               modalBody.textContent = "Enter the verification code";
               verifyBtn.textContent = "Verify Code";
             },
@@ -263,9 +275,15 @@ verifyBtn.addEventListener("click", async function () {
     }
   } else {
     // التحقق من الـ OTP
-    const enteredCode = otpInput.value.trim();
+    // const enteredCode = otpInput.value.trim();
+    let otpValue = "";
 
-    if (enteredCode === generatedOTP) {
+    // بنلف على كل input وناخد الرقم اللي جواه ونلزقه في الـ String
+    numberCodeInputs.forEach((input) => {
+      otpValue += input.value;
+    });
+
+    if (otpValue === generatedOTP) {
       localStorage.setItem("emailForReset", targetEmail);
       otpModal.hide();
       window.location.href = "forgetPassword.html";
@@ -274,4 +292,34 @@ verifyBtn.addEventListener("click", async function () {
       otpError.classList.remove("d-none");
     }
   }
+});
+
+// === fieldset ===
+numberCodeInputs.forEach((input) => {
+  // Listen for typing events
+  input.addEventListener("input", (e) => {
+    // Prevent entering more than 1 digit per box
+    if (e.target.value.length > 1) {
+      e.target.value = e.target.value.slice(0, 1);
+    }
+
+    let currentIndex = Number(e.target.dataset.numberCodeInput);
+    const nextIndex = currentIndex + 1;
+
+    // If a number was typed and it's not the last input, focus the next one
+    if (e.target.value !== "" && nextIndex < numberCodeInputs.length) {
+      numberCodeInputs[nextIndex].focus();
+    }
+  });
+
+  // Listen for Backspace to move focus backwards
+  input.addEventListener("keydown", (e) => {
+    let currentIndex = Number(e.target.dataset.numberCodeInput);
+    const prevIndex = currentIndex - 1;
+
+    // If Backspace is pressed, the input is already empty, and it's not the first input
+    if (e.key === "Backspace" && e.target.value === "" && prevIndex >= 0) {
+      numberCodeInputs[prevIndex].focus();
+    }
+  });
 });
