@@ -168,3 +168,14 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+
+.my-link{
+    color: rgb(76, 26, 26);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.my-link:hover{
+    text-decoration: underline !important;
+}

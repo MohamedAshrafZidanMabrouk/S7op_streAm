@@ -141,34 +141,73 @@ window.addEventListener("DOMContentLoaded", () => {
           const allUsers = await response.json();
 
           // 4. ندور على اليوزر اللي الإيميل والباسورد بتوعه متطابقين
-          const userMatch = allUsers.find(
-            (user) =>
-              user.email === email.value && user.password === password.value,
+          // const userMatch = allUsers.find(
+          //   (user) =>
+          //     user.email === email.value && user.password === password.value,
+          // );
+
+          // if (userMatch) {
+          //   localStorage.setItem("isLoggedIn", "true");
+          //   localStorage.setItem("currentUser", JSON.stringify(userMatch));
+
+          //   if (rememberCheckbox.checked) {
+          //     localStorage.setItem(
+          //       "currentUser",
+          //       JSON.stringify({
+          //         email: email.value,
+          //         password: password.value,
+          //       }),
+          //     );
+          //   } else {
+          //     localStorage.removeItem("currentUser");
+          //   }
+          //   window.location.href = "index.html";
+          // } else {
+          //   alertmsg.classList.remove("d-none");
+          //   password.setCustomValidity("Invalid email or password");
+          //   password.value = "";
+          //   password.classList.remove("is-valid");
+          //   email.classList.remove("is-valid");
+          // }
+          // نجيب اليوزر بالإيميل بس
+          const userByEmail = allUsers.find(
+            (user) => user.email === email.value.trim(),
           );
 
-          if (userMatch) {
-            localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("currentUser", JSON.stringify(userMatch));
-
-            if (rememberCheckbox.checked) {
-              localStorage.setItem(
-                "currentUser",
-                JSON.stringify({
-                  email: email.value,
-                  password: password.value,
-                }),
-              );
-            } else {
-              localStorage.removeItem("currentUser");
-            }
-            window.location.href = "index.html";
-          } else {
+          // 1️⃣ لو الإيميل مش موجود
+          if (!userByEmail) {
+            alertmsg.innerHTML =
+              "This email is not registered. <a class='my-link' href = './signup.html'> sign up</a>";
             alertmsg.classList.remove("d-none");
-            password.setCustomValidity("Invalid email or password");
+
             password.value = "";
             password.classList.remove("is-valid");
             email.classList.remove("is-valid");
+            email.value = "";
+            return;
           }
+
+          // 2️⃣ لو الإيميل موجود بس الباسورد غلط
+          if (userByEmail.password !== password.value) {
+            alertmsg.textContent = "Incorrect email or password.";
+            alertmsg.classList.remove("d-none");
+
+            password.value = "";
+            // password.classList.add("is-invalid");
+            return;
+          }
+
+          // 3️⃣ لو الاتنين صح
+          localStorage.setItem("isLoggedIn", "true");
+
+          if (rememberCheckbox.checked) {
+            // يحفظ البيانات لو علم على تذكرني
+            localStorage.setItem("currentUser", JSON.stringify(userByEmail));
+          } else {
+            // ممكن تحفظ البيانات في sessionStorage عشان تضيع لما يقفل المتصفح
+            sessionStorage.setItem("currentUser", JSON.stringify(userByEmail));
+          }
+          window.location.href = "index.html";
         } catch (error) {
           console.error("Error fetching data:", error);
           alert("حدث خطأ في الاتصال بالسيرفر، يرجى المحاولة مرة أخرى.");
