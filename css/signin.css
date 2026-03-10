@@ -44,12 +44,7 @@ body{
   margin: 0;
 }
 
-.title-wrapper h1 a{
-    color: var(--main-color);
-    text-decoration: none;
-}
-
-.title-wrapper h1 a:hover {
+.title-wrapper h1:hover{
     color: var(--main-color-hover) !important;
 }
 
@@ -171,11 +166,11 @@ input[type=number] {
 
 
 .my-link{
-    color: rgb(76, 26, 26);
+    color: var(--main-color);
     font-weight: 700;
     text-decoration: none;
 }
 
 .my-link:hover{
-    text-decoration: underline !important;
+    color: var(--main-color-hover);
 }

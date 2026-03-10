@@ -1,27 +1,26 @@
-console.log("eye toggle loaded");
+/**
+ * passwordEyeToggle.js — Amazino
+ * Works on signin.html (1 field) and signup.html (1 field).
+ * Wrapped in DOMContentLoaded and null-safe.
+ */
+document.addEventListener('DOMContentLoaded', function () {
 
-const togglePasswordIcon = document.getElementById("togglePassword");
-// const toggleRePasswordIcon = document.getElementById("toggleRePassword");
-// غيرنا الأسامي هنا عشان التعارض
-const eyePasswordField = document.getElementById("password");
-// const eyeRePasswordField = document.getElementById("rePassword");
+  // ── Helper: wire one icon to one input ──────────────────
+  function bindToggle(iconId, fieldId) {
+    var icon  = document.getElementById(iconId);
+    var field = document.getElementById(fieldId);
+    if (!icon || !field) return;   // element doesn't exist on this page — skip
 
-togglePasswordIcon.addEventListener("click", function () {
-  if (eyePasswordField.type === "password") {
-    eyePasswordField.type = "text";
-    this.classList.replace("bi-eye", "bi-eye-slash");
-  } else {
-    eyePasswordField.type = "password";
-    this.classList.replace("bi-eye-slash", "bi-eye");
+    icon.addEventListener('click', function () {
+      var isHidden = field.type === 'password';
+      field.type = isHidden ? 'text' : 'password';
+      // toggle Bootstrap Icons classes
+      this.classList.toggle('bi-eye',       !isHidden);
+      this.classList.toggle('bi-eye-slash',  isHidden);
+    });
   }
-});
 
-// toggleRePasswordIcon.addEventListener("click", function () {
-//   if (eyeRePasswordField.type === "password") {
-//     eyeRePasswordField.type = "text";
-//     this.classList.replace("bi-eye", "bi-eye-slash");
-//   } else {
-//     eyeRePasswordField.type = "password";
-//     this.classList.replace("bi-eye-slash", "bi-eye");
-//   }
-// });
+  bindToggle('togglePassword',   'password');    // signin & signup
+  bindToggle('toggleRePassword', 'rePassword');  // signup only — safely ignored on signin
+
+});

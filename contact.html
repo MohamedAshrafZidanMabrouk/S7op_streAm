@@ -52,7 +52,7 @@
                             <i class="bi bi-geo-alt-fill"></i>
                         </div>
                         <h6>Our Address</h6>
-                        <p>123 Main Street, Anytown,<br>USA 10001</p>
+                        <p>19 , Tanta<br>Egypt</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -61,7 +61,7 @@
                             <i class="bi bi-telephone-fill"></i>
                         </div>
                         <h6>Call Us</h6>
-                        <p>+1 234 567 890<br>Mon - Fri, 9am - 6pm</p>
+                        <p>+20 123 456 7890<br>Sun - Thu, 9am - 6pm</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -85,19 +85,19 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">First Name</label>
-                                    <input type="text" class="form-control" placeholder="John">
+                                    <input type="text" class="form-control" placeholder="Mahmoud">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" placeholder="Doe">
+                                    <input type="text" class="form-control" placeholder="Hussein">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" placeholder="john@example.com">
+                                    <input type="email" class="form-control" placeholder="mahmoud.hussein@example.com">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Phone</label>
-                                    <input type="tel" class="form-control" placeholder="+1 234 567 890">
+                                    <input type="tel" class="form-control" placeholder="+20 123 456 7890">
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label">Subject</label>
@@ -112,7 +112,8 @@
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label">Message</label>
-                                    <textarea class="form-control" rows="5" placeholder="Tell us how we can help..."></textarea>
+                                    <textarea class="form-control" rows="5"
+                                        placeholder="Tell us how we can help..."></textarea>
                                 </div>
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary-custom w-100">
@@ -125,19 +126,27 @@
                 </div>
                 <div class="col-lg-6">
                     <h2 class="section-title">Find Us Here</h2>
-                    <p class="section-subtitle">Visit our showroom to see our furniture collection in person.</p>
+                    <p class="section-subtitle">Visit our showroom to see our collection in person.</p>
                     <div class="map-container">
-                        <iframe
+                        <iframe id="location-map"
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387193.3059353029!2d-74.25986548248684!3d40.69714941932609!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2seg!4v1700000000000!5m2!1sen!2seg"
                             width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
+                    <script>
+                        (function () {
+                            const lat = 30.7865;
+                            const lng = 31.0004;
+                            const mapIframe = document.getElementById('location-map');
+                            mapIframe.src = "https://www.google.com/maps?q=" + lat + "," + lng + "&z=15&output=embed";
+                        })();
+                    </script>
 
                     <!-- Business Hours -->
                     <div class="contact-form mt-4">
                         <h5 class="fw-bold mb-3"><i class="bi bi-clock me-2"></i>Business Hours</h5>
                         <div class="d-flex justify-content-between py-2 border-bottom">
-                            <span>Monday - Friday</span>
+                            <span>Sunday - Thursday</span>
                             <span class="fw-600">9:00 AM - 6:00 PM</span>
                         </div>
                         <div class="d-flex justify-content-between py-2 border-bottom">
@@ -145,7 +154,7 @@
                             <span class="fw-600">10:00 AM - 4:00 PM</span>
                         </div>
                         <div class="d-flex justify-content-between py-2">
-                            <span>Sunday</span>
+                            <span>Friday</span>
                             <span class="text-danger fw-600">Closed</span>
                         </div>
                     </div>
@@ -166,49 +175,58 @@
                     <div class="accordion" id="faqAccordion">
                         <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq1">
                                     What are your delivery times?
                                 </button>
                             </h2>
                             <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body text-muted">
-                                    Standard delivery takes 5-7 business days. Express delivery is available for 2-3 business days at an additional cost. Free shipping is offered on all orders above $500.
+                                    Standard delivery takes 5-7 business days. Express delivery is available for 2-3
+                                    business days at an additional cost. Free shipping is offered on all orders above
+                                    $500.
                                 </div>
                             </div>
                         </div>
                         <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq2">
                                     Do you offer assembly services?
                                 </button>
                             </h2>
                             <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body text-muted">
-                                    Yes! We offer professional assembly services for all furniture items. You can add this service during checkout for a small fee.
+                                    Yes! We offer professional assembly services for all furniture items. You can add
+                                    this service during checkout for a small fee.
                                 </div>
                             </div>
                         </div>
                         <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq3">
                                     What is your return policy?
                                 </button>
                             </h2>
                             <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body text-muted">
-                                    We offer a 30-day return policy on all items in their original condition. Simply contact our support team to initiate a return.
+                                    We offer a 30-day return policy on all items in their original condition. Simply
+                                    contact our support team to initiate a return.
                                 </div>
                             </div>
                         </div>
                         <div class="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq4">
                                     Can I visit your showroom?
                                 </button>
                             </h2>
                             <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body text-muted">
-                                    Absolutely! Our showroom is open during our business hours. Walk-ins are welcome, but we recommend scheduling an appointment for a personalized experience.
+                                    Absolutely! Our showroom is open during our business hours. Walk-ins are welcome,
+                                    but we recommend scheduling an appointment for a personalized experience.
                                 </div>
                             </div>
                         </div>

@@ -288,17 +288,22 @@ async function submitPassword(e) {
 /* ════════════════════════════════════════════════════════════
    NOTIFICATIONS
 ════════════════════════════════════════════════════════════ */
+// استبدل الدالة القديمة بالنسخة المعدلة دي
 function loadNotifications() {
-  const el=document.getElementById('notifList');el.innerHTML='';
-  // Only show real notifications from user data, no fake demo ones
-  const notifs=CU?.notifications||[];
-  if(!notifs.length){el.innerHTML='<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No notifications yet.</p></div>';return;}
-  notifs.forEach((n,i)=>{
-    if(i===0){const lbl=document.createElement('div');lbl.className='notif-section-label';lbl.textContent='Recent';el.appendChild(lbl);}
-    if(i===2){const lbl=document.createElement('div');lbl.className='notif-section-label';lbl.textContent='Earlier';el.appendChild(lbl);}
-    const div=document.createElement('div');div.className='notif-item';
-    div.innerHTML=`<div class="notif-icon"><i class="fas ${n.icon||'fa-bell'}"></i></div><div><div class="notif-text">${n.text}</div><div class="notif-time">${n.time||''}</div></div>`;
-    el.appendChild(div);
+  // ... الكود القديم بتاعك ...
+
+  // بعد ما تخلّص الـ render
+  requestAnimationFrame(() => {
+    const items = document.querySelectorAll('.notif-item');
+    items.forEach(item => {
+      if (item.classList.contains('unread')) {
+        if (!item.querySelector('.unread-dot')) {
+          const dot = document.createElement('div');
+          dot.className = 'unread-dot';
+          item.appendChild(dot);
+        }
+      }
+    });
   });
 }
 
