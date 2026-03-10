@@ -146,7 +146,7 @@ window.addEventListener("DOMContentLoaded", () => {
           // لو الإيميل مش موجود
           if (!userByEmail) {
             alertmsg.innerHTML =
-              "This email is not registered. <a class='my-link' href = './signup.html'> sign up</a>";
+              "This email is not registered. <a class='my-link' href = './signup.html'> Sign up</a>";
             alertmsg.classList.remove("d-none");
 
             password.value = "";

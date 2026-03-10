@@ -44,7 +44,12 @@ body{
   margin: 0;
 }
 
-.title-wrapper h1:hover{
+.title-wrapper h1 a{
+    color: var(--main-color);
+    text-decoration: none;
+}
+
+.title-wrapper h1 a:hover {
     color: var(--main-color-hover) !important;
 }
 
@@ -164,13 +169,13 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-
 .my-link{
     color: var(--main-color);
-    font-weight: 700;
     text-decoration: none;
+    font-weight: 600;
 }
 
 .my-link:hover{
     color: var(--main-color-hover);
+    text-decoration: underline;
 }
