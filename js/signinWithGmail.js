@@ -27,7 +27,7 @@ async function handleCredentialResponse(response) {
 
       localStorage.setItem("currentUser", JSON.stringify(user));
 
-      window.location.href = "/home.html";
+      window.location.href = "index.html";
     } else {
       // =========================
       // المستخدم جديد → Sign Up
@@ -53,7 +53,7 @@ async function handleCredentialResponse(response) {
 
       localStorage.setItem("currentUser", JSON.stringify(createdUser));
 
-      window.location.href = "/index.html";
+      window.location.href = "index.html";
     }
   } catch (error) {
     console.error("Error:", error);
