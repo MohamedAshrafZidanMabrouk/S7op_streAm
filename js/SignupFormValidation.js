@@ -1,4 +1,4 @@
-// نمسك الفورم اللي واخدة الكلاس ده
+// select form
 const forms = document.querySelectorAll(".needs-validation");
 // modal
 const otpModal = new bootstrap.Modal(document.getElementById("otpModal"));
@@ -18,12 +18,11 @@ const numberCodeInputs = [
 ];
 
 // api link
-// api link
+
 const API_URL =
-  "https://699c4912110b5b738cc24139.mockapi.io/api/ecomerce/users/users_table"; // فصلنا السطر ده لوحده
+  "https://699c4912110b5b738cc24139.mockapi.io/api/ecomerce/users/users_table";
 
 (() => {
-  // رجعنا دي زي ما كانت
   "use strict";
 
   document
@@ -138,7 +137,7 @@ const API_URL =
                         body: JSON.stringify(newUser),
                       });
 
-                      const savedUser = await postResponse.json(); // صلحنا الـ syntax هنا
+                      const savedUser = await postResponse.json();
 
                       localStorage.setItem("isLoggedIn", "true");
                       localStorage.setItem(

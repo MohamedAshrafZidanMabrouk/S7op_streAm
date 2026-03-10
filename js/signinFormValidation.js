@@ -1,4 +1,5 @@
-// **** variables ****
+// ---------------------------------------------------------
+// **************** variables ****************
 // api link
 const API_URL =
   "https://699c4912110b5b738cc24139.mockapi.io/api/ecomerce/users/users_table";
@@ -19,7 +20,7 @@ const otpSuccess = document.getElementById("otpSuccess");
 const emailNotExist = document.getElementById("emailNotExist");
 const modalBody = document.querySelector(".modal-body p");
 
-// email js
+// email js for otp
 const forgetLink = document.querySelector(".forgetlink");
 let isOtpSent = false;
 let generatedOTP = "";
@@ -48,7 +49,7 @@ function isOtpEmailValid() {
 }
 
 // ---------------------------------------------------------
-// رسائل الخطأ (Validation Messages)
+// **************** validation messages ****************
 
 // Email
 email.addEventListener("input", function () {
@@ -116,7 +117,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // ---------------------------------------------------------
-// (Login Logic)
+// **************** Login Logic ****************
 
 (() => {
   "use strict";
@@ -125,7 +126,6 @@ window.addEventListener("DOMContentLoaded", () => {
     form.addEventListener(
       "submit",
       async (event) => {
-        // ضفنا async هنا
         event.preventDefault();
 
         if (!form.checkValidity() || !isEmailValid() || !isPasswordValid()) {
@@ -136,45 +136,14 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-          // 3. نجيب البيانات من الـ Mock API بدل الـ LocalStorage
+          // get user data from mockup api
           const response = await fetch(API_URL);
           const allUsers = await response.json();
-
-          // 4. ندور على اليوزر اللي الإيميل والباسورد بتوعه متطابقين
-          // const userMatch = allUsers.find(
-          //   (user) =>
-          //     user.email === email.value && user.password === password.value,
-          // );
-
-          // if (userMatch) {
-          //   localStorage.setItem("isLoggedIn", "true");
-          //   localStorage.setItem("currentUser", JSON.stringify(userMatch));
-
-          //   if (rememberCheckbox.checked) {
-          //     localStorage.setItem(
-          //       "currentUser",
-          //       JSON.stringify({
-          //         email: email.value,
-          //         password: password.value,
-          //       }),
-          //     );
-          //   } else {
-          //     localStorage.removeItem("currentUser");
-          //   }
-          //   window.location.href = "index.html";
-          // } else {
-          //   alertmsg.classList.remove("d-none");
-          //   password.setCustomValidity("Invalid email or password");
-          //   password.value = "";
-          //   password.classList.remove("is-valid");
-          //   email.classList.remove("is-valid");
-          // }
-          // نجيب اليوزر بالإيميل بس
           const userByEmail = allUsers.find(
             (user) => user.email === email.value.trim(),
           );
 
-          // 1️⃣ لو الإيميل مش موجود
+          // لو الإيميل مش موجود
           if (!userByEmail) {
             alertmsg.innerHTML =
               "This email is not registered. <a class='my-link' href = './signup.html'> sign up</a>";
@@ -187,7 +156,7 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // 2️⃣ لو الإيميل موجود بس الباسورد غلط
+          // لو الإيميل موجود بس الباسورد غلط
           if (userByEmail.password !== password.value) {
             alertmsg.textContent = "Incorrect email or password.";
             alertmsg.classList.remove("d-none");
@@ -197,7 +166,7 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // 3️⃣ لو الاتنين صح
+          //  لو الاتنين صح
           localStorage.setItem("isLoggedIn", "true");
 
           if (rememberCheckbox.checked) {
@@ -210,7 +179,7 @@ window.addEventListener("DOMContentLoaded", () => {
           window.location.href = "index.html";
         } catch (error) {
           console.error("Error fetching data:", error);
-          alert("حدث خطأ في الاتصال بالسيرفر، يرجى المحاولة مرة أخرى.");
+          alert("failed to connect to server, try again");
         }
 
         form.classList.add("was-validated");
